@@ -577,22 +577,22 @@ function saveTargetLocation(targetName) {
 }
 
 function openDeal(targetName, isOwn){
-  const t=TARGETS.find(x=>x.name===targetName);
-  if(!t) return;
+  // TARGETSリストにない自由登録企業にも対応
+  const t=TARGETS.find(x=>x.name===targetName) || {name:targetName,url:'',industry:'（自由登録）',category:'',priority:'-',address:'',prefecture:'',area:''};
   const d=deals.find(x=>x.target_name===targetName);
   const see=d?canSee(d):canCreate();
   const edit=d?canEdit(d):canCreate();
  
-  let html=`<div class="modal-title">${t.name} <span style="font-size:13px;color:#888">— ${CAT_LABELS[t.category]}</span></div>
+  let html=`<div class="modal-title">${t.name} <span style="font-size:13px;color:#888">— ${CAT_LABELS[t.category]||'自由登録'}</span></div>
   <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:16px">
     <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:600">基本情報（全員閲覧可）</div>
     <div style="font-size:12px;display:grid;grid-template-columns:80px 1fr;gap:4px 8px">
       <span style="color:#888">業種</span><span>${t.industry}</span>
-      <span style="color:#888">優先度</span><span><span class="badge badge-${t.priority}">${t.priority}</span></span>
+      ${t.priority&&t.priority!=='-'?`<span style="color:#888">優先度</span><span><span class="badge badge-${t.priority}">${t.priority}</span></span>`:''}
       ${t.address?`<span style="color:#888">住所</span><span>${t.address}</span>`:''}
       ${t.prefecture?`<span style="color:#888">都道府県</span><span>${t.prefecture}</span>`:''}
       ${t.area?`<span style="color:#888">エリア</span><span>${t.area}</span>`:''}
-      <span style="color:#888">URL</span><span><a href="${t.url}" target="_blank" style="color:#185FA5;font-size:11px">${t.url}</a></span>
+      ${t.url?`<span style="color:#888">URL</span><span><a href="${t.url}" target="_blank" style="color:#185FA5;font-size:11px">${t.url}</a></span>`:''}
     </div>
   </div>`;
  
