@@ -251,13 +251,34 @@ let targetPage=0;
 const PAGE_SIZE=20;
 const TARGET_PAGE_SIZE=50;
  
+let _loginBusy = false;
 async function doLogin(){
-  const email=document.getElementById('loginEmail').value;
-  const pass=document.getElementById('loginPassword').value;
+  if(_loginBusy) return;
+  _loginBusy = true;
+  const btn = document.querySelector('#loginView .btn-primary');
+  if(btn){ btn.textContent='ログイン中...'; btn.disabled=true; }
   document.getElementById('loginError').textContent='';
-  const {data,error}=await sb.auth.signInWithPassword({email,password:pass});
-  if(error){document.getElementById('loginError').textContent='ログインに失敗しました: '+error.message;return;}
-  await loadProfile(data.user);
+  try {
+    // 古いセッション・キャッシュをクリアしてからログイン
+    await sb.auth.signOut().catch(()=>{});
+    const email=document.getElementById('loginEmail').value.trim();
+    const pass=document.getElementById('loginPassword').value;
+    if(!email||!pass){
+      document.getElementById('loginError').textContent='メールアドレスとパスワードを入力してください。';
+      return;
+    }
+    const {data,error}=await sb.auth.signInWithPassword({email,password:pass});
+    if(error){
+      document.getElementById('loginError').textContent='ログインに失敗しました: '+error.message;
+      return;
+    }
+    await loadProfile(data.user);
+  } catch(e) {
+    document.getElementById('loginError').textContent='エラーが発生しました。再度お試しください。';
+  } finally {
+    _loginBusy = false;
+    if(btn){ btn.textContent='ログイン'; btn.disabled=false; }
+  }
 }
  
 async function loadProfile(user){
@@ -290,7 +311,16 @@ async function doLogout(){
 }
  
 sb.auth.onAuthStateChange(async(event,session)=>{
-  if(session&&!currentUser) await loadProfile(session.user);
+  // SIGNED_IN イベントのみ対応（古いキャッシュセッションを自動ログインしない）
+  if(event==='SIGNED_IN' && session && !currentUser){
+    await loadProfile(session.user);
+  }
+  // SIGNED_OUT時は確実にログイン画面へ
+  if(event==='SIGNED_OUT'){
+    currentUser=null; currentProfile=null; deals=[];
+    document.getElementById('loginView').style.display='flex';
+    document.getElementById('appView').style.display='none';
+  }
 });
  
 function canSee(deal){
