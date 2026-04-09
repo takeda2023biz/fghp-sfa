@@ -406,7 +406,7 @@ function renderList(c){
   else roleMsg=`<div class="info-banner">メーカーとして全代理店の商談情報を閲覧できます。</div>`;
  
   let html=`<div class="stats-grid">
-    <div class="stat-card"><div class="stat-label">総ターゲット</div><div class="stat-value">346</div><div class="stat-sub">社・施設</div></div>
+    <div class="stat-card"><div class="stat-label">総ターゲット</div><div class="stat-value">${TARGETS.length}</div><div class="stat-sub">社・施設</div></div>
     <div class="stat-card"><div class="stat-label">表示件数</div><div class="stat-value">${filtered.length}</div></div>
     <div class="stat-card"><div class="stat-label">自社案件数</div><div class="stat-value">${myDeals.length}</div></div>
     <div class="stat-card"><div class="stat-label">自社受注額</div><div class="stat-value">${Math.round(wonAmt/10000)}万</div><div class="stat-sub">円</div></div>
