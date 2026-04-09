@@ -105,7 +105,7 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
 </style>
 </head>
 <body>
-
+ 
 <!-- ログイン画面 -->
 <div id="loginView" class="login-wrap">
   <div class="login-card">
@@ -123,7 +123,7 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
     <div id="loginError" class="error-msg"></div>
   </div>
 </div>
-
+ 
 <!-- メインアプリ -->
 <div id="appView" class="app" style="display:none">
   <div class="topbar">
@@ -145,26 +145,26 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
     <div class="content" id="mainContent"></div>
   </div>
 </div>
-
+ 
 <!-- モーダル -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal" id="modalContent"></div>
 </div>
-
+ 
 <script>
 const SUPABASE_URL = 'https://raqcwqmvwxhvarzoomvz.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhcWN3cW12d3hodmFyem9vbXZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2OTc5NTcsImV4cCI6MjA5MTI3Mzk1N30.75Ky3O1F9Y-9N3PxKxEDl_1HQQ9RcWhXqWqcfZLV_VQ';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+ 
 const TARGETS = [{"rank":1,"priority":"S","name":"鹿児島市","url":"https://www.city.kagoshima.lg.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾"},{"rank":2,"priority":"S","name":"鹿屋市","url":"https://www.city.kanoya.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":3,"priority":"S","name":"薩摩川内市","url":"https://www.city.satsumasendai.lg.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾"},{"rank":4,"priority":"S","name":"霧島市","url":"https://www.city-kirishima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":5,"priority":"S","name":"姶良市","url":"https://www.city.aira.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":6,"priority":"S","name":"南九州市","url":"https://www.city.minamikyushu.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":7,"priority":"S","name":"出水市","url":"https://www.city.izumi.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":8,"priority":"S","name":"鹿児島港管理局","url":"https://www.pref.kagoshima.jp/ab07/","industry":"港湾管理","category":"自治体_体育館_公園_港湾"},{"rank":9,"priority":"S","name":"志布志港管理センター","url":"https://www.pref.kagoshima.jp/ab07/","industry":"港湾管理","category":"自治体_体育館_公園_港湾"},{"rank":10,"priority":"S","name":"鹿児島県体育館","url":"https://www.pref.kagoshima.jp/","industry":"体育館（県営）","category":"自治体_体育館_公園_港湾"},{"rank":11,"priority":"S","name":"鹿児島アリーナ","url":"https://kagoshima-arena.jp/","industry":"体育館（市営）","category":"自治体_体育館_公園_港湾"},{"rank":12,"priority":"A","name":"日置市","url":"https://www.city.hioki.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":13,"priority":"A","name":"いちき串木野市","url":"https://www.city.ichikikushikino.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":14,"priority":"A","name":"阿久根市","url":"https://www.city.akune.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":15,"priority":"A","name":"伊佐市","url":"https://www.city.isa.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":1,"priority":"S","name":"マルエーフェリー株式会社","url":"https://www.aline-ferry.com/","industry":"海運","category":"船舶関連"},{"rank":2,"priority":"S","name":"鹿児島海陸運送株式会社","url":"https://www.kagoshima-kairiku.co.jp/","industry":"港湾・物流","category":"船舶関連"},{"rank":3,"priority":"S","name":"鹿児島荷役海陸運輸株式会社","url":"https://www.karyu.co.jp/","industry":"港湾荷役","category":"船舶関連"},{"rank":4,"priority":"S","name":"南海フェリー株式会社","url":"https://nankai-ferry.co.jp/","industry":"海運","category":"船舶関連"},{"rank":5,"priority":"A","name":"鹿児島県漁業協同組合連合会","url":"https://www.kagoren.or.jp/","industry":"漁業","category":"船舶関連"},{"rank":1,"priority":"S","name":"鹿児島空港","url":"https://www.koj-ab.co.jp/","industry":"空港・交通","category":"駐車場_屋外施設"},{"rank":2,"priority":"S","name":"奄美空港","url":"https://amami-airport.co.jp/","industry":"空港・交通","category":"駐車場_屋外施設"},{"rank":3,"priority":"S","name":"鹿児島中央駅周辺駐車場","url":"https://www.jr-kyushu.co.jp/","industry":"駐車場","category":"駐車場_屋外施設"},{"rank":4,"priority":"S","name":"イオンモール鹿児島","url":"https://kagoshima-aeonmall.com/","industry":"ショッピングモール","category":"駐車場_屋外施設"},{"rank":5,"priority":"S","name":"アミュプラザ鹿児島","url":"https://www.amu-kagoshima.com/","industry":"商業施設","category":"駐車場_屋外施設"},{"rank":6,"priority":"S","name":"山形屋","url":"https://www.yamakataya.co.jp/","industry":"百貨店","category":"駐車場_屋外施設"},{"rank":7,"priority":"S","name":"鹿児島市立病院","url":"https://www.shiritsuhp.jp/","industry":"病院","category":"駐車場_屋外施設"},{"rank":8,"priority":"S","name":"鹿児島大学病院","url":"https://www.kufm.kagoshima-u.ac.jp/","industry":"病院・大学","category":"駐車場_屋外施設"},{"rank":9,"priority":"A","name":"鹿児島生協病院","url":"https://www.kagoshima-coop-hp.jp/","industry":"病院","category":"駐車場_屋外施設"},{"rank":10,"priority":"A","name":"鴨池公園野球場","url":"https://www.pref.kagoshima.jp/","industry":"スポーツ施設","category":"駐車場_屋外施設"},{"rank":1,"priority":"S","name":"さつまゴルフリゾート","url":"https://www.satsumagolf.jp/","industry":"ゴルフ場・リゾート","category":"ゴルフ場"},{"rank":2,"priority":"S","name":"霧島ゴルフクラブ","url":"https://kirishima-gc.or.jp/","industry":"ゴルフ場","category":"ゴルフ場"},{"rank":3,"priority":"S","name":"ゴールデンパームカントリークラブ","url":"https://www.belle-co.com/goldenpalm/goldenpalmsprings.html","industry":"ゴルフ場・リゾート","category":"ゴルフ場"},{"rank":4,"priority":"S","name":"鹿児島国際ゴルフ倶楽部","url":"https://www.kigc.jp/","industry":"ゴルフ場","category":"ゴルフ場"},{"rank":5,"priority":"S","name":"吹上浜カントリークラブ","url":"https://www.fukiagehama.jp/","industry":"ゴルフ場","category":"ゴルフ場"},{"rank":1,"priority":"S","name":"三洋工機株式会社","url":"https://sanyokouki.co.jp/","industry":"プラントエンジニアリング","category":"工場_物流_プラント"},{"rank":2,"priority":"S","name":"株式会社アイエヌジー","url":"https://www.ing-web.com/","industry":"プラントエンジニアリング","category":"工場_物流_プラント"},{"rank":3,"priority":"S","name":"中園機工株式会社","url":"https://nakazonokikou.co.jp/","industry":"プラント・設備製作","category":"工場_物流_プラント"},{"rank":4,"priority":"S","name":"日本エア・リキード合同会社 鹿児島事業所","url":"https://www.airliquide.com/japan","industry":"産業ガス","category":"工場_物流_プラント"},{"rank":5,"priority":"S","name":"出光興産株式会社 喜入油槽所","url":"https://www.idemitsu.com/","industry":"石油・エネルギー","category":"工場_物流_プラント"},{"rank":6,"priority":"S","name":"ENEOS株式会社 喜入基地","url":"https://www.eneos.co.jp/","industry":"石油・エネルギー","category":"工場_物流_プラント"},{"rank":7,"priority":"S","name":"JFEエンジニアリング株式会社","url":"https://www.jfe-eng.co.jp/","industry":"プラントエンジニアリング","category":"工場_物流_プラント"},{"rank":8,"priority":"S","name":"三菱電機株式会社 鹿児島製作所","url":"https://www.mitsubishielectric.co.jp/","industry":"電気機器製造","category":"工場_物流_プラント"},{"rank":9,"priority":"S","name":"京セラ株式会社 鹿児島川内工場","url":"https://www.kyocera.co.jp/","industry":"電子部品製造","category":"工場_物流_プラント"},{"rank":10,"priority":"S","name":"旭化成株式会社 延岡エリア関連拠点","url":"https://www.asahi-kasei.com/","industry":"化学・素材","category":"工場_物流_プラント"}];
-
+ 
 const CAT_LABELS={'自治体_体育館_公園_港湾':'自治体・体育館','船舶関連':'船舶関連','駐車場_屋外施設':'駐車場・屋外','ゴルフ場':'ゴルフ場','工場_物流_プラント':'工場・物流'};
 const STATUSES=['未着手','アプローチ済','提案中','交渉中','受注','失注'];
-
+ 
 let currentUser=null, currentProfile=null, currentView='list';
 let deals=[], searchQ='', filtCat='', filtPriority='', filtStatus='', page=0;
 const PAGE_SIZE=20;
-
+ 
 async function doLogin(){
   const email=document.getElementById('loginEmail').value;
   const pass=document.getElementById('loginPassword').value;
@@ -173,7 +173,7 @@ async function doLogin(){
   if(error){document.getElementById('loginError').textContent='ログインに失敗しました: '+error.message;return;}
   await loadProfile(data.user);
 }
-
+ 
 async function loadProfile(user){
   currentUser=user;
   const {data}=await sb.from('profiles').select('*').eq('id',user.id).single();
@@ -190,23 +190,23 @@ async function loadProfile(user){
   if(navEl) navEl.classList.add('active');
   renderView();
 }
-
+ 
 async function loadDeals(){
   const {data}=await sb.from('deals').select('*');
   deals=data||[];
 }
-
+ 
 async function doLogout(){
   await sb.auth.signOut();
   currentUser=null;currentProfile=null;deals=[];
   document.getElementById('loginView').style.display='flex';
   document.getElementById('appView').style.display='none';
 }
-
+ 
 sb.auth.onAuthStateChange(async(event,session)=>{
   if(session&&!currentUser) await loadProfile(session.user);
 });
-
+ 
 function canSee(deal){
   if(!currentProfile) return false;
   if(currentProfile.role==='maker'||currentProfile.role==='tokuyakuten') return true;
@@ -220,11 +220,11 @@ function canEdit(deal){
 function canCreate(){
   return currentProfile&&currentProfile.role==='agency';
 }
-
+ 
 function getDeal(targetName){
   return deals.find(d=>d.agency_name===(currentProfile&&currentProfile.agency_name) ? d.target_name===targetName : false) || deals.find(d=>d.target_name===targetName);
 }
-
+ 
 function showView(v){
   currentView=v;
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
@@ -233,7 +233,7 @@ function showView(v){
   page=0;
   renderView();
 }
-
+ 
 function renderView(){
   const c=document.getElementById('mainContent');
   if(currentView==='list') renderList(c);
@@ -241,7 +241,7 @@ function renderView(){
   else if(currentView==='dashboard') renderDashboard(c);
   else if(currentView==='targets') renderTargets(c);
 }
-
+ 
 function getFiltered(){
   return TARGETS.filter(t=>{
     if(searchQ&&!t.name.includes(searchQ)&&!t.industry.includes(searchQ)) return false;
@@ -255,22 +255,38 @@ function getFiltered(){
     return true;
   });
 }
-
+ 
 function renderList(c){
-  const filtered=getFiltered();
+  // リスト外企業の案件もマージして表示
+  const extraDeals=deals.filter(d=>!TARGETS.find(t=>t.name===d.target_name));
+  const extraTargets=extraDeals.map(d=>({name:d.target_name,url:'',industry:'（自由登録）',category:'',priority:'-',rank:9999}));
+  const allTargets=[...TARGETS,...extraTargets.filter((t,i,a)=>a.findIndex(x=>x.name===t.name)===i)];
+ 
+  const filtered=allTargets.filter(t=>{
+    if(searchQ&&!t.name.includes(searchQ)&&!t.industry.includes(searchQ)) return false;
+    if(filtCat&&t.category!==filtCat) return false;
+    if(filtPriority&&t.priority!==filtPriority) return false;
+    if(filtStatus){
+      const d=deals.find(x=>x.target_name===t.name);
+      const st=d?d.status:'未着手';
+      if(st!==filtStatus) return false;
+    }
+    return true;
+  });
+ 
   const pageData=filtered.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);
   const totalPages=Math.ceil(filtered.length/PAGE_SIZE);
   const myDeals=deals.filter(d=>d.agency_name===currentProfile.agency_name);
   const wonAmt=myDeals.filter(d=>d.status==='受注').reduce((s,d)=>s+(d.amount||0),0);
-
+ 
   let roleMsg='';
   if(currentProfile.role==='agency') roleMsg=`<div class="info-banner">自社（${currentProfile.agency_name}）の商談情報のみ編集できます。他社の商談情報は閲覧できません。</div>`;
   else if(currentProfile.role==='tokuyakuten') roleMsg=`<div class="info-banner">特約店として配下の全代理店の商談情報を閲覧できます。</div>`;
   else roleMsg=`<div class="info-banner">メーカーとして全代理店の商談情報を閲覧できます。</div>`;
-
+ 
   let html=`<div class="stats-grid">
     <div class="stat-card"><div class="stat-label">総ターゲット</div><div class="stat-value">346</div><div class="stat-sub">社・施設</div></div>
-    <div class="stat-card"><div class="stat-label">絞込件数</div><div class="stat-value">${filtered.length}</div></div>
+    <div class="stat-card"><div class="stat-label">表示件数</div><div class="stat-value">${filtered.length}</div></div>
     <div class="stat-card"><div class="stat-label">自社案件数</div><div class="stat-value">${myDeals.length}</div></div>
     <div class="stat-card"><div class="stat-label">自社受注額</div><div class="stat-value">${Math.round(wonAmt/10000)}万</div><div class="stat-sub">円</div></div>
   </div>${roleMsg}
@@ -295,14 +311,14 @@ function renderList(c){
   <table class="card-table"><thead><tr>
     <th>優先</th><th>企業名</th><th>業種</th><th>カテゴリ</th><th>担当代理店</th><th>ステータス</th><th>提案金額</th><th>初回接触</th><th>次アクション</th><th></th>
   </tr></thead><tbody>`;
-
+ 
   pageData.forEach(t=>{
     const d=deals.find(x=>x.target_name===t.name);
     const status=d?d.status:'未着手';
     const isOwn=d&&d.agency_name===currentProfile.agency_name;
     const see=d?canSee(d):false;
     const edit=d?canEdit(d):false;
-
+ 
     html+=`<tr>
       <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
       <td><b>${t.name}</b>${isOwn?`<span class="own-tag">自社</span>`:''}<br><span style="font-size:10px;color:#aaa">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">${t.url.replace('https://','').substring(0,28)}</a>`:''}</span></td>
@@ -311,12 +327,12 @@ function renderList(c){
       <td>${see&&d?`<span class="badge badge-agency">${d.agency_name}</span>`:(d&&!see?`<span class="locked">非公開</span>`:'-')}</td>
       <td><span class="badge badge-${status}">${status}</span></td>
       <td>${see&&d&&d.amount?Math.round(d.amount/10000)+'万円':(d&&!see?`<span class="locked">-</span>`:'-')}</td>
-      <td style="font-size:11px">${see&&d?d.first_contact||'-':(d&&!see?`<span class="locked">-</span>`:'-')}</td>
+      <td style="font-size:11px">${d?d.first_contact||'-':'-'}</td>
       <td style="font-size:11px">${see&&d?d.next_action||'-':(d&&!see?`<span class="locked">-</span>`:'-')}</td>
       <td><button class="btn btn-sm" onclick="openDeal('${t.name.replace(/'/g,"\\'")}',${isOwn})">${edit?'編集':'詳細'}</button></td>
     </tr>`;
   });
-
+ 
   html+=`</tbody></table>
   <div class="pager">
     <span>${filtered.length}件中 ${page*PAGE_SIZE+1}〜${Math.min((page+1)*PAGE_SIZE,filtered.length)}件</span>
@@ -326,7 +342,7 @@ function renderList(c){
   </div>`;
   c.innerHTML=html;
 }
-
+ 
 function renderKanban(c){
   let html=`<div class="section-head"><span class="section-title">商談ボード</span></div><div class="kanban-wrap">`;
   STATUSES.forEach(st=>{
@@ -344,14 +360,14 @@ function renderKanban(c){
   html+=`</div>`;
   c.innerHTML=html;
 }
-
+ 
 function renderDashboard(c){
   const myDeals=deals.filter(d=>currentProfile.role!=='agency'||d.agency_name===currentProfile.agency_name);
   const byStatus={};STATUSES.forEach(s=>byStatus[s]=0);
   myDeals.forEach(d=>byStatus[d.status]=(byStatus[d.status]||0)+1);
   const wonAmt=myDeals.filter(d=>d.status==='受注').reduce((s,d)=>s+(d.amount||0),0);
   const pipeAmt=myDeals.filter(d=>['提案中','交渉中'].includes(d.status)).reduce((s,d)=>s+(d.amount||0),0);
-
+ 
   let html=`<div class="section-head"><span class="section-title">ダッシュボード</span></div>
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-label">総案件数</div><div class="stat-value">${myDeals.length}</div></div>
@@ -369,7 +385,7 @@ function renderDashboard(c){
   </div>`;
   c.innerHTML=html;
 }
-
+ 
 function renderTargets(c){
   let html=`<div class="section-head"><span class="section-title">ターゲット管理（基本情報）</span></div>
   <div class="info-banner">基本情報は全ユーザーが閲覧できます。</div>
@@ -380,14 +396,14 @@ function renderTargets(c){
   html+=`</tbody></table><div class="pager"><span>先頭50件を表示（全346件）</span></div>`;
   c.innerHTML=html;
 }
-
+ 
 function openDeal(targetName, isOwn){
   const t=TARGETS.find(x=>x.name===targetName);
   if(!t) return;
   const d=deals.find(x=>x.target_name===targetName);
   const see=d?canSee(d):canCreate();
   const edit=d?canEdit(d):canCreate();
-
+ 
   let html=`<div class="modal-title">${t.name} <span style="font-size:13px;color:#888">— ${CAT_LABELS[t.category]}</span></div>
   <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:16px">
     <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:600">基本情報（全員閲覧可）</div>
@@ -397,7 +413,7 @@ function openDeal(targetName, isOwn){
       <span style="color:#888">URL</span><span><a href="${t.url}" target="_blank" style="color:#185FA5;font-size:11px">${t.url}</a></span>
     </div>
   </div>`;
-
+ 
   if(d&&!see){
     html+=`<div class="warn-banner">他社の商談情報は閲覧できません。</div>`;
   } else if(edit){
@@ -422,7 +438,7 @@ function openDeal(targetName, isOwn){
       <span style="color:#888">メモ</span><span>${d.memo||'-'}</span>
     </div>`;
   }
-
+ 
   html+=`<div class="modal-actions">
     <button class="btn" onclick="closeModal()">閉じる</button>
     ${edit?`<button class="btn btn-primary" onclick="saveDeal('${targetName.replace(/'/g,"\\'")}')">保存</button>`:''}
@@ -430,7 +446,7 @@ function openDeal(targetName, isOwn){
   document.getElementById('modalContent').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('open');
 }
-
+ 
 function openNewDeal(){
   let html=`<div class="modal-title">新規案件登録</div>
   <div class="form-row">
@@ -465,7 +481,7 @@ function openNewDeal(){
   document.getElementById('modalContent').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('open');
 }
-
+ 
 function switchInputMode(mode){
   if(mode==='list'){
     document.getElementById('input-list').style.display='block';
@@ -489,7 +505,7 @@ function switchInputMode(mode){
     document.getElementById('duplicate-msg').innerHTML='';
   }
 }
-
+ 
 function checkDuplicate(name){
   const msg=document.getElementById('duplicate-msg');
   if(!name){msg.innerHTML='';return;}
@@ -509,7 +525,7 @@ function checkDuplicate(name){
     document.getElementById('btn-save-new').style.opacity='1';
   }
 }
-
+ 
 async function saveDeal(targetName){
   const d=deals.find(x=>x.target_name===targetName);
   const payload={
@@ -533,13 +549,13 @@ async function saveDeal(targetName){
   closeModal();
   renderView();
 }
-
+ 
 async function saveNewDeal(){
   const listEl=document.getElementById('f_target_list');
   const freeEl=document.getElementById('f_target_free');
   const isListMode=document.getElementById('input-list').style.display!=='none';
   const targetName=isListMode?(listEl?listEl.value:''):(freeEl?freeEl.value.trim():'');
-
+ 
   if(!targetName){
     alert('企業名を入力または選択してください。');
     return;
@@ -566,7 +582,7 @@ async function saveNewDeal(){
   closeModal();
   renderView();
 }
-
+ 
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
 document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 </script>
