@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FGHP® ライト SFA</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Sans','Meiryo',sans-serif;font-size:14px;background:#f5f5f5;color:#333}
+.app{display:flex;flex-direction:column;min-height:100vh}
+/* ログイン画面 */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f0f4f8}
+.login-card{background:#fff;border-radius:12px;border:1px solid #e0e0e0;padding:40px;width:360px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.login-title{font-size:20px;font-weight:600;text-align:center;margin-bottom:8px;color:#1a1a1a}
+.login-sub{font-size:13px;color:#888;text-align:center;margin-bottom:28px}
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12px;color:#666;margin-bottom:5px;font-weight:500}
+.form-input{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;color:#333;background:#fff}
+.form-input:focus{outline:none;border-color:#185FA5}
+.btn{padding:9px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#333;font-size:13px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#f5f5f5}
+.btn-primary{background:#185FA5;color:#fff;border-color:#185FA5;width:100%;padding:11px}
+.btn-primary:hover{background:#0C447C}
+.btn-sm{padding:4px 10px;font-size:12px}
+.error-msg{color:#c0392b;font-size:12px;margin-top:8px;text-align:center}
+/* トップバー */
+.topbar{background:#fff;border-bottom:1px solid #e8e8e8;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.topbar-title{font-size:15px;font-weight:600;color:#1a1a1a}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.user-info{font-size:12px;color:#666}
+.user-role{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;margin-left:6px}
+.role-maker{background:#FAEEDA;color:#633806}
+.role-tokuyakuten{background:#EEEDFE;color:#3C3489}
+.role-agency{background:#E6F1FB;color:#0C447C}
+/* メインレイアウト */
+.main{display:flex;flex:1}
+.sidebar{width:180px;background:#fff;border-right:1px solid #e8e8e8;padding:12px 0;flex-shrink:0;min-height:calc(100vh - 50px)}
+.nav-item{padding:9px 18px;font-size:13px;color:#666;cursor:pointer;border-left:3px solid transparent}
+.nav-item:hover{background:#f5f5f5;color:#333}
+.nav-item.active{background:#EBF3FB;color:#185FA5;border-left:3px solid #185FA5;font-weight:500}
+.nav-section{padding:6px 14px;font-size:10px;color:#aaa;font-weight:600;margin-top:10px;letter-spacing:0.5px;text-transform:uppercase}
+.content{flex:1;padding:20px;overflow-y:auto}
+/* カード・テーブル */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat-card{background:#fff;border-radius:10px;border:1px solid #e8e8e8;padding:14px 16px}
+.stat-label{font-size:11px;color:#888;margin-bottom:5px}
+.stat-value{font-size:24px;font-weight:600;color:#1a1a1a}
+.stat-sub{font-size:11px;color:#aaa;margin-top:2px}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+input.search{flex:1;min-width:160px;padding:7px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;color:#333;background:#fff}
+select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;color:#333;background:#fff}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-size:15px;font-weight:600;color:#1a1a1a}
+.card-table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e8e8e8}
+.card-table th{background:#f8f8f8;padding:9px 12px;text-align:left;font-size:12px;font-weight:600;color:#666;border-bottom:1px solid #e8e8e8}
+.card-table td{padding:9px 12px;font-size:12px;border-bottom:1px solid #f0f0f0;color:#333;vertical-align:middle}
+.card-table tr:last-child td{border-bottom:none}
+.card-table tr:hover td{background:#fafafa}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500}
+.badge-S{background:#E6F1FB;color:#0C447C}
+.badge-A{background:#EAF3DE;color:#27500A}
+.badge-B{background:#f5f5f5;color:#666}
+.badge-未着手{background:#FEF3CD;color:#856404}
+.badge-アプローチ済{background:#D1ECF1;color:#0C5460}
+.badge-提案中{background:#E2D9F3;color:#4A2C8A}
+.badge-交渉中{background:#D4EDDA;color:#155724}
+.badge-受注{background:#C3E6CB;color:#155724}
+.badge-失注{background:#F8D7DA;color:#721C24}
+.badge-agency{background:#FBEAF0;color:#72243E}
+.locked{color:#ccc;font-style:italic;font-size:11px}
+.own-tag{background:#FFF3CD;color:#856404;padding:1px 5px;border-radius:4px;font-size:10px;margin-left:4px}
+/* モーダル */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:12px;border:1px solid #e0e0e0;width:520px;max-width:95vw;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 4px 24px rgba(0,0,0,0.12)}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid #f0f0f0}
+.form-row{margin-bottom:14px}
+.form-section{font-size:12px;font-weight:600;color:#888;margin:16px 0 10px;padding-bottom:5px;border-bottom:1px solid #f0f0f0;text-transform:uppercase;letter-spacing:0.5px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0}
+.info-banner{background:#EBF3FB;border:1px solid #B5D4F4;border-radius:8px;padding:9px 14px;font-size:12px;color:#0C447C;margin-bottom:14px}
+.warn-banner{background:#FFF3CD;border:1px solid #FFECB5;border-radius:8px;padding:9px 14px;font-size:12px;color:#856404;margin-bottom:14px}
+/* ページネーション */
+.pager{display:flex;align-items:center;gap:8px;margin-top:14px;justify-content:flex-end;font-size:12px;color:#888}
+.pager button{padding:4px 12px;border:1px solid #ddd;border-radius:6px;background:#fff;font-size:12px;cursor:pointer}
+.pager button:disabled{opacity:0.4;cursor:default}
+/* カンバン */
+.kanban-wrap{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;overflow-x:auto}
+.kanban-col{background:#f8f8f8;border-radius:10px;padding:10px;min-height:200px}
+.kanban-col-title{font-size:12px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.kanban-card{background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:10px;margin-bottom:8px;cursor:pointer;transition:box-shadow 0.1s}
+.kanban-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.kanban-card-name{font-size:12px;font-weight:600;margin-bottom:3px}
+.kanban-card-cat{font-size:11px;color:#888}
+.kanban-card-amt{font-size:11px;color:#185FA5;margin-top:3px;font-weight:500}
+/* ダッシュボード */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.dash-card{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:16px}
+.dash-card-title{font-size:13px;font-weight:600;margin-bottom:14px;color:#333}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.bar-label{font-size:12px;color:#666;min-width:80px}
+.bar-track{flex:1;background:#f0f0f0;border-radius:4px;height:16px;overflow:hidden}
+.bar-fill{height:100%;background:#185FA5;border-radius:4px;transition:width 0.4s}
+.bar-count{font-size:12px;min-width:20px;text-align:right;color:#333}
+</style>
+</head>
+<body>
+
+<!-- ログイン画面 -->
+<div id="loginView" class="login-wrap">
+  <div class="login-card">
+    <div class="login-title">FGHP® ライト SFA</div>
+    <div class="login-sub">メールアドレスとパスワードでログイン</div>
+    <div class="form-group">
+      <label class="form-label">メールアドレス</label>
+      <input class="form-input" type="email" id="loginEmail" placeholder="your@email.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">パスワード</label>
+      <input class="form-input" type="password" id="loginPassword" placeholder="パスワード">
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">ログイン</button>
+    <div id="loginError" class="error-msg"></div>
+  </div>
+</div>
+
+<!-- メインアプリ -->
+<div id="appView" class="app" style="display:none">
+  <div class="topbar">
+    <span class="topbar-title">FGHP® ライト SFA</span>
+    <div class="topbar-right">
+      <span class="user-info" id="userInfoLabel"></span>
+      <button class="btn btn-sm" onclick="doLogout()">ログアウト</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="sidebar">
+      <div class="nav-section">メニュー</div>
+      <div class="nav-item active" id="nav-list" onclick="showView('list')">案件一覧</div>
+      <div class="nav-item" id="nav-kanban" onclick="showView('kanban')">商談ボード</div>
+      <div class="nav-item" id="nav-dashboard" onclick="showView('dashboard')">ダッシュボード</div>
+      <div class="nav-section">マスタ</div>
+      <div class="nav-item" id="nav-targets" onclick="showView('targets')">ターゲット管理</div>
+    </div>
+    <div class="content" id="mainContent"></div>
+  </div>
+</div>
+
+<!-- モーダル -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://raqcwqmvwxhvarzoomvz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Z67Cou6MrZedrsc2wnl-YQ_mq82PZ4b';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const TARGETS = [{"rank":1,"priority":"S","name":"鹿児島市","url":"https://www.city.kagoshima.lg.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾"},{"rank":2,"priority":"S","name":"鹿屋市","url":"https://www.city.kanoya.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":3,"priority":"S","name":"薩摩川内市","url":"https://www.city.satsumasendai.lg.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾"},{"rank":4,"priority":"S","name":"霧島市","url":"https://www.city-kirishima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":5,"priority":"S","name":"姶良市","url":"https://www.city.aira.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":6,"priority":"S","name":"南九州市","url":"https://www.city.minamikyushu.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":7,"priority":"S","name":"出水市","url":"https://www.city.izumi.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":8,"priority":"S","name":"鹿児島港管理局","url":"https://www.pref.kagoshima.jp/ab07/","industry":"港湾管理","category":"自治体_体育館_公園_港湾"},{"rank":9,"priority":"S","name":"志布志港管理センター","url":"https://www.pref.kagoshima.jp/ab07/","industry":"港湾管理","category":"自治体_体育館_公園_港湾"},{"rank":10,"priority":"S","name":"鹿児島県体育館","url":"https://www.pref.kagoshima.jp/","industry":"体育館（県営）","category":"自治体_体育館_公園_港湾"},{"rank":11,"priority":"S","name":"鹿児島アリーナ","url":"https://kagoshima-arena.jp/","industry":"体育館（市営）","category":"自治体_体育館_公園_港湾"},{"rank":12,"priority":"A","name":"日置市","url":"https://www.city.hioki.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":13,"priority":"A","name":"いちき串木野市","url":"https://www.city.ichikikushikino.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":14,"priority":"A","name":"阿久根市","url":"https://www.city.akune.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":15,"priority":"A","name":"伊佐市","url":"https://www.city.isa.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾"},{"rank":1,"priority":"S","name":"マルエーフェリー株式会社","url":"https://www.aline-ferry.com/","industry":"海運","category":"船舶関連"},{"rank":2,"priority":"S","name":"鹿児島海陸運送株式会社","url":"https://www.kagoshima-kairiku.co.jp/","industry":"港湾・物流","category":"船舶関連"},{"rank":3,"priority":"S","name":"鹿児島荷役海陸運輸株式会社","url":"https://www.karyu.co.jp/","industry":"港湾荷役","category":"船舶関連"},{"rank":4,"priority":"S","name":"南海フェリー株式会社","url":"https://nankai-ferry.co.jp/","industry":"海運","category":"船舶関連"},{"rank":5,"priority":"A","name":"鹿児島県漁業協同組合連合会","url":"https://www.kagoren.or.jp/","industry":"漁業","category":"船舶関連"},{"rank":1,"priority":"S","name":"鹿児島空港","url":"https://www.koj-ab.co.jp/","industry":"空港・交通","category":"駐車場_屋外施設"},{"rank":2,"priority":"S","name":"奄美空港","url":"https://amami-airport.co.jp/","industry":"空港・交通","category":"駐車場_屋外施設"},{"rank":3,"priority":"S","name":"鹿児島中央駅周辺駐車場","url":"https://www.jr-kyushu.co.jp/","industry":"駐車場","category":"駐車場_屋外施設"},{"rank":4,"priority":"S","name":"イオンモール鹿児島","url":"https://kagoshima-aeonmall.com/","industry":"ショッピングモール","category":"駐車場_屋外施設"},{"rank":5,"priority":"S","name":"アミュプラザ鹿児島","url":"https://www.amu-kagoshima.com/","industry":"商業施設","category":"駐車場_屋外施設"},{"rank":6,"priority":"S","name":"山形屋","url":"https://www.yamakataya.co.jp/","industry":"百貨店","category":"駐車場_屋外施設"},{"rank":7,"priority":"S","name":"鹿児島市立病院","url":"https://www.shiritsuhp.jp/","industry":"病院","category":"駐車場_屋外施設"},{"rank":8,"priority":"S","name":"鹿児島大学病院","url":"https://www.kufm.kagoshima-u.ac.jp/","industry":"病院・大学","category":"駐車場_屋外施設"},{"rank":9,"priority":"A","name":"鹿児島生協病院","url":"https://www.kagoshima-coop-hp.jp/","industry":"病院","category":"駐車場_屋外施設"},{"rank":10,"priority":"A","name":"鴨池公園野球場","url":"https://www.pref.kagoshima.jp/","industry":"スポーツ施設","category":"駐車場_屋外施設"},{"rank":1,"priority":"S","name":"さつまゴルフリゾート","url":"https://www.satsumagolf.jp/","industry":"ゴルフ場・リゾート","category":"ゴルフ場"},{"rank":2,"priority":"S","name":"霧島ゴルフクラブ","url":"https://kirishima-gc.or.jp/","industry":"ゴルフ場","category":"ゴルフ場"},{"rank":3,"priority":"S","name":"ゴールデンパームカントリークラブ","url":"https://www.belle-co.com/goldenpalm/goldenpalmsprings.html","industry":"ゴルフ場・リゾート","category":"ゴルフ場"},{"rank":4,"priority":"S","name":"鹿児島国際ゴルフ倶楽部","url":"https://www.kigc.jp/","industry":"ゴルフ場","category":"ゴルフ場"},{"rank":5,"priority":"S","name":"吹上浜カントリークラブ","url":"https://www.fukiagehama.jp/","industry":"ゴルフ場","category":"ゴルフ場"},{"rank":1,"priority":"S","name":"三洋工機株式会社","url":"https://sanyokouki.co.jp/","industry":"プラントエンジニアリング","category":"工場_物流_プラント"},{"rank":2,"priority":"S","name":"株式会社アイエヌジー","url":"https://www.ing-web.com/","industry":"プラントエンジニアリング","category":"工場_物流_プラント"},{"rank":3,"priority":"S","name":"中園機工株式会社","url":"https://nakazonokikou.co.jp/","industry":"プラント・設備製作","category":"工場_物流_プラント"},{"rank":4,"priority":"S","name":"日本エア・リキード合同会社 鹿児島事業所","url":"https://www.airliquide.com/japan","industry":"産業ガス","category":"工場_物流_プラント"},{"rank":5,"priority":"S","name":"出光興産株式会社 喜入油槽所","url":"https://www.idemitsu.com/","industry":"石油・エネルギー","category":"工場_物流_プラント"},{"rank":6,"priority":"S","name":"ENEOS株式会社 喜入基地","url":"https://www.eneos.co.jp/","industry":"石油・エネルギー","category":"工場_物流_プラント"},{"rank":7,"priority":"S","name":"JFEエンジニアリング株式会社","url":"https://www.jfe-eng.co.jp/","industry":"プラントエンジニアリング","category":"工場_物流_プラント"},{"rank":8,"priority":"S","name":"三菱電機株式会社 鹿児島製作所","url":"https://www.mitsubishielectric.co.jp/","industry":"電気機器製造","category":"工場_物流_プラント"},{"rank":9,"priority":"S","name":"京セラ株式会社 鹿児島川内工場","url":"https://www.kyocera.co.jp/","industry":"電子部品製造","category":"工場_物流_プラント"},{"rank":10,"priority":"S","name":"旭化成株式会社 延岡エリア関連拠点","url":"https://www.asahi-kasei.com/","industry":"化学・素材","category":"工場_物流_プラント"}];
+
+const CAT_LABELS={'自治体_体育館_公園_港湾':'自治体・体育館','船舶関連':'船舶関連','駐車場_屋外施設':'駐車場・屋外','ゴルフ場':'ゴルフ場','工場_物流_プラント':'工場・物流'};
+const STATUSES=['未着手','アプローチ済','提案中','交渉中','受注','失注'];
+
+let currentUser=null, currentProfile=null, currentView='list';
+let deals=[], searchQ='', filtCat='', filtPriority='', filtStatus='', page=0;
+const PAGE_SIZE=20;
+
+async function doLogin(){
+  const email=document.getElementById('loginEmail').value;
+  const pass=document.getElementById('loginPassword').value;
+  document.getElementById('loginError').textContent='';
+  const {data,error}=await sb.auth.signInWithPassword({email,password:pass});
+  if(error){document.getElementById('loginError').textContent='ログインに失敗しました: '+error.message;return;}
+  await loadProfile(data.user);
+}
+
+async function loadProfile(user){
+  currentUser=user;
+  const {data}=await sb.from('profiles').select('*').eq('id',user.id).single();
+  currentProfile=data;
+  await loadDeals();
+  document.getElementById('loginView').style.display='none';
+  document.getElementById('appView').style.display='flex';
+  const roleClass={'maker':'role-maker','tokuyakuten':'role-tokuyakuten','agency':'role-agency'}[data.role]||'role-agency';
+  const roleLabel={'maker':'メーカー','tokuyakuten':'特約店','agency':'代理店'}[data.role]||'代理店';
+  document.getElementById('userInfoLabel').innerHTML=`${data.name}<span class="user-role ${roleClass}">${roleLabel}</span>`;
+  renderView();
+}
+
+async function loadDeals(){
+  const {data}=await sb.from('deals').select('*');
+  deals=data||[];
+}
+
+async function doLogout(){
+  await sb.auth.signOut();
+  currentUser=null;currentProfile=null;deals=[];
+  document.getElementById('loginView').style.display='flex';
+  document.getElementById('appView').style.display='none';
+}
+
+sb.auth.onAuthStateChange(async(event,session)=>{
+  if(session&&!currentUser) await loadProfile(session.user);
+});
+
+function canSee(deal){
+  if(!currentProfile) return false;
+  if(currentProfile.role==='maker'||currentProfile.role==='tokuyakuten') return true;
+  return deal.agency_name===currentProfile.agency_name;
+}
+function canEdit(deal){
+  if(!currentProfile) return false;
+  if(currentProfile.role!=='agency') return false;
+  return deal.agency_name===currentProfile.agency_name;
+}
+function canCreate(){
+  return currentProfile&&currentProfile.role==='agency';
+}
+
+function getDeal(targetName){
+  return deals.find(d=>d.agency_name===(currentProfile&&currentProfile.agency_name) ? d.target_name===targetName : false) || deals.find(d=>d.target_name===targetName);
+}
+
+function showView(v){
+  currentView=v;
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('nav-'+v)&&document.getElementById('nav-'+v).classList.add('active');
+  renderView();
+}
+
+function renderView(){
+  const c=document.getElementById('mainContent');
+  if(currentView==='list') renderList(c);
+  else if(currentView==='kanban') renderKanban(c);
+  else if(currentView==='dashboard') renderDashboard(c);
+  else if(currentView==='targets') renderTargets(c);
+}
+
+function getFiltered(){
+  return TARGETS.filter(t=>{
+    if(searchQ&&!t.name.includes(searchQ)&&!t.industry.includes(searchQ)) return false;
+    if(filtCat&&t.category!==filtCat) return false;
+    if(filtPriority&&t.priority!==filtPriority) return false;
+    if(filtStatus){
+      const d=deals.find(x=>x.target_name===t.name);
+      const st=d?d.status:'未着手';
+      if(st!==filtStatus) return false;
+    }
+    return true;
+  });
+}
+
+function renderList(c){
+  const filtered=getFiltered();
+  const pageData=filtered.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);
+  const totalPages=Math.ceil(filtered.length/PAGE_SIZE);
+  const myDeals=deals.filter(d=>d.agency_name===currentProfile.agency_name);
+  const wonAmt=myDeals.filter(d=>d.status==='受注').reduce((s,d)=>s+(d.amount||0),0);
+
+  let roleMsg='';
+  if(currentProfile.role==='agency') roleMsg=`<div class="info-banner">自社（${currentProfile.agency_name}）の商談情報のみ編集できます。他社の商談情報は閲覧できません。</div>`;
+  else if(currentProfile.role==='tokuyakuten') roleMsg=`<div class="info-banner">特約店として配下の全代理店の商談情報を閲覧できます。</div>`;
+  else roleMsg=`<div class="info-banner">メーカーとして全代理店の商談情報を閲覧できます。</div>`;
+
+  let html=`<div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">総ターゲット</div><div class="stat-value">346</div><div class="stat-sub">社・施設</div></div>
+    <div class="stat-card"><div class="stat-label">絞込件数</div><div class="stat-value">${filtered.length}</div></div>
+    <div class="stat-card"><div class="stat-label">自社案件数</div><div class="stat-value">${myDeals.length}</div></div>
+    <div class="stat-card"><div class="stat-label">自社受注額</div><div class="stat-value">${Math.round(wonAmt/10000)}万</div><div class="stat-sub">円</div></div>
+  </div>${roleMsg}
+  <div class="section-head"><span class="section-title">案件一覧</span>${canCreate()?`<button class="btn btn-primary btn-sm" onclick="openNewDeal()">＋ 案件登録</button>`:''}</div>
+  <div class="toolbar">
+    <input class="search" placeholder="企業名・業種で検索..." value="${searchQ}" oninput="searchQ=this.value;page=0;renderView()">
+    <select class="filt" onchange="filtCat=this.value;page=0;renderView()">
+      <option value="">全カテゴリ</option>
+      ${Object.entries(CAT_LABELS).map(([k,v])=>`<option value="${k}"${filtCat===k?' selected':''}>${v}</option>`).join('')}
+    </select>
+    <select class="filt" onchange="filtPriority=this.value;page=0;renderView()">
+      <option value="">全優先度</option>
+      <option value="S"${filtPriority==='S'?' selected':''}>S</option>
+      <option value="A"${filtPriority==='A'?' selected':''}>A</option>
+      <option value="B"${filtPriority==='B'?' selected':''}>B</option>
+    </select>
+    <select class="filt" onchange="filtStatus=this.value;page=0;renderView()">
+      <option value="">全ステータス</option>
+      ${STATUSES.map(s=>`<option value="${s}"${filtStatus===s?' selected':''}>${s}</option>`).join('')}
+    </select>
+  </div>
+  <table class="card-table"><thead><tr>
+    <th>優先</th><th>企業名</th><th>業種</th><th>カテゴリ</th><th>担当代理店</th><th>ステータス</th><th>提案金額</th><th>初回接触</th><th>次アクション</th><th></th>
+  </tr></thead><tbody>`;
+
+  pageData.forEach(t=>{
+    const d=deals.find(x=>x.target_name===t.name);
+    const status=d?d.status:'未着手';
+    const isOwn=d&&d.agency_name===currentProfile.agency_name;
+    const see=d?canSee(d):false;
+    const edit=d?canEdit(d):false;
+
+    html+=`<tr>
+      <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
+      <td><b>${t.name}</b>${isOwn?`<span class="own-tag">自社</span>`:''}<br><span style="font-size:10px;color:#aaa">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">${t.url.replace('https://','').substring(0,28)}</a>`:''}</span></td>
+      <td>${t.industry}</td>
+      <td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td>
+      <td>${see&&d?`<span class="badge badge-agency">${d.agency_name}</span>`:(d&&!see?`<span class="locked">非公開</span>`:'-')}</td>
+      <td><span class="badge badge-${status}">${status}</span></td>
+      <td>${see&&d&&d.amount?Math.round(d.amount/10000)+'万円':(d&&!see?`<span class="locked">-</span>`:'-')}</td>
+      <td style="font-size:11px">${see&&d?d.first_contact||'-':(d&&!see?`<span class="locked">-</span>`:'-')}</td>
+      <td style="font-size:11px">${see&&d?d.next_action||'-':(d&&!see?`<span class="locked">-</span>`:'-')}</td>
+      <td><button class="btn btn-sm" onclick="openDeal('${t.name.replace(/'/g,"\\'")}',${isOwn})">${edit?'編集':'詳細'}</button></td>
+    </tr>`;
+  });
+
+  html+=`</tbody></table>
+  <div class="pager">
+    <span>${filtered.length}件中 ${page*PAGE_SIZE+1}〜${Math.min((page+1)*PAGE_SIZE,filtered.length)}件</span>
+    <button ${page===0?'disabled':''} onclick="page--;renderView()">◀ 前へ</button>
+    <span>${page+1} / ${totalPages||1}</span>
+    <button ${page>=totalPages-1?'disabled':''} onclick="page++;renderView()">次へ ▶</button>
+  </div>`;
+  c.innerHTML=html;
+}
+
+function renderKanban(c){
+  let html=`<div class="section-head"><span class="section-title">商談ボード</span></div><div class="kanban-wrap">`;
+  STATUSES.forEach(st=>{
+    const items=deals.filter(d=>d.status===st&&(currentProfile.role!=='agency'||d.agency_name===currentProfile.agency_name));
+    html+=`<div class="kanban-col"><div class="kanban-col-title"><span class="badge badge-${st}">${st}</span><span style="color:#aaa;font-size:11px">${items.length}</span></div>`;
+    items.forEach(d=>{
+      html+=`<div class="kanban-card" onclick="openDeal('${d.target_name.replace(/'/g,"\\'")}',true)">
+        <div class="kanban-card-name">${d.target_name}</div>
+        <div class="kanban-card-cat"><span class="badge badge-agency">${d.agency_name}</span></div>
+        ${d.amount?`<div class="kanban-card-amt">${Math.round(d.amount/10000)}万円</div>`:''}
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  html+=`</div>`;
+  c.innerHTML=html;
+}
+
+function renderDashboard(c){
+  const myDeals=deals.filter(d=>currentProfile.role!=='agency'||d.agency_name===currentProfile.agency_name);
+  const byStatus={};STATUSES.forEach(s=>byStatus[s]=0);
+  myDeals.forEach(d=>byStatus[d.status]=(byStatus[d.status]||0)+1);
+  const wonAmt=myDeals.filter(d=>d.status==='受注').reduce((s,d)=>s+(d.amount||0),0);
+  const pipeAmt=myDeals.filter(d=>['提案中','交渉中'].includes(d.status)).reduce((s,d)=>s+(d.amount||0),0);
+
+  let html=`<div class="section-head"><span class="section-title">ダッシュボード</span></div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">総案件数</div><div class="stat-value">${myDeals.length}</div></div>
+    <div class="stat-card"><div class="stat-label">受注済</div><div class="stat-value">${byStatus['受注']||0}</div></div>
+    <div class="stat-card"><div class="stat-label">受注額</div><div class="stat-value">${Math.round(wonAmt/10000)}万</div><div class="stat-sub">円</div></div>
+    <div class="stat-card"><div class="stat-label">パイプライン</div><div class="stat-value">${Math.round(pipeAmt/10000)}万</div><div class="stat-sub">円</div></div>
+  </div>
+  <div class="dash-grid">
+    <div class="dash-card"><div class="dash-card-title">ステータス別件数</div>
+      ${STATUSES.map(s=>`<div class="bar-row"><span class="bar-label"><span class="badge badge-${s}">${s}</span></span><div class="bar-track"><div class="bar-fill" style="width:${myDeals.length?Math.round((byStatus[s]||0)/myDeals.length*100):0}%"></div></div><span class="bar-count">${byStatus[s]||0}</span></div>`).join('')}
+    </div>
+    <div class="dash-card"><div class="dash-card-title">代理店別案件数</div>
+      ${Object.entries(deals.reduce((acc,d)=>{acc[d.agency_name]=(acc[d.agency_name]||0)+1;return acc},{})).map(([k,v])=>`<div class="bar-row"><span class="bar-label" style="font-size:11px">${k}</span><div class="bar-track"><div class="bar-fill" style="width:${deals.length?Math.round(v/deals.length*100):0}%;background:#1D9E75"></div></div><span class="bar-count">${v}</span></div>`).join('')||'<div style="color:#aaa;font-size:12px">データなし</div>'}
+    </div>
+  </div>`;
+  c.innerHTML=html;
+}
+
+function renderTargets(c){
+  let html=`<div class="section-head"><span class="section-title">ターゲット管理（基本情報）</span></div>
+  <div class="info-banner">基本情報は全ユーザーが閲覧できます。</div>
+  <table class="card-table"><thead><tr><th>優先</th><th>企業名</th><th>業種</th><th>カテゴリ</th><th>URL</th></tr></thead><tbody>`;
+  TARGETS.slice(0,50).forEach(t=>{
+    html+=`<tr><td><span class="badge badge-${t.priority}">${t.priority}</span></td><td>${t.name}</td><td>${t.industry}</td><td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td><td style="font-size:11px">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">サイトへ</a>`:''}</td></tr>`;
+  });
+  html+=`</tbody></table><div class="pager"><span>先頭50件を表示（全346件）</span></div>`;
+  c.innerHTML=html;
+}
+
+function openDeal(targetName, isOwn){
+  const t=TARGETS.find(x=>x.name===targetName);
+  if(!t) return;
+  const d=deals.find(x=>x.target_name===targetName);
+  const see=d?canSee(d):canCreate();
+  const edit=d?canEdit(d):canCreate();
+
+  let html=`<div class="modal-title">${t.name} <span style="font-size:13px;color:#888">— ${CAT_LABELS[t.category]}</span></div>
+  <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:16px">
+    <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:600">基本情報（全員閲覧可）</div>
+    <div style="font-size:12px;display:grid;grid-template-columns:80px 1fr;gap:4px 8px">
+      <span style="color:#888">業種</span><span>${t.industry}</span>
+      <span style="color:#888">優先度</span><span><span class="badge badge-${t.priority}">${t.priority}</span></span>
+      <span style="color:#888">URL</span><span><a href="${t.url}" target="_blank" style="color:#185FA5;font-size:11px">${t.url}</a></span>
+    </div>
+  </div>`;
+
+  if(d&&!see){
+    html+=`<div class="warn-banner">他社の商談情報は閲覧できません。</div>`;
+  } else if(edit){
+    html+=`<div class="form-section">商談情報</div>
+    <div class="form-row"><label class="form-label">ステータス</label>
+      <select class="form-input" id="f_status">${STATUSES.map(s=>`<option${(d&&d.status===s)||(!d&&s==='未着手')?' selected':''}>${s}</option>`).join('')}</select>
+    </div>
+    <div class="form-row"><label class="form-label">先方担当者名</label><input class="form-input" id="f_person" value="${d?d.person||'':''}" placeholder="例：田中課長"></div>
+    <div class="form-row"><label class="form-label">提案金額（円）</label><input class="form-input" id="f_amount" type="number" value="${d?d.amount||0:0}"></div>
+    <div class="form-row"><label class="form-label">初回接触日</label><input class="form-input" id="f_firstContact" type="date" value="${d?d.first_contact||'':''}"></div>
+    <div class="form-row"><label class="form-label">次のアクション</label><input class="form-input" id="f_nextAction" value="${d?d.next_action||'':''}" placeholder="例：見積提出、再訪問"></div>
+    <div class="form-row"><label class="form-label">メモ</label><textarea class="form-input" id="f_memo" rows="3">${d?d.memo||'':''}</textarea></div>`;
+  } else if(d){
+    html+=`<div class="form-section">商談情報（閲覧のみ）</div>
+    <div style="font-size:12px;display:grid;grid-template-columns:100px 1fr;gap:6px 8px">
+      <span style="color:#888">担当代理店</span><span><span class="badge badge-agency">${d.agency_name}</span></span>
+      <span style="color:#888">ステータス</span><span><span class="badge badge-${d.status}">${d.status}</span></span>
+      <span style="color:#888">担当者</span><span>${d.person||'-'}</span>
+      <span style="color:#888">提案金額</span><span>${d.amount?Math.round(d.amount/10000)+'万円':'-'}</span>
+      <span style="color:#888">初回接触</span><span>${d.first_contact||'-'}</span>
+      <span style="color:#888">次アクション</span><span>${d.next_action||'-'}</span>
+      <span style="color:#888">メモ</span><span>${d.memo||'-'}</span>
+    </div>`;
+  }
+
+  html+=`<div class="modal-actions">
+    <button class="btn" onclick="closeModal()">閉じる</button>
+    ${edit?`<button class="btn btn-primary" onclick="saveDeal('${targetName.replace(/'/g,"\\'")}')">保存</button>`:''}
+  </div>`;
+  document.getElementById('modalContent').innerHTML=html;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function openNewDeal(){
+  let html=`<div class="modal-title">新規案件登録</div>
+  <div class="form-row"><label class="form-label">企業名</label>
+    <select class="form-input" id="f_target">
+      ${TARGETS.map(t=>`<option value="${t.name}">${t.name}（${CAT_LABELS[t.category]}）</option>`).join('')}
+    </select>
+  </div>
+  <div class="form-row"><label class="form-label">ステータス</label>
+    <select class="form-input" id="f_status">${STATUSES.map(s=>`<option>${s}</option>`).join('')}</select>
+  </div>
+  <div class="form-row"><label class="form-label">先方担当者名</label><input class="form-input" id="f_person" placeholder="例：田中課長"></div>
+  <div class="form-row"><label class="form-label">提案金額（円）</label><input class="form-input" id="f_amount" type="number" value="0"></div>
+  <div class="form-row"><label class="form-label">初回接触日</label><input class="form-input" id="f_firstContact" type="date"></div>
+  <div class="form-row"><label class="form-label">次のアクション</label><input class="form-input" id="f_nextAction" placeholder="例：訪問アポ取得"></div>
+  <div class="form-row"><label class="form-label">メモ</label><textarea class="form-input" id="f_memo" rows="3"></textarea></div>
+  <div class="modal-actions">
+    <button class="btn" onclick="closeModal()">キャンセル</button>
+    <button class="btn btn-primary" onclick="saveNewDeal()">登録</button>
+  </div>`;
+  document.getElementById('modalContent').innerHTML=html;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+async function saveDeal(targetName){
+  const d=deals.find(x=>x.target_name===targetName);
+  const payload={
+    target_name:targetName,
+    agency_name:currentProfile.agency_name,
+    status:document.getElementById('f_status').value,
+    person:document.getElementById('f_person').value,
+    amount:parseInt(document.getElementById('f_amount').value)||0,
+    first_contact:document.getElementById('f_firstContact').value||null,
+    next_action:document.getElementById('f_nextAction').value,
+    memo:document.getElementById('f_memo').value,
+    updated_at:new Date().toISOString(),
+  };
+  if(d){
+    await sb.from('deals').update(payload).eq('id',d.id);
+  } else {
+    payload.created_at=new Date().toISOString();
+    await sb.from('deals').insert(payload);
+  }
+  await loadDeals();
+  closeModal();
+  renderView();
+}
+
+async function saveNewDeal(){
+  const payload={
+    target_name:document.getElementById('f_target').value,
+    agency_name:currentProfile.agency_name,
+    status:document.getElementById('f_status').value,
+    person:document.getElementById('f_person').value,
+    amount:parseInt(document.getElementById('f_amount').value)||0,
+    first_contact:document.getElementById('f_firstContact').value||null,
+    next_action:document.getElementById('f_nextAction').value,
+    memo:document.getElementById('f_memo').value,
+    created_at:new Date().toISOString(),
+    updated_at:new Date().toISOString(),
+  };
+  await sb.from('deals').insert(payload);
+  await loadDeals();
+  closeModal();
+  renderView();
+}
+
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
+document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+</script>
+</body>
+</html>
