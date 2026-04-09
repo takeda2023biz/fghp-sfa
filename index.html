@@ -184,6 +184,10 @@ async function loadProfile(user){
   const roleClass={'maker':'role-maker','tokuyakuten':'role-tokuyakuten','agency':'role-agency'}[data.role]||'role-agency';
   const roleLabel={'maker':'メーカー','tokuyakuten':'特約店','agency':'代理店'}[data.role]||'代理店';
   document.getElementById('userInfoLabel').innerHTML=`${data.name}<span class="user-role ${roleClass}">${roleLabel}</span>`;
+  currentView='list';
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  var navEl=document.getElementById('nav-list');
+  if(navEl) navEl.classList.add('active');
   renderView();
 }
 
@@ -224,7 +228,9 @@ function getDeal(targetName){
 function showView(v){
   currentView=v;
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
-  document.getElementById('nav-'+v)&&document.getElementById('nav-'+v).classList.add('active');
+  var navEl=document.getElementById('nav-'+v);
+  if(navEl) navEl.classList.add('active');
+  page=0;
   renderView();
 }
 
