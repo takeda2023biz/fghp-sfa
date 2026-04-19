@@ -9,7 +9,6 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Hiragino Sans','Meiryo',sans-serif;font-size:14px;background:#f5f5f5;color:#333}
 .app{display:flex;flex-direction:column;min-height:100vh}
-/* ログイン画面 */
 .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f0f4f8}
 .login-card{background:#fff;border-radius:12px;border:1px solid #e0e0e0;padding:40px;width:360px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
 .login-title{font-size:20px;font-weight:600;text-align:center;margin-bottom:8px;color:#1a1a1a}
@@ -23,8 +22,8 @@ body{font-family:'Hiragino Sans','Meiryo',sans-serif;font-size:14px;background:#
 .btn-primary{background:#185FA5;color:#fff;border-color:#185FA5;width:100%;padding:11px}
 .btn-primary:hover{background:#0C447C}
 .btn-sm{padding:4px 10px;font-size:12px}
+.btn-danger{background:#dc3545;color:#fff;border-color:#dc3545}
 .error-msg{color:#c0392b;font-size:12px;margin-top:8px;text-align:center}
-/* トップバー */
 .topbar{background:#fff;border-bottom:1px solid #e8e8e8;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
 .topbar-title{font-size:15px;font-weight:600;color:#1a1a1a}
 .topbar-right{display:flex;align-items:center;gap:12px}
@@ -33,7 +32,6 @@ body{font-family:'Hiragino Sans','Meiryo',sans-serif;font-size:14px;background:#
 .role-maker{background:#FAEEDA;color:#633806}
 .role-tokuyakuten{background:#EEEDFE;color:#3C3489}
 .role-agency{background:#E6F1FB;color:#0C447C}
-/* メインレイアウト */
 .main{display:flex;flex:1}
 .sidebar{width:180px;background:#fff;border-right:1px solid #e8e8e8;padding:12px 0;flex-shrink:0;min-height:calc(100vh - 50px)}
 .nav-item{padding:9px 18px;font-size:13px;color:#666;cursor:pointer;border-left:3px solid transparent}
@@ -41,7 +39,6 @@ body{font-family:'Hiragino Sans','Meiryo',sans-serif;font-size:14px;background:#
 .nav-item.active{background:#EBF3FB;color:#185FA5;border-left:3px solid #185FA5;font-weight:500}
 .nav-section{padding:6px 14px;font-size:10px;color:#aaa;font-weight:600;margin-top:10px;letter-spacing:0.5px;text-transform:uppercase}
 .content{flex:1;padding:20px;overflow-y:auto}
-/* カード・テーブル */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
 .stat-card{background:#fff;border-radius:10px;border:1px solid #e8e8e8;padding:14px 16px}
 .stat-label{font-size:11px;color:#888;margin-bottom:5px}
@@ -70,21 +67,18 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
 .badge-agency{background:#FBEAF0;color:#72243E}
 .locked{color:#ccc;font-style:italic;font-size:11px}
 .own-tag{background:#FFF3CD;color:#856404;padding:1px 5px;border-radius:4px;font-size:10px;margin-left:4px}
-/* モーダル */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
-.modal{background:#fff;border-radius:12px;border:1px solid #e0e0e0;width:520px;max-width:95vw;max-height:85vh;overflow-y:auto;padding:24px;box-shadow:0 4px 24px rgba(0,0,0,0.12)}
+.modal{background:#fff;border-radius:12px;border:1px solid #e0e0e0;width:620px;max-width:95vw;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:0 4px 24px rgba(0,0,0,0.12)}
 .modal-title{font-size:16px;font-weight:600;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid #f0f0f0}
 .form-row{margin-bottom:14px}
 .form-section{font-size:12px;font-weight:600;color:#888;margin:16px 0 10px;padding-bottom:5px;border-bottom:1px solid #f0f0f0;text-transform:uppercase;letter-spacing:0.5px}
 .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0}
 .info-banner{background:#EBF3FB;border:1px solid #B5D4F4;border-radius:8px;padding:9px 14px;font-size:12px;color:#0C447C;margin-bottom:14px}
 .warn-banner{background:#FFF3CD;border:1px solid #FFECB5;border-radius:8px;padding:9px 14px;font-size:12px;color:#856404;margin-bottom:14px}
-/* ページネーション */
 .pager{display:flex;align-items:center;gap:8px;margin-top:14px;justify-content:flex-end;font-size:12px;color:#888}
 .pager button{padding:4px 12px;border:1px solid #ddd;border-radius:6px;background:#fff;font-size:12px;cursor:pointer}
 .pager button:disabled{opacity:0.4;cursor:default}
-/* カンバン */
 .kanban-wrap{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;overflow-x:auto}
 .kanban-col{background:#f8f8f8;border-radius:10px;padding:10px;min-height:200px}
 .kanban-col-title{font-size:12px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px}
@@ -93,7 +87,6 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
 .kanban-card-name{font-size:12px;font-weight:600;margin-bottom:3px}
 .kanban-card-cat{font-size:11px;color:#888}
 .kanban-card-amt{font-size:11px;color:#185FA5;margin-top:3px;font-weight:500}
-/* ダッシュボード */
 .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
 .dash-card{background:#fff;border:1px solid #e8e8e8;border-radius:10px;padding:16px}
 .dash-card-title{font-size:13px;font-weight:600;margin-bottom:14px;color:#333}
@@ -102,38 +95,45 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
 .bar-track{flex:1;background:#f0f0f0;border-radius:4px;height:16px;overflow:hidden}
 .bar-fill{height:100%;background:#185FA5;border-radius:4px;transition:width 0.4s}
 .bar-count{font-size:12px;min-width:20px;text-align:right;color:#333}
-/* 住所自動入力ヒント */
 .auto-badge{display:inline-block;background:#E6F1FB;color:#0C447C;font-size:10px;padding:1px 6px;border-radius:4px;margin-left:6px;font-weight:500}
+/* 製品明細スタイル */
+.product-items-wrap{border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;margin-bottom:8px;background:#fff}
+.product-item-row{display:grid;grid-template-columns:1fr 70px auto;gap:8px;align-items:start;padding:10px 12px;border-bottom:1px solid #f0f0f0}
+.product-item-row:last-child{border-bottom:none}
+.product-item-row:nth-child(even){background:#fafafa}
+.product-select{width:100%;padding:6px 8px;border:1px solid #ddd;border-radius:6px;font-size:12px;color:#333;background:#fff}
+.product-qty{width:60px;padding:6px 8px;border:1px solid #ddd;border-radius:6px;font-size:12px;text-align:center}
+.product-options-wrap{display:flex;flex-wrap:wrap;gap:8px;padding:6px 0 0}
+.product-option-check{display:flex;align-items:center;gap:4px;font-size:11px;color:#555;cursor:pointer}
+.product-option-check input{margin:0;cursor:pointer}
+.product-remove-btn{padding:3px 8px;font-size:11px;background:#fff;border:1px solid #ddd;border-radius:5px;cursor:pointer;color:#999;margin-top:2px}
+.product-remove-btn:hover{background:#fee;border-color:#f99;color:#c33}
+.add-product-btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:8px 12px;border:1px dashed #185FA5;border-radius:8px;background:#f0f6ff;color:#185FA5;font-size:12px;cursor:pointer;width:100%;font-weight:500}
+.add-product-btn:hover{background:#dceeff}
+.deal-items-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+.deal-items-table th{background:#f8f8f8;padding:6px 8px;text-align:left;font-weight:600;color:#666;border-bottom:1px solid #e8e8e8}
+.deal-items-table td{padding:6px 8px;border-bottom:1px solid #f5f5f5}
+.deal-items-table tr:last-child td{border-bottom:none}
 </style>
 </head>
 <body>
- 
+
 <!-- ログイン画面 -->
 <div id="loginView" class="login-wrap">
   <div class="login-card">
-    <div class="login-title">FGHP® ライト SFA</div>
+    <div class="login-title">FGHP&reg; ライト SFA</div>
     <div class="login-sub">メールアドレスとパスワードでログイン</div>
-    <div class="form-group">
-      <label class="form-label">メールアドレス</label>
-      <input class="form-input" type="email" id="loginEmail" placeholder="your@email.com">
-    </div>
-    <div class="form-group">
-      <label class="form-label">パスワード</label>
-      <input class="form-input" type="password" id="loginPassword" placeholder="パスワード">
-    </div>
+    <div class="form-group"><label class="form-label">メールアドレス</label><input class="form-input" type="email" id="loginEmail" placeholder="your@email.com"></div>
+    <div class="form-group"><label class="form-label">パスワード</label><input class="form-input" type="password" id="loginPassword" placeholder="パスワード"></div>
     <button class="btn btn-primary" onclick="doLogin()">ログイン</button>
     <div id="loginError" class="error-msg"></div>
   </div>
 </div>
- 
 <!-- メインアプリ -->
 <div id="appView" class="app" style="display:none">
   <div class="topbar">
-    <span class="topbar-title">FGHP® ライト SFA</span>
-    <div class="topbar-right">
-      <span class="user-info" id="userInfoLabel"></span>
-      <button class="btn btn-sm" onclick="doLogout()">ログアウト</button>
-    </div>
+    <span class="topbar-title">FGHP&reg; ライト SFA</span>
+    <div class="topbar-right"><span class="user-info" id="userInfoLabel"></span><button class="btn btn-sm" onclick="doLogout()">ログアウト</button></div>
   </div>
   <div class="main">
     <div class="sidebar">
@@ -143,24 +143,34 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
       <div class="nav-item" id="nav-dashboard" onclick="showView('dashboard')">ダッシュボード</div>
       <div class="nav-section">マスタ</div>
       <div class="nav-item" id="nav-targets" onclick="showView('targets')">ターゲット管理</div>
+      <div class="nav-item" id="nav-products" onclick="showView('products')">製品マスタ</div>
     </div>
     <div class="content" id="mainContent"></div>
   </div>
 </div>
- 
 <!-- モーダル -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal" id="modalContent"></div>
-</div>
- 
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
+
 <script>
 const SUPABASE_URL = 'https://raqcwqmvwxhvarzoomvz.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhcWN3cW12d3hodmFyem9vbXZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2OTc5NTcsImV4cCI6MjA5MTI3Mzk1N30.75Ky3O1F9Y-9N3PxKxEDl_1HQQ9RcWhXqWqcfZLV_VQ';
-// ページ読み込み時に古いSupabaseセッションを自動クリア
 Object.keys(localStorage).forEach(k=>{ if(k.startsWith('sb-')) localStorage.removeItem(k); });
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ── 都道府県 → エリア マッピング ──────────────────────────────
+/* ── 製品マスタ ── */
+const PRODUCTS = [
+  {id:'CCP5060N-L15', name:'広角タイプ',   angle:'145度', ip:'IP65', listPrice:950000},
+  {id:'CCP5060N-L09', name:'中角タイプ',   angle:'91度',  ip:'IP65', listPrice:950000},
+  {id:'CCP5060N-L05', name:'狭角タイプ',   angle:'53度',  ip:'IP65', listPrice:950000},
+  {id:'CCP5060N-L03', name:'超狭角タイプ', angle:'27度',  ip:'IP65', listPrice:980000},
+];
+const OPTIONS = [
+  {id:'vol_dimmer', name:'ボリューム調光', listPrice:45000},
+  {id:'anti_salt',  name:'耐塩害塗装',    listPrice:45000},
+];
+let editingItems = []; // モーダル内の一時明細
+
+/* ── 都道府県マッピング ── */
 const PREF_TO_AREA = {
   '北海道':'北海道',
   '青森県':'東北','岩手県':'東北','宮城県':'東北','秋田県':'東北','山形県':'東北','福島県':'東北',
@@ -171,121 +181,68 @@ const PREF_TO_AREA = {
   '徳島県':'四国','香川県':'四国','愛媛県':'四国','高知県':'四国',
   '福岡県':'九州・沖縄','佐賀県':'九州・沖縄','長崎県':'九州・沖縄','熊本県':'九州・沖縄','大分県':'九州・沖縄','宮崎県':'九州・沖縄','鹿児島県':'九州・沖縄','沖縄県':'九州・沖縄'
 };
-
 const PREFS = Object.keys(PREF_TO_AREA);
 
-// 住所文字列から都道府県を抽出
 function extractPrefecture(address) {
   if (!address) return '';
-  for (const pref of PREFS) {
-    if (address.includes(pref)) return pref;
-  }
-  // 「鹿児島」など「県」なしでも検出
-  const shorts = ['北海道','東京都','大阪府','京都府'];
-  for (const s of shorts) {
-    if (address.includes(s)) return s;
-  }
-  // 短縮形（例：「鹿児島市」→「鹿児島県」）
-  const prefMap = {
-    '鹿児島':'鹿児島県','福岡':'福岡県','熊本':'熊本県','宮崎':'宮崎県','大分':'大分県',
-    '佐賀':'佐賀県','長崎':'長崎県','沖縄':'沖縄県','鹿屋':'鹿児島県','薩摩':'鹿児島県',
-    '奄美':'鹿児島県','霧島':'鹿児島県','姶良':'鹿児島県','出水':'鹿児島県',
-    '志布志':'鹿児島県','伊佐':'鹿児島県','日置':'鹿児島県','阿久根':'鹿児島県'
-  };
-  for (const [key, val] of Object.entries(prefMap)) {
-    if (address.includes(key)) return val;
-  }
+  for (const pref of PREFS) { if (address.includes(pref)) return pref; }
+  const prefMap = {'鹿児島':'鹿児島県','福岡':'福岡県','熊本':'熊本県','宮崎':'宮崎県','大分':'大分県','佐賀':'佐賀県','長崎':'長崎県','沖縄':'沖縄県','鹿屋':'鹿児島県','薩摩':'鹿児島県','奄美':'鹿児島県','霧島':'鹿児島県','姶良':'鹿児島県','出水':'鹿児島県','志布志':'鹿児島県','伊佐':'鹿児島県','日置':'鹿児島県','阿久根':'鹿児島県'};
+  for (const [key, val] of Object.entries(prefMap)) { if (address.includes(key)) return val; }
   return '';
 }
-
-// 住所入力時に都道府県・エリアを自動セット
 function onAddressInput(val) {
   const pref = extractPrefecture(val);
   const area = pref ? (PREF_TO_AREA[pref] || '') : '';
-  const prefEl = document.getElementById('f_prefecture');
-  const areaEl = document.getElementById('f_area');
-  if (prefEl && pref && !prefEl.value) prefEl.value = pref;
-  if (areaEl && area && !areaEl.value) areaEl.value = area;
+  const pe = document.getElementById('f_prefecture');
+  const ae = document.getElementById('f_area');
+  if (pe && pref && !pe.value) pe.value = pref;
+  if (ae && area && !ae.value) ae.value = area;
 }
-
-// 都道府県変更時にエリアを自動セット
 function onPrefChange(val) {
-  const areaEl = document.getElementById('f_area');
-  if (areaEl) areaEl.value = PREF_TO_AREA[val] || '';
+  const ae = document.getElementById('f_area');
+  if (ae) ae.value = PREF_TO_AREA[val] || '';
 }
+</script>
 
-// ── ターゲットマスタ（住所・都道府県・エリアフィールドを追加） ──
+<script>
 const TARGETS_DEFAULT = [{"rank":1,"priority":"S","name":"鹿児島市","url":"https://www.city.kagoshima.lg.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":2,"priority":"S","name":"鹿屋市","url":"https://www.city.kanoya.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":3,"priority":"S","name":"薩摩川内市","url":"https://www.city.satsumasendai.lg.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":4,"priority":"S","name":"霧島市","url":"https://www.city-kirishima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":5,"priority":"S","name":"姶良市","url":"https://www.city.aira.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":6,"priority":"S","name":"指宿市","url":"https://www.city.ibusuki.lg.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":7,"priority":"S","name":"志布志市","url":"https://www.city.shibushi.lg.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":8,"priority":"S","name":"いちき串木野市","url":"https://www.city.ichikikushikino.lg.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":9,"priority":"S","name":"奄美市","url":"https://www.city.amami.lg.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":10,"priority":"S","name":"西之表市","url":"https://www.city.nishinoomote.lg.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":11,"priority":"S","name":"出水市","url":"https://www.city.kagoshima-izumi.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":12,"priority":"S","name":"日置市","url":"https://www.city.hioki.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":13,"priority":"S","name":"垂水市","url":"https://www.city.tarumizu.lg.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":14,"priority":"S","name":"南さつま市","url":"https://www.city.minamisatsuma.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":15,"priority":"S","name":"鹿児島港","url":"https://www.pref.kagoshima.jp/infra/port/minato/kagoshima/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":16,"priority":"S","name":"川内港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":17,"priority":"S","name":"志布志港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":18,"priority":"S","name":"マリンポートかごしま","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾・旅客ターミナル","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":19,"priority":"S","name":"鹿児島県総合体育センター体育館","url":"https://www.pref.kagoshima.jp/bc10/kikan/taiku/shisetsu/sisetu-taiikukan.html","industry":"体育館","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":20,"priority":"S","name":"鴨池公園","url":"https://www.pref.kagoshima.jp/ah10/infra/toshi/toshikoen/kenritu/sub35.html","industry":"公園・運動施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":21,"priority":"S","name":"鴨池緑地公園","url":"https://www.pref.kagoshima.jp/ah10/infra/toshi/toshikoen/kenritu/sub36.html","industry":"公園・球技場","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":22,"priority":"S","name":"吉野公園","url":"https://www.pref.kagoshima.jp/ah10/infra/toshi/toshikoen/kenritu/sub31.html","industry":"公園","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":23,"priority":"S","name":"石橋記念公園","url":"https://www.pref.kagoshima.jp/ah10/infra/toshi/toshikoen/kenritu/sub38.html","industry":"公園","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":24,"priority":"S","name":"吹上浜海浜公園","url":"https://www.pref.kagoshima.jp/ah10/infra/toshi/toshikoen/kenritu/sub32.html","industry":"公園・屋外レジャー","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":25,"priority":"S","name":"大隅広域公園","url":"https://www.pref.kagoshima.jp/ah10/infra/toshi/toshikoen/kenritu/sub33.html","industry":"公園・体育館","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":26,"priority":"A","name":"北薩広域公園","url":"https://www.pref.kagoshima.jp/shisetsu/kouen/003.html","industry":"公園","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":27,"priority":"A","name":"フラワーパークかごしま","url":"https://www.pref.kagoshima.jp/shisetsu/kouen/006.html","industry":"公園・観光施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":28,"priority":"A","name":"鹿児島県県民の森","url":"https://www.pref.kagoshima.jp/shisetsu/kouen/008.html","industry":"公園・森林レクリエーション","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":29,"priority":"A","name":"照葉樹の森","url":"https://www.pref.kagoshima.jp/ad07/sangyo-rodo/rinsui/ryokka/fureai/kenminsyouyougaiyou.html","industry":"公園・森林レクリエーション","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":30,"priority":"A","name":"県立サッカー・ラグビー場","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"屋外スポーツ施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":31,"priority":"A","name":"大隅アリーナ21","url":"https://www.pref.kagoshima.jp/shisetsu/kouen/002.html","industry":"体育館","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":32,"priority":"A","name":"平川ヨットハウス","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"屋外スポーツ施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":33,"priority":"A","name":"上野原縄文の森","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公園・文化施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":34,"priority":"A","name":"奄美パーク","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公園・文化施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":35,"priority":"A","name":"霧島自然ふれあいセンター","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公園・自然施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":36,"priority":"A","name":"高千穂河原ビジターセンター","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公園・自然施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":37,"priority":"A","name":"屋久島環境文化村センター","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公園・自然施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":38,"priority":"A","name":"屋久島環境文化研修センター","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公園・自然施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":39,"priority":"A","name":"谷山緑地","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公園","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":40,"priority":"A","name":"曽於市","url":"https://www.city.soo.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":41,"priority":"A","name":"南九州市","url":"https://www.city.minamikyushu.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":42,"priority":"A","name":"枕崎市","url":"https://www.city.makurazaki.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":43,"priority":"A","name":"阿久根市","url":"https://www.city.akune.kagoshima.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":44,"priority":"A","name":"伊佐市","url":"https://www.city.isa.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":45,"priority":"A","name":"さつま町","url":"https://www.satsuma-net.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":46,"priority":"A","name":"湧水町","url":"https://www.town.yusui.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":47,"priority":"A","name":"大崎町","url":"https://www.town.kagoshima-osaki.lg.jp/","industry":"自治体（体育館・公園・港湾周辺）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":48,"priority":"A","name":"肝付町","url":"https://kimotsuki-town.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":49,"priority":"A","name":"長島町","url":"https://www.town.nagashima.lg.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":50,"priority":"A","name":"錦江町","url":"https://www.town.kinko.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":51,"priority":"A","name":"南大隅町","url":"https://www.town.minamiosumi.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":52,"priority":"A","name":"東串良町","url":"https://www.higashikushira.com/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":53,"priority":"A","name":"中種子町","url":"https://town.nakatane.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":54,"priority":"A","name":"南種子町","url":"https://www.town.minamitane.kagoshima.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":55,"priority":"A","name":"屋久島町","url":"https://www.town.yakushima.kagoshima.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":56,"priority":"A","name":"瀬戸内町","url":"https://www.town.setouchi.lg.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":57,"priority":"A","name":"龍郷町","url":"https://www.town.tatsugo.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":58,"priority":"A","name":"喜界町","url":"https://www.town.kikai.lg.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":59,"priority":"A","name":"徳之島町","url":"https://www.tokunoshima-town.org/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":60,"priority":"A","name":"天城町","url":"https://www.town.amagi.lg.jp/","industry":"自治体（体育館・公園・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":61,"priority":"B","name":"伊仙町","url":"https://www.town.isen.kagoshima.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":62,"priority":"B","name":"和泊町","url":"https://www.town.wadomari.lg.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":63,"priority":"B","name":"知名町","url":"https://www.town.china.lg.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":64,"priority":"B","name":"与論町","url":"https://www.yoron.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":65,"priority":"B","name":"三島村","url":"https://mishimamura.com/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":66,"priority":"B","name":"十島村","url":"https://www.tokara.jp/","industry":"自治体（体育館・港湾）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":67,"priority":"B","name":"大和村","url":"https://www.vill.yamato.lg.jp/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":68,"priority":"B","name":"宇検村","url":"https://www.uken.net/","industry":"自治体（体育館・公園）","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":69,"priority":"B","name":"指宿港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":70,"priority":"B","name":"加治木港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":71,"priority":"B","name":"垂水港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":72,"priority":"B","name":"鹿屋港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":73,"priority":"B","name":"串木野新港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":74,"priority":"B","name":"西之表港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":75,"priority":"B","name":"島間港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":76,"priority":"B","name":"宮之浦港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":77,"priority":"B","name":"安房港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":78,"priority":"B","name":"名瀬港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":79,"priority":"B","name":"古仁屋港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":80,"priority":"B","name":"亀徳港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":81,"priority":"B","name":"和泊港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":82,"priority":"B","name":"与論港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":83,"priority":"B","name":"湾港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":84,"priority":"B","name":"里港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":85,"priority":"B","name":"硫黄島港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":86,"priority":"B","name":"中之島港","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":87,"priority":"B","name":"鴨池公園陸上競技場","url":"https://www.pref.kagoshima.jp/bc10/kikan/taiku/shisetsu/sisetu-rikujou.html","industry":"屋外スポーツ施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":88,"priority":"B","name":"鴨池公園野球場","url":"https://www.pref.kagoshima.jp/bc10/kikan/taiku/shisetsu/sisetu-yakyuu.html","industry":"屋外スポーツ施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":89,"priority":"B","name":"鴨池緑地球技場","url":"https://www.pref.kagoshima.jp/bc10/kikan/taiku/shisetsu/sisetu-ryokutikyugijo.html","industry":"屋外スポーツ施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":90,"priority":"B","name":"青少年会館","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公共施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":91,"priority":"B","name":"防災研修センター","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公共施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":92,"priority":"B","name":"森の研修館かごしま","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公共施設・屋外施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":93,"priority":"B","name":"南薩少年自然の家","url":"https://www.pref.kagoshima.jp/ah10/infra/toshi/toshikoen/kenritu/sub32.html","industry":"公共施設・屋外施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":94,"priority":"B","name":"霧島アートの森","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公園・文化施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":95,"priority":"B","name":"霧島国際音楽ホール","url":"https://www.pref.kagoshima.jp/ab06/kensei/gyokaku/shiteikanri/jokyo/h31shitei.html","industry":"公共施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":96,"priority":"B","name":"鹿児島県地域振興公社 公園管理部","url":"https://www.kagoshima-kousya.jp/project/park/","industry":"公園管理","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":97,"priority":"B","name":"鹿児島港本港区県営駐車場","url":"https://www.pref.kagoshima.jp/infra/port/minato/kagoshima/index.html","industry":"港湾関連駐車場","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":98,"priority":"B","name":"鹿児島港新港区県営駐車場","url":"https://www.pref.kagoshima.jp/infra/port/minato/kagoshima/index.html","industry":"港湾関連駐車場","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":99,"priority":"B","name":"鹿児島港本港区旅客ターミナル","url":"https://www.pref.kagoshima.jp/infra/port/minato/kagoshima/index.html","industry":"港湾関連施設","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":100,"priority":"B","name":"川内港港湾脱炭素化推進協議会","url":"https://www.pref.kagoshima.jp/infra/port/minato/index.html","industry":"港湾関連組織","category":"自治体_体育館_公園_港湾","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":1,"priority":"S","name":"鹿児島空港","url":"https://www.koj-ab.co.jp/","industry":"空港・交通","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":2,"priority":"S","name":"奄美空港","url":"https://amami-airport.co.jp/","industry":"空港・交通","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":3,"priority":"S","name":"種子島空港","url":"https://www.pref.kagoshima.jp/ah09/infra/port/kuko/tanegashima-.html","industry":"空港・交通","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":4,"priority":"S","name":"屋久島空港","url":"https://www.pref.kagoshima.jp/ah09/infra/port/kuko/yakushima.html","industry":"空港・交通","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":5,"priority":"S","name":"徳之島空港","url":"https://www.pref.kagoshima.jp/ah09/infra/port/kuko/tokunoshima.html","industry":"空港・交通","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":6,"priority":"S","name":"沖永良部空港","url":"https://www.pref.kagoshima.jp/ah09/infra/port/kuko/okinoerabu.html","industry":"空港・交通","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":7,"priority":"S","name":"喜界空港","url":"https://www.pref.kagoshima.jp/ah09/infra/port/kuko/kikai.html","industry":"空港・交通","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":8,"priority":"S","name":"与論空港","url":"https://www.pref.kagoshima.jp/ah09/infra/port/kuko/yoron.html","industry":"空港・交通","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":9,"priority":"S","name":"鹿児島港桜島フェリーターミナル","url":"https://www.city.kagoshima.lg.jp/sakurajima-ferry/terminal/index.html","industry":"港湾・交通","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":10,"priority":"S","name":"桜島港フェリーターミナル","url":"https://www.city.kagoshima.lg.jp/sakurajima-ferry/terminal/index.html","industry":"港湾・交通","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":11,"priority":"S","name":"イオンモール鹿児島","url":"https://kagoshima-aeonmall.com/","industry":"商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":12,"priority":"S","name":"JR鹿児島シティ（アミュプラザ鹿児島）","url":"https://www.jrkagoshimacity.com/","industry":"商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":13,"priority":"S","name":"A-Zはやと","url":"https://a-zmakio.com/hayato/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":14,"priority":"S","name":"A-Zあくね","url":"https://a-zmakio.com/akune/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":15,"priority":"S","name":"フレスポジャングルパーク","url":"https://www.e-frespo.com/jungle/","industry":"商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":16,"priority":"S","name":"オプシアミスミ","url":"https://www.opsia.jp/","industry":"商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":17,"priority":"S","name":"アクロスプラザ与次郎","url":"https://yojiro.acrossplaza.jp/","industry":"商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":18,"priority":"S","name":"スーパーセンターニシムタ 与次郎店・与次郎店食鮮館","url":"https://nishimuta.co.jp/shop/yojirou/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":19,"priority":"S","name":"スーパーセンターニシムタ N'sCITY谷山店","url":"https://nishimuta.co.jp/shop/taniyama/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":20,"priority":"S","name":"スーパーセンターニシムタ スカイマーケット鴨池店","url":"https://nishimuta.co.jp/shop/kamoike/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":21,"priority":"S","name":"スーパーセンターニシムタ 北ふ頭店","url":"https://nishimuta.co.jp/shop/kitahutou/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":22,"priority":"S","name":"スーパーセンターニシムタ 鹿屋店","url":"https://nishimuta.co.jp/shop/kanoya/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":23,"priority":"S","name":"ハンズマン宇宿店","url":"https://www.handsman.co.jp/shop/","industry":"ホームセンター・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":24,"priority":"S","name":"ハンズマン国分店","url":"https://www.handsman.co.jp/shop/","industry":"ホームセンター・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":25,"priority":"S","name":"ホームプラザナフコ 東開店","url":"https://www.nafco.life/hc/shop_list/3560/","industry":"ホームセンター・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":26,"priority":"S","name":"スーパーセンタートライアル 東開店","url":"https://www.trial-net.co.jp/shops/344/","industry":"商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":27,"priority":"S","name":"スーパーセンタートライアル 隼人店","url":"https://www.trial-net.co.jp/shops/383/","industry":"商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":28,"priority":"S","name":"スーパーセンタートライアル 加治木店","url":"https://www.trial-net.co.jp/shops/569/","industry":"商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":29,"priority":"S","name":"西原商会アリーナ","url":"https://nishihara-shokai-arena.jp/","industry":"スポーツ施設・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":30,"priority":"S","name":"白波スタジアム（県立鴨池陸上競技場）","url":"https://www.pref.kagoshima.jp/bc10/kikan/taiku/shisetsu/sisetu-rikujokyogijo.html","industry":"スポーツ施設・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":31,"priority":"S","name":"平和リース球場（県立鴨池野球場）","url":"https://k-kyujo.com/","industry":"スポーツ施設・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":32,"priority":"S","name":"平川動物公園","url":"https://hirakawazoo.jp/","industry":"観光施設・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":33,"priority":"S","name":"いおワールドかごしま水族館","url":"https://ioworld.jp/","industry":"観光施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":34,"priority":"S","name":"仙巌園","url":"https://www.senganen.jp/","industry":"観光施設・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":35,"priority":"S","name":"城山ホテル鹿児島","url":"https://www.shiroyama-g.co.jp/index.html","industry":"ホテル・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":36,"priority":"S","name":"指宿白水館","url":"https://www.hakusuikan.co.jp/","industry":"ホテル・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":37,"priority":"A","name":"かごしま健康の森公園","url":"https://k-kouenkousya.jp/kenkou/","industry":"公園・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":38,"priority":"A","name":"鹿児島ふれあいスポーツランド","url":"https://www.furesupo.jp/","industry":"スポーツ施設・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":39,"priority":"A","name":"吹上浜海浜公園","url":"https://fukiagepark.synapse.kagoshima.jp/","industry":"公園・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":40,"priority":"A","name":"吉野公園","url":"https://yoshinopark.jp/","industry":"公園・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":41,"priority":"A","name":"県民の森","url":"https://www.kkmori.jp/","industry":"公園・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":42,"priority":"A","name":"桜島ビジターセンター","url":"https://visitor.sakurajima.gr.jp/","industry":"観光施設・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":43,"priority":"A","name":"奄美パーク","url":"https://amamipark.com/","industry":"観光施設・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":44,"priority":"A","name":"知覧特攻平和会館","url":"https://www.chiran-tokkou.jp/","industry":"観光施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":45,"priority":"A","name":"知覧平和公園","url":"https://www.city.minamikyushu.lg.jp/kanko_bunka_sports/shisetsu/kanko/3/2575.html","industry":"公園・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":46,"priority":"A","name":"大浜海浜公園","url":"https://ohama.marutani-amami.com/","industry":"公園・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":47,"priority":"A","name":"奄美海洋展示館","url":"https://ohama.marutani-amami.com/ocean-exhibition-hall","industry":"観光施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":48,"priority":"A","name":"ダグリ岬遊園地","url":"https://daguri.co.jp/","industry":"レジャー施設・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":49,"priority":"A","name":"フラワーパークかごしま","url":"https://www.fp-k.org/","industry":"公園・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":50,"priority":"A","name":"霧島アートの森","url":"https://open-air-museum.org/","industry":"美術館・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":51,"priority":"A","name":"尚古集成館","url":"https://www.shuseikan.jp/","industry":"観光施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":52,"priority":"A","name":"かごしま近代文学館・かごしまメルヘン館","url":"https://www.k-kb.or.jp/kinmeru/","industry":"文化施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":53,"priority":"A","name":"鹿児島大学病院","url":"https://www.hosp.kagoshima-u.ac.jp/","industry":"病院・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":54,"priority":"A","name":"鹿児島市立病院","url":"https://www.kch.kagoshima.jp/index.html","industry":"病院・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":55,"priority":"A","name":"いまきいれ総合病院","url":"https://imakiire.jp/","industry":"病院・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":56,"priority":"A","name":"鹿児島医療センター","url":"https://kagomc.hosp.go.jp/","industry":"病院・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":57,"priority":"A","name":"霧島ホテル","url":"https://www.kirishima-hotel.jp/","industry":"ホテル・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":58,"priority":"A","name":"霧島国際ホテル","url":"https://www.kirishima-kokusai.com/","industry":"ホテル・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":59,"priority":"A","name":"霧島観光ホテル","url":"https://www.kirikan.jp/","industry":"ホテル・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":60,"priority":"A","name":"HOTEL AZ 鹿児島川辺店","url":"https://www.az-hotel.com/kawanabe/","industry":"ホテル・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":61,"priority":"A","name":"ホームプラザナフコ 国分店","url":"https://www.nafco.life/hc/shop_list/1470/","industry":"ホームセンター・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":62,"priority":"A","name":"ホームプラザナフコ 姶良店","url":"https://www.nafco.life/hc/shop_list/1430/","industry":"ホームセンター・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":63,"priority":"A","name":"ホームプラザナフコ 川内店","url":"https://www.nafco.life/hc/shop_list/0880/","industry":"ホームセンター・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":64,"priority":"A","name":"ホームプラザナフコ 鹿屋店","url":"https://www.nafco.life/hc/shop_list/1060/","industry":"ホームセンター・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":65,"priority":"A","name":"ケーズデンキ鹿児島本店","url":"https://www.ksdenki.co.jp/store/detail/?code=3115&prefectureCode=46","industry":"家電量販店・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":66,"priority":"A","name":"エディオン鹿児島南店","url":"https://search.edion.com/e_store/spot/detail?code=0000001922","industry":"家電量販店・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":67,"priority":"A","name":"SAKODA与次郎店","url":"https://www.sakoda.co.jp/shop/pages/shop_yojiro.aspx","industry":"家具店・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":68,"priority":"A","name":"ニトリ鹿児島与次郎店","url":"https://shop.nitori-net.jp/nitori/spot/detail?code=0000000403","industry":"家具店・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":69,"priority":"A","name":"スーパーセンターニシムタ 姶良店","url":"https://nishimuta.co.jp/shop/aira/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":70,"priority":"A","name":"スーパーセンターニシムタ 出水店","url":"https://nishimuta.co.jp/shop/izumi/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":71,"priority":"A","name":"スーパーセンターニシムタ 伊集院店","url":"https://nishimuta.co.jp/shop/ijuin/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":72,"priority":"A","name":"スーパーセンターニシムタ 大口店","url":"https://nishimuta.co.jp/shop/okuchi/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":73,"priority":"A","name":"A-Zかわなべ","url":"https://a-zmakio.com/kawanabe/","industry":"大型商業施設・駐車場","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":74,"priority":"A","name":"道の駅喜入 鹿児島市マリンピア喜入","url":"http://www.michinoeki-kiire.jp/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":75,"priority":"A","name":"道の駅桜島 火の島めぐみ館","url":"https://www.megumikan.jp/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":76,"priority":"A","name":"道の駅霧島（霧島神話の里公園）","url":"https://www.shinwanosato.jp/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":77,"priority":"B","name":"道の駅いぶすき 彩花菜館","url":"https://michinoeki-ibusuki.jp/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":78,"priority":"B","name":"道の駅山川港 活お海道","url":"https://io-kaido.com/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":79,"priority":"B","name":"道の駅たるみず湯っ足り館","url":"https://mitinoeki-tarumizu.com/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":80,"priority":"B","name":"道の駅たるみずはまびら たるたるぱあく","url":"https://tarutaru.jp/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":81,"priority":"B","name":"道の駅奄美大島住用 マングローブパーク","url":"https://www.mangrovepark.com/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":82,"priority":"B","name":"道の駅阿久根","url":"https://www.yoka-guide.com/spot/1734/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":83,"priority":"B","name":"道の駅黒之瀬戸だんだん市場","url":"https://www.yoka-guide.com/spot/1742/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":84,"priority":"B","name":"道の駅長島 ポテトハウス望陽","url":"https://www.yoka-guide.com/spot/1743/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":85,"priority":"B","name":"道の駅樋脇 遊湯館","url":"https://www.yoka-guide.com/spot/1779/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":86,"priority":"B","name":"道の駅川辺 やすらぎの郷","url":"https://www.yasuraginosato.com/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":87,"priority":"B","name":"道の駅きんぽう木花館","url":"https://www.yoka-guide.com/spot/1790/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":88,"priority":"B","name":"道の駅江口蓬莱館","url":"https://www.yoka-guide.com/spot/1784/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":89,"priority":"B","name":"道の駅おおすみ弥五郎伝説の里","url":"https://www.yoka-guide.com/spot/1804/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":90,"priority":"B","name":"道の駅錦江 にしきの里","url":"https://www.yoka-guide.com/spot/1805/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":91,"priority":"B","name":"道の駅すえよし 四季祭市場","url":"https://www.yoka-guide.com/spot/1811/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":92,"priority":"B","name":"道の駅たからべ きらら館","url":"https://www.yoka-guide.com/spot/1812/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":93,"priority":"B","name":"道の駅野方あらさの","url":"https://www.yoka-guide.com/spot/1818/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":94,"priority":"B","name":"道の駅松山 やっちくふるさと村","url":"https://www.yoka-guide.com/spot/1820/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":95,"priority":"B","name":"道の駅ねじめ（大浜海浜公園）","url":"https://www.yoka-guide.com/spot/1834/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":96,"priority":"B","name":"道の駅とくのしま","url":"https://michinoeki-tokunoshima.jp/","industry":"道の駅・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":97,"priority":"B","name":"鹿児島国際ゴルフ倶楽部","url":"https://kokusaigolf.com/","industry":"ゴルフ場・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":98,"priority":"B","name":"鹿児島高牧カントリークラブ","url":"https://takamakicc.net/","industry":"ゴルフ場・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":99,"priority":"B","name":"かごしま空港36カントリークラブ","url":"https://www.kuko36cc.co.jp/","industry":"ゴルフ場・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":100,"priority":"B","name":"霧島ゴルフクラブ","url":"https://kirishima-gc.or.jp/","industry":"ゴルフ場・屋外","category":"駐車場_屋外施設","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":1,"priority":"S","name":"三洋工機株式会社","url":"https://sanyokouki.co.jp/","industry":"プラントエンジニアリング","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":2,"priority":"S","name":"株式会社アイエヌジー","url":"https://www.ing-web.com/","industry":"プラントエンジニアリング","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":3,"priority":"S","name":"中園機工株式会社","url":"https://nakazonokikou.co.jp/","industry":"プラント・設備製作","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":4,"priority":"S","name":"株式会社プレシード さつま事業所","url":"https://www.preceed.co.jp/","industry":"装置製作・板金","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":5,"priority":"S","name":"株式会社南光 本社精機課","url":"https://nanko.co.jp/","industry":"大型精密加工・真空筐体","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":6,"priority":"S","name":"株式会社南光 川内工場","url":"https://nanko.co.jp/","industry":"製缶・プラント製品","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":7,"priority":"S","name":"株式会社南光 本社第二工場","url":"https://nanko.co.jp/","industry":"大型精密加工・真空筐体","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":8,"priority":"S","name":"株式会社ティーマスターズテクノ","url":"https://www.google.com/search?q=株式会社ティーマスターズテクノ+鹿児島","industry":"半導体装置組立","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":9,"priority":"S","name":"株式会社大木","url":"http://www.ooki.ecnet.jp/","industry":"鋼材加工・製缶","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":10,"priority":"S","name":"南日汽缶工業株式会社","url":"https://www.google.com/search?q=南日汽缶工業株式会社+鹿児島","industry":"プラント・圧力容器","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":11,"priority":"S","name":"壮旺株式会社","url":"https://www.google.com/search?q=壮旺株式会社 鹿児島+鹿児島","industry":"砕石プラント","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":12,"priority":"S","name":"鹿児島ドック鉄工株式会社","url":"https://www.google.com/search?q=鹿児島ドック鉄工株式会社+鹿児島","industry":"船舶修繕・鋼構造物","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":13,"priority":"S","name":"株式会社明興テクノス","url":"https://www.meiko-techno.co.jp/","industry":"電気計装・配電盤","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":14,"priority":"S","name":"株式会社相良製作所","url":"https://sagara-seisakusho.co.jp/","industry":"鉄骨・産業機械","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":15,"priority":"S","name":"株式会社クリモトワークス","url":"http://kk-kurimoto.co.jp/","industry":"製缶・大型加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":16,"priority":"S","name":"鹿児島通運株式会社","url":"https://kagoshima-tsuun.com/","industry":"物流・倉庫","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":17,"priority":"S","name":"太陽運輸倉庫株式会社","url":"https://www.ttw-net.com/","industry":"物流・倉庫","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":18,"priority":"S","name":"薩摩倉庫運輸株式会社","url":"https://sa-sou.com/","industry":"物流・定温倉庫","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":19,"priority":"S","name":"マリックス物流サービス株式会社","url":"https://marixbs.com/","industry":"物流・コンテナ","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":20,"priority":"S","name":"出水運輸センター株式会社","url":"https://www.izumiunyu-c.jp/","industry":"物流センター","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":21,"priority":"S","name":"株式会社JA物流かごしま","url":"https://www.google.com/search?q=株式会社JA物流かごしま+鹿児島","industry":"物流・倉庫","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":22,"priority":"S","name":"志布志東洋埠頭株式会社","url":"https://www.google.com/search?q=志布志東洋埠頭株式会社+鹿児島","industry":"港湾・倉庫","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":23,"priority":"S","name":"高千穂倉庫運輸株式会社 鹿児島支店","url":"https://www.google.com/search?q=高千穂倉庫運輸株式会社 鹿児島支店+鹿児島","industry":"倉庫・定温物流","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":24,"priority":"S","name":"九州航空株式会社","url":"https://www.kyushu-koku.co.jp/","industry":"航空貨物・物流","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":25,"priority":"S","name":"南国殖産株式会社","url":"https://www.nangoku.co.jp/","industry":"物流・エネルギー","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":26,"priority":"A","name":"アロン電機株式会社","url":"https://www.aron.co.jp/","industry":"省力化装置・金型","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":27,"priority":"A","name":"株式会社アルプスエステック","url":"https://alps-stech.jp/","industry":"精密加工・装置","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":28,"priority":"A","name":"八幡金属株式会社 部品加工部門","url":"https://ymetal-kokubu.jp/","industry":"精密加工・プレス","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":29,"priority":"A","name":"YANASE SEIKI株式会社","url":"http://www.yanaseseiki.com/","industry":"精密機械加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":30,"priority":"A","name":"MIRAINO株式会社","url":"https://www.miraino-jp.com/","industry":"精密加工・半導体","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":31,"priority":"A","name":"株式会社セノメタル","url":"https://senometal.jp/","industry":"精密加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":32,"priority":"A","name":"株式会社中央工作所","url":"https://www.google.com/search?q=株式会社中央工作所 鹿児島+鹿児島","industry":"板金・機械加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":33,"priority":"A","name":"瀬涯機工株式会社","url":"https://www.google.com/search?q=瀬涯機工株式会社+鹿児島","industry":"製缶・据付","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":34,"priority":"A","name":"株式会社オールエンジニアリング社","url":"https://www.google.com/search?q=株式会社オールエンジニアリング社+鹿児島","industry":"装置組立・検査","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":35,"priority":"A","name":"株式会社イチノセ","url":"https://www.google.com/search?q=株式会社イチノセ 鹿児島+鹿児島","industry":"装置設計・メンテナンス","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":36,"priority":"A","name":"元田技研株式会社","url":"https://www.google.com/search?q=元田技研株式会社+鹿児島","industry":"搬送機械","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":37,"priority":"A","name":"マトヤ技研工業株式会社","url":"https://www.google.com/search?q=マトヤ技研工業株式会社+鹿児島","industry":"産業機械","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":38,"priority":"A","name":"株式会社フジヤマ","url":"https://www.google.com/search?q=株式会社フジヤマ 鹿児島+鹿児島","industry":"総合エンジニアリング","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":39,"priority":"A","name":"株式会社日本計器鹿児島製作所","url":"https://www.google.com/search?q=株式会社日本計器鹿児島製作所+鹿児島","industry":"省力化機器・電子部品","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":40,"priority":"A","name":"株式会社省力化技研","url":"https://www.google.com/search?q=株式会社省力化技研+鹿児島","industry":"省力化設備","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":41,"priority":"A","name":"株式会社エフエー","url":"https://www.google.com/search?q=株式会社エフエー 鹿児島+鹿児島","industry":"生産設備・治工具","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":42,"priority":"A","name":"有限会社エーエム技研","url":"https://www.google.com/search?q=有限会社エーエム技研 鹿児島+鹿児島","industry":"自動機設計・立上","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":43,"priority":"A","name":"株式会社一吉工業","url":"https://www.google.com/search?q=株式会社一吉工業 鹿児島+鹿児島","industry":"設計・製作・保守","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":44,"priority":"A","name":"株式会社オートメック","url":"https://www.google.com/search?q=株式会社オートメック 鹿児島+鹿児島","industry":"精密装置OEM","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":45,"priority":"A","name":"株式会社南光 隼人工場","url":"https://nanko.co.jp/","industry":"セラミック・難削材加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":46,"priority":"A","name":"株式会社南光 志布志工場","url":"https://nanko.co.jp/","industry":"プレス金型・自動車部品","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":47,"priority":"A","name":"中越パッケージ株式会社","url":"https://www.chuetsu-package.co.jp/","industry":"包装資材・紙器","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":48,"priority":"A","name":"株式会社岡野エレクトロニクス","url":"https://www.google.com/search?q=株式会社岡野エレクトロニクス 鹿児島+鹿児島","industry":"基板実装・樹脂成形","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":49,"priority":"A","name":"株式会社菅公テクノ","url":"https://www.google.com/search?q=株式会社菅公テクノ 鹿児島+鹿児島","industry":"金型・部品加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":50,"priority":"A","name":"株式会社中川製作所 樋脇工場","url":"https://www.google.com/search?q=株式会社中川製作所 樋脇工場+鹿児島","industry":"機械加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":51,"priority":"A","name":"ワールド工業株式会社","url":"https://www.google.com/search?q=ワールド工業株式会社 鹿児島+鹿児島","industry":"金型設計・試作","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":52,"priority":"A","name":"日之出紙器工業株式会社 鹿児島工場","url":"https://www.hinode-shiki.co.jp/","industry":"包装・紙器","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":53,"priority":"A","name":"エス・パックス株式会社","url":"https://www.google.com/search?q=エス・パックス株式会社 鹿児島+鹿児島","industry":"段ボール・紙器","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":54,"priority":"A","name":"株式会社丸和工業","url":"https://www.google.com/search?q=株式会社丸和工業 鹿児島+鹿児島","industry":"圧力容器・製缶","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":55,"priority":"A","name":"株式会社プランテムタナカ","url":"https://www.google.com/search?q=株式会社プランテムタナカ+鹿児島","industry":"ポンプ・設備保守","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":56,"priority":"A","name":"福留工業株式会社","url":"https://www.google.com/search?q=福留工業株式会社 鹿児島+鹿児島","industry":"鉄骨製作","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":57,"priority":"A","name":"八光工業株式会社","url":"https://www.google.com/search?q=八光工業株式会社 鹿児島+鹿児島","industry":"土木・管工事・製缶","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":58,"priority":"A","name":"有限会社橋口製作所","url":"https://www.google.com/search?q=有限会社橋口製作所 鹿児島+鹿児島","industry":"コンテナ製作","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":59,"priority":"A","name":"株式会社中川製作所","url":"https://www.google.com/search?q=株式会社中川製作所 鹿児島+鹿児島","industry":"製缶・鋼構造物","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":60,"priority":"A","name":"株式会社ウスキ工業","url":"https://www.google.com/search?q=株式会社ウスキ工業 鹿児島+鹿児島","industry":"タンク・製缶","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":61,"priority":"B","name":"朝日工業株式会社","url":"https://www.google.com/search?q=朝日工業株式会社 鹿児島+鹿児島","industry":"建設・設備メンテナンス","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":62,"priority":"B","name":"株式会社薩州工業","url":"https://www.google.com/search?q=株式会社薩州工業 鹿児島+鹿児島","industry":"機械器具据付","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":63,"priority":"B","name":"株式会社JISOK","url":"https://www.google.com/search?q=株式会社JISOK 鹿児島+鹿児島","industry":"プラント3D計測","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":64,"priority":"B","name":"九州金属株式会社","url":"https://www.google.com/search?q=九州金属株式会社 鹿児島+鹿児島","industry":"金属加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":65,"priority":"B","name":"ダイイチシコウ株式会社","url":"https://www.google.com/search?q=ダイイチシコウ株式会社 鹿児島+鹿児島","industry":"電子部品・板金","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":66,"priority":"B","name":"ダイコー熱処理株式会社","url":"https://www.google.com/search?q=ダイコー熱処理株式会社 鹿児島+鹿児島","industry":"熱処理","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":67,"priority":"B","name":"吉玉精鍍株式会社","url":"https://www.google.com/search?q=吉玉精鍍株式会社 鹿児島+鹿児島","industry":"めっき・表面処理","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":68,"priority":"B","name":"メテック株式会社 九州事業所","url":"https://www.google.com/search?q=メテック株式会社 九州事業所 鹿児島+鹿児島","industry":"めっき・表面処理","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":69,"priority":"B","name":"株式会社プレーティング","url":"https://www.google.com/search?q=株式会社プレーティング 鹿児島+鹿児島","industry":"表面処理","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":70,"priority":"B","name":"日水電気化学工業株式会社","url":"https://www.google.com/search?q=日水電気化学工業株式会社 鹿児島+鹿児島","industry":"表面処理","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":71,"priority":"B","name":"テックス株式会社","url":"https://www.google.com/search?q=テックス株式会社 鹿児島 電解研磨+鹿児島","industry":"電解研磨・表面処理","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":72,"priority":"B","name":"アルバックテクノ株式会社（表面処理本部 鹿児島表面処理センター）","url":"https://www.google.com/search?q=アルバックテクノ 鹿児島表面処理センター+鹿児島","industry":"表面処理","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":73,"priority":"B","name":"加世田電子工業株式会社","url":"https://www.google.com/search?q=加世田電子工業株式会社+鹿児島","industry":"電子部品組立","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":74,"priority":"B","name":"鹿児島宮園電子株式会社","url":"https://www.google.com/search?q=鹿児島宮園電子株式会社+鹿児島","industry":"電子部品組立","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":75,"priority":"B","name":"高槻電器工業株式会社 金峰工場","url":"https://www.google.com/search?q=高槻電器工業株式会社 金峰工場+鹿児島","industry":"半導体パッケージ実装","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":76,"priority":"B","name":"株式会社レゾナック・オプトエレクトロニクス鹿児島","url":"https://www.google.com/search?q=レゾナック・オプトエレクトロニクス鹿児島+鹿児島","industry":"光半導体・電子部品","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":77,"priority":"B","name":"国分電機株式会社","url":"https://www.google.com/search?q=国分電機株式会社 鹿児島+鹿児島","industry":"照明器具OEM","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":78,"priority":"B","name":"株式会社エルム","url":"https://www.google.com/search?q=株式会社エルム 鹿児島+鹿児島","industry":"自動化機器・回路設計","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":79,"priority":"B","name":"株式会社エコナーセリー","url":"https://www.google.com/search?q=株式会社エコナーセリー 鹿児島+鹿児島","industry":"電子組立・LED","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":80,"priority":"B","name":"東京エンプラ商事鹿児島株式会社","url":"https://www.google.com/search?q=東京エンプラ商事鹿児島株式会社+鹿児島","industry":"樹脂加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":81,"priority":"B","name":"ジャスティモールド株式会社","url":"https://www.google.com/search?q=ジャスティモールド株式会社 鹿児島+鹿児島","industry":"金型製作","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":82,"priority":"B","name":"サンライト化成株式会社","url":"https://www.google.com/search?q=サンライト化成株式会社 鹿児島+鹿児島","industry":"樹脂成形","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":83,"priority":"B","name":"株式会社鹿児島北斗製作所","url":"https://www.google.com/search?q=株式会社鹿児島北斗製作所+鹿児島","industry":"樹脂・金型","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":84,"priority":"B","name":"株式会社創世エンジニアリング","url":"https://www.google.com/search?q=株式会社創世エンジニアリング 鹿児島+鹿児島","industry":"金型・精密加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":85,"priority":"B","name":"株式会社新光エンジニアリング","url":"https://www.google.com/search?q=株式会社新光エンジニアリング 鹿児島+鹿児島","industry":"金型設計製作","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":86,"priority":"B","name":"樋脇精工株式会社","url":"https://www.google.com/search?q=樋脇精工株式会社+鹿児島","industry":"精密プレス・金型","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":87,"priority":"B","name":"株式会社東郷","url":"https://www.google.com/search?q=株式会社東郷 鹿児島+鹿児島","industry":"自動車部品・量産工場","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":88,"priority":"B","name":"鹿児島金属株式会社","url":"https://www.google.com/search?q=鹿児島金属株式会社+鹿児島","industry":"冷間圧造・メッキ","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":89,"priority":"B","name":"株式会社寿精密","url":"https://www.google.com/search?q=株式会社寿精密 鹿児島+鹿児島","industry":"精密金型","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":90,"priority":"B","name":"株式会社飯塚製作所","url":"https://www.google.com/search?q=株式会社飯塚製作所 鹿児島+鹿児島","industry":"冷間鍛造","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":91,"priority":"B","name":"株式会社米森金属工業","url":"https://www.google.com/search?q=株式会社米森金属工業 鹿児島+鹿児島","industry":"金属加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":92,"priority":"B","name":"有限会社トーヨーステンレス工業","url":"https://www.google.com/search?q=有限会社トーヨーステンレス工業 鹿児島+鹿児島","industry":"ステンレス製作","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":93,"priority":"B","name":"南九精工株式会社","url":"https://www.google.com/search?q=南九精工株式会社+鹿児島","industry":"半導体装置部品","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":94,"priority":"B","name":"株式会社ミナトステンレス","url":"https://www.google.com/search?q=株式会社ミナトステンレス 鹿児島+鹿児島","industry":"ステンレス加工","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":95,"priority":"B","name":"株式会社マツオ","url":"https://www.google.com/search?q=株式会社マツオ 鹿児島 製缶+鹿児島","industry":"管工事・製缶","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":96,"priority":"B","name":"株式会社アイ・ティ・テクノス","url":"https://www.google.com/search?q=株式会社アイ・ティ・テクノス 鹿児島+鹿児島","industry":"基板実装・組立","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":97,"priority":"B","name":"有限会社ファン・テック","url":"https://www.google.com/search?q=有限会社ファン・テック 鹿児島+鹿児島","industry":"FA・省力化","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":98,"priority":"B","name":"有限会社サンリツ電機","url":"https://www.google.com/search?q=有限会社サンリツ電機 鹿児島+鹿児島","industry":"電気工事・通信","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":99,"priority":"B","name":"株式会社ダッド","url":"https://www.google.com/search?q=株式会社ダッド 鹿児島+鹿児島","industry":"生産設備設計・DX","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":100,"priority":"B","name":"協業組合ユニカラー","url":"https://www.google.com/search?q=協業組合ユニカラー 鹿児島+鹿児島","industry":"紙器・竹紙製品","category":"工場_物流_プラント","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":1,"priority":"S","name":"さつまゴルフリゾート","url":"https://www.satsumagolf.jp/","industry":"ゴルフ場・リゾート","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":2,"priority":"S","name":"霧島ゴルフクラブ","url":"https://kirishima-gc.or.jp/","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":3,"priority":"S","name":"ゴールデンパームカントリークラブ","url":"https://www.belle-co.com/goldenpalm/goldenpalmsprings.html","industry":"ゴルフ場・リゾート","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":4,"priority":"S","name":"鹿児島ガーデンゴルフ倶楽部","url":"https://www.plus-web.co.jp/official-site/kagoshima.html","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":5,"priority":"S","name":"かごしま空港36カントリークラブ","url":"https://www.plus-web.co.jp/official-site/kagoshima.html","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":6,"priority":"S","name":"南国カンツリークラブ","url":"https://www.guk.jp/club/434","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":7,"priority":"S","name":"出水ゴルフクラブ","url":"https://www.guk.jp/club/434","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":8,"priority":"S","name":"南九州カントリークラブ","url":"https://www.guk.jp/club/434","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":9,"priority":"S","name":"いぶすきゴルフクラブ","url":"https://www.guk.jp/club/434","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":10,"priority":"S","name":"高千穂カントリー倶楽部","url":"https://www.homemate-golf.com/golf-course/46/list/","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":11,"priority":"S","name":"鹿児島国際ゴルフ倶楽部","url":"https://www.homemate-golf.com/golf-course/46/list/","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":12,"priority":"S","name":"祁答院ゴルフ倶楽部","url":"https://www.homemate-golf.com/golf-course/46/list/","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":13,"priority":"S","name":"島津ゴルフ倶楽部","url":"https://golf.ana.co.jp/Searches/calendar/46","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":14,"priority":"S","name":"鹿児島高牧カントリークラブ","url":"https://golf.ana.co.jp/Searches/calendar/46","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":15,"priority":"S","name":"知覧カントリークラブ","url":"https://golf.ana.co.jp/Searches/calendar/46","industry":"ゴルフ場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":16,"priority":"A","name":"GOLF LOUNGE PRESENT","url":"https://dr.golfdigest.co.jp/dr_list/?search_ext_col_06%5B%5D=46&topics_ext_options_search=1","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":17,"priority":"A","name":"慈眼寺ゴルフ","url":"https://dr.golfdigest.co.jp/dr_list/?search_ext_col_06%5B%5D=46&topics_ext_options_search=1","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":18,"priority":"A","name":"ゴルフプラザビスタ","url":"https://dr.golfdigest.co.jp/dr_list/%3Ftopics_ext_options_search%3D1%26search_ext_col_06%5B%5D%3D46%26search_ext_col_78%5B%5D%3D05","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":19,"priority":"A","name":"にっしんグリーンヒルゴルフ練習場 加世田","url":"https://gora.golf.rakuten.co.jp/practice-range/search/kagoshima","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":20,"priority":"A","name":"西陵ゴルフセンター","url":"https://dr.golfdigest.co.jp/dr_list/%3Ftopics_ext_options_search%3D1%26search_ext_col_06%5B%5D%3D46%26search_ext_col_78%5B%5D%3D05","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":21,"priority":"A","name":"スバルゴルフセンター","url":"https://dr.golfdigest.co.jp/dr_list/%3Ftopics_ext_options_search%3D1%26search_ext_col_06%5B%5D%3D46%26search_ext_col_78%5B%5D%3D05","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":22,"priority":"A","name":"伸紘ゴルフセンター","url":"https://gora.golf.rakuten.co.jp/practice-range/search/kagoshima","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":23,"priority":"A","name":"鹿児島ベイサイドゴルフアリーナ","url":"https://www.homemate-golf.com/driving-range/46/list/","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":24,"priority":"A","name":"ベイサイドウェルネスパーク","url":"https://dr.golfdigest.co.jp/dr_list/?search_ext_col_06%5B%5D=46&topics_ext_options_search=1","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":25,"priority":"A","name":"グリーンスポーツガーデン","url":"https://dr.golfdigest.co.jp/dr_list/?search_ext_col_06%5B%5D=46&topics_ext_options_search=1","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":26,"priority":"A","name":"川内グリーンスポーツ","url":"https://gora.golf.rakuten.co.jp/practice-range/search/kagoshima","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":27,"priority":"A","name":"三豊ゴルフクラブ","url":"https://golf-joshibu.com/range/kagoshima/","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":28,"priority":"A","name":"グリーンゴルフ忠元","url":"https://golf-joshibu.com/range/kagoshima/","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":29,"priority":"A","name":"国分ゴルフ練習場","url":"https://golf-joshibu.com/range/kagoshima/","industry":"ゴルフ練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":30,"priority":"A","name":"ネオゴルフステージメテオ","url":"https://golf-joshibu.com/range/kagoshima/","industry":"インドア・練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":31,"priority":"A","name":"アミティエゴルフ","url":"https://golf-joshibu.com/range/kagoshima/","industry":"インドア・練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":32,"priority":"A","name":"MITSUO GOLF","url":"https://golf-joshibu.com/range/kagoshima/","industry":"インドア・練習場","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":33,"priority":"A","name":"ホテルゴールデンパームスプリングス","url":"https://travel.rakuten.co.jp/HOTEL/184248/184248.html","industry":"ホテル・ゴルフ関連","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":34,"priority":"A","name":"いわさきホテルズ","url":"https://www.iwasaki-corp.com/","industry":"ホテル・リゾート","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":35,"priority":"A","name":"指宿いわさきホテル","url":"https://ibusuki.iwasaki-corp.com/","industry":"ホテル・リゾート","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":36,"priority":"A","name":"霧島いわさきホテル","url":"https://kirishima.iwasaki-corp.com/","industry":"ホテル・リゾート","category":"ゴルフ場","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":999,"priority":"S","name":"マルエーフェリー株式会社","url":"https://www.aline-ferry.com/","industry":"海運","category":"船舶関連","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":999,"priority":"S","name":"鹿児島海陸運送株式会社","url":"https://www.kagoshima-kairiku.co.jp/","industry":"港湾・物流","category":"船舶関連","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":999,"priority":"S","name":"鹿児島荷役海陸運輸株式会社","url":"https://www.karyu.co.jp/","industry":"港湾荷役","category":"船舶関連","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":999,"priority":"S","name":"山川造船鉄工株式会社","url":"-","industry":"造船","category":"船舶関連","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":999,"priority":"S","name":"岡下造船鉄工株式会社","url":"-","industry":"造船","category":"船舶関連","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":999,"priority":"A","name":"コスモライン株式会社","url":"https://cosmo-line.co.jp/","industry":"海運","category":"船舶関連","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":999,"priority":"A","name":"十島村営フェリー","url":"-","industry":"海運","category":"船舶関連","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":999,"priority":"A","name":"三島村営船","url":"-","industry":"海運","category":"船舶関連","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":999,"priority":"A","name":"種子屋久高速船株式会社","url":"https://www.tykousoku.jp/","industry":"海運","category":"船舶関連","address":"","prefecture":"鹿児島県","area":"九州・沖縄"},{"rank":999,"priority":"A","name":"岩崎産業株式会社","url":"https://www.iwasaki-corp.com/","industry":"海運・交通","category":"船舶関連","address":"","prefecture":"鹿児島県","area":"九州・沖縄"}];
+</script>
 
+<script>
 const CAT_LABELS={'自治体_体育館_公園_港湾':'自治体・体育館','船舶関連':'船舶関連','駐車場_屋外施設':'駐車場・屋外','ゴルフ場':'ゴルフ場','工場_物流_プラント':'工場・物流'};
 const STATUSES=['未着手','アプローチ済','提案中','交渉中','受注','失注'];
 
-// ── localStorage でターゲット住所情報を永続化 ──────────────────
-const LS_KEY = 'fghp_target_locations';
+const LS_KEY='fghp_target_locations';
+function loadTargetLocations(){try{const s=localStorage.getItem(LS_KEY);return s?JSON.parse(s):{}}catch(e){return{}}}
+function saveTargetLocations(locs){localStorage.setItem(LS_KEY,JSON.stringify(locs))}
+function getTargets(){const locs=loadTargetLocations();return TARGETS_DEFAULT.map(t=>{const s=locs[t.name];return s?{...t,...s}:t})}
+let TARGETS=getTargets();
 
-function loadTargetLocations() {
-  try {
-    const saved = localStorage.getItem(LS_KEY);
-    if (!saved) return {};
-    return JSON.parse(saved);
-  } catch(e) { return {}; }
-}
+let currentUser=null,currentProfile=null,currentView='list';
+let deals=[],dealItems={},searchQ='',filtCat='',filtPriority='',filtStatus='',page=0,targetPage=0;
+const PAGE_SIZE=20,TARGET_PAGE_SIZE=50;
 
-function saveTargetLocations(locs) {
-  localStorage.setItem(LS_KEY, JSON.stringify(locs));
-}
-
-// TARGETS_DEFAULT に localStorage の情報をマージして返す
-function getTargets() {
-  const locs = loadTargetLocations();
-  return TARGETS_DEFAULT.map(t => {
-    const saved = locs[t.name];
-    if (saved) return {...t, ...saved};
-    return t;
-  });
-}
-
-let TARGETS = getTargets();
-
-let currentUser=null, currentProfile=null, currentView='list';
-let deals=[], searchQ='', filtCat='', filtPriority='', filtStatus='', page=0;
-let targetPage=0;
-const PAGE_SIZE=20;
-const TARGET_PAGE_SIZE=50;
- 
-let _loginBusy = false;
+let _loginBusy=false;
 async function doLogin(){
-  if(_loginBusy) return;
-  _loginBusy = true;
-  const btn = document.querySelector('#loginView .btn-primary');
-  if(btn){ btn.textContent='ログイン中...'; btn.disabled=true; }
+  if(_loginBusy)return;_loginBusy=true;
+  const btn=document.querySelector('#loginView .btn-primary');
+  if(btn){btn.textContent='ログイン中...';btn.disabled=true;}
   document.getElementById('loginError').textContent='';
-  try {
+  try{
     const email=document.getElementById('loginEmail').value.trim();
     const pass=document.getElementById('loginPassword').value;
-    if(!email||!pass){
-      document.getElementById('loginError').textContent='メールアドレスとパスワードを入力してください。';
-      return;
-    }
-    // localStorageの古いSupabaseセッションを直接クリア
-    Object.keys(localStorage).forEach(k=>{ if(k.startsWith('sb-')) localStorage.removeItem(k); });
-    const {data,error}=await sb.auth.signInWithPassword({email,password:pass});
-    if(error){
-      document.getElementById('loginError').textContent='ログインに失敗しました: '+error.message;
-      return;
-    }
+    if(!email||!pass){document.getElementById('loginError').textContent='メールアドレスとパスワードを入力してください。';return;}
+    Object.keys(localStorage).forEach(k=>{if(k.startsWith('sb-'))localStorage.removeItem(k);});
+    const{data,error}=await sb.auth.signInWithPassword({email,password:pass});
+    if(error){document.getElementById('loginError').textContent='ログインに失敗しました: '+error.message;return;}
     await loadProfile(data.user);
-  } catch(e) {
-    document.getElementById('loginError').textContent='エラーが発生しました。再度お試しください。';
-  } finally {
-    _loginBusy = false;
-    if(btn){ btn.textContent='ログイン'; btn.disabled=false; }
-  }
+  }catch(e){document.getElementById('loginError').textContent='エラーが発生しました。再度お試しください。';}
+  finally{_loginBusy=false;if(btn){btn.textContent='ログイン';btn.disabled=false;}}
 }
- 
+
 async function loadProfile(user){
   currentUser=user;
-  const {data}=await sb.from('profiles').select('*').eq('id',user.id).single();
+  const{data}=await sb.from('profiles').select('*').eq('id',user.id).single();
   currentProfile=data;
   await loadDeals();
   document.getElementById('loginView').style.display='none';
@@ -295,116 +252,137 @@ async function loadProfile(user){
   document.getElementById('userInfoLabel').innerHTML=`${data.name}<span class="user-role ${roleClass}">${roleLabel}</span>`;
   currentView='list';
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
-  var navEl=document.getElementById('nav-list');
-  if(navEl) navEl.classList.add('active');
+  var navEl=document.getElementById('nav-list');if(navEl)navEl.classList.add('active');
   renderView();
 }
- 
+
 async function loadDeals(){
-  const {data}=await sb.from('deals').select('*');
+  const{data}=await sb.from('deals').select('*');
   deals=data||[];
+  if(deals.length>0){
+    const ids=deals.map(d=>d.id);
+    const{data:items}=await sb.from('deal_items').select('*').in('deal_id',ids);
+    dealItems={};
+    (items||[]).forEach(item=>{if(!dealItems[item.deal_id])dealItems[item.deal_id]=[];dealItems[item.deal_id].push(item);});
+  } else {dealItems={};}
 }
- 
+
 async function doLogout(){
-  await sb.auth.signOut();
-  currentUser=null;currentProfile=null;deals=[];
+  await sb.auth.signOut();currentUser=null;currentProfile=null;deals=[];dealItems={};
   document.getElementById('loginView').style.display='flex';
   document.getElementById('appView').style.display='none';
 }
- 
+
 sb.auth.onAuthStateChange(async(event,session)=>{
-  // SIGNED_IN イベントのみ対応（古いキャッシュセッションを自動ログインしない）
-  if(event==='SIGNED_IN' && session && !currentUser){
-    await loadProfile(session.user);
-  }
-  // SIGNED_OUT時は確実にログイン画面へ
+  if(event==='SIGNED_IN'&&session&&!currentUser){await loadProfile(session.user);}
   if(event==='SIGNED_OUT'){
-    currentUser=null; currentProfile=null; deals=[];
+    currentUser=null;currentProfile=null;deals=[];dealItems={};
     document.getElementById('loginView').style.display='flex';
     document.getElementById('appView').style.display='none';
   }
 });
- 
-function canSee(deal){
-  if(!currentProfile) return false;
-  if(currentProfile.role==='maker'||currentProfile.role==='tokuyakuten') return true;
-  return deal.agency_name===currentProfile.agency_name;
-}
-function canEdit(deal){
-  if(!currentProfile) return false;
-  if(currentProfile.role!=='agency') return false;
-  return deal.agency_name===currentProfile.agency_name;
-}
-function canCreate(){
-  return currentProfile&&currentProfile.role==='agency';
-}
-function canEditTarget(){
-  // 全ロールでターゲット基本情報の住所等は編集可能
-  return !!currentProfile;
-}
- 
-function getDeal(targetName){
-  return deals.find(d=>d.agency_name===(currentProfile&&currentProfile.agency_name) ? d.target_name===targetName : false) || deals.find(d=>d.target_name===targetName);
-}
- 
+
+function canSee(deal){if(!currentProfile)return false;if(currentProfile.role==='maker'||currentProfile.role==='tokuyakuten')return true;return deal.agency_name===currentProfile.agency_name;}
+function canEdit(deal){if(!currentProfile)return false;if(currentProfile.role!=='agency')return false;return deal.agency_name===currentProfile.agency_name;}
+function canCreate(){return currentProfile&&currentProfile.role==='agency';}
+
 function showView(v){
   currentView=v;
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
-  var navEl=document.getElementById('nav-'+v);
-  if(navEl) navEl.classList.add('active');
-  page=0; targetPage=0;
-  renderView();
+  var navEl=document.getElementById('nav-'+v);if(navEl)navEl.classList.add('active');
+  page=0;targetPage=0;renderView();
 }
- 
+
 function renderView(){
   const c=document.getElementById('mainContent');
-  if(currentView==='list') renderList(c);
-  else if(currentView==='kanban') renderKanban(c);
-  else if(currentView==='dashboard') renderDashboard(c);
-  else if(currentView==='targets') renderTargets(c);
+  if(currentView==='list')renderList(c);
+  else if(currentView==='kanban')renderKanban(c);
+  else if(currentView==='dashboard')renderDashboard(c);
+  else if(currentView==='targets')renderTargets(c);
+  else if(currentView==='products')renderProducts(c);
 }
- 
-function getFiltered(){
-  return TARGETS.filter(t=>{
-    if(searchQ&&!t.name.includes(searchQ)&&!t.industry.includes(searchQ)) return false;
-    if(filtCat&&t.category!==filtCat) return false;
-    if(filtPriority&&t.priority!==filtPriority) return false;
-    if(filtStatus){
-      const d=deals.find(x=>x.target_name===t.name);
-      const st=d?d.status:'未着手';
-      if(st!==filtStatus) return false;
-    }
-    return true;
-  });
+
+/* ── 製品明細ヘルパー ── */
+function calcItemTotal(item){
+  const p=PRODUCTS.find(x=>x.id===item.productId);if(!p)return 0;
+  let base=p.listPrice*(item.qty||1);
+  (item.options||[]).forEach(optId=>{const o=OPTIONS.find(x=>x.id===optId);if(o)base+=o.listPrice*(item.qty||1);});
+  return base;
 }
- 
+function renderItemsTotal(){
+  const total=editingItems.reduce((s,item)=>s+calcItemTotal(item),0);
+  const el=document.getElementById('items-total');
+  if(el)el.textContent=total>0?'合計（定価）: '+total.toLocaleString()+'円':'';
+}
+function renderProductRows(){
+  const wrap=document.getElementById('product-rows');if(!wrap)return;
+  if(editingItems.length===0){
+    wrap.innerHTML='<div style="padding:12px;color:#bbb;font-size:12px;text-align:center">製品が追加されていません</div>';
+    renderItemsTotal();return;
+  }
+  wrap.innerHTML=editingItems.map((item,idx)=>{
+    const optChecks=OPTIONS.map(o=>`<label class="product-option-check"><input type="checkbox" ${(item.options||[]).includes(o.id)?'checked':''} onchange="toggleOption(${idx},'${o.id}',this.checked)"> ${o.name}（${o.listPrice.toLocaleString()}円）</label>`).join('');
+    return `<div class="product-item-row">
+      <div>
+        <select class="product-select" onchange="updateItemProduct(${idx},this.value)">
+          <option value="">-- 型式を選択 --</option>
+          ${PRODUCTS.map(p=>`<option value="${p.id}"${item.productId===p.id?' selected':''}>${p.id} ${p.name}（照射${p.angle}・定価${p.listPrice.toLocaleString()}円）</option>`).join('')}
+        </select>
+        <div class="product-options-wrap">${optChecks}</div>
+      </div>
+      <div><div style="font-size:10px;color:#888;margin-bottom:2px">数量</div><input type="number" class="product-qty" value="${item.qty||1}" min="1" onchange="updateItemQty(${idx},this.value)"></div>
+      <button class="product-remove-btn" onclick="removeItem(${idx})">✕</button>
+    </div>`;
+  }).join('');
+  renderItemsTotal();
+}
+function addProductItem(){editingItems.push({productId:'',qty:1,options:[]});renderProductRows();}
+function removeItem(idx){editingItems.splice(idx,1);renderProductRows();}
+function updateItemProduct(idx,val){editingItems[idx].productId=val;renderItemsTotal();}
+function updateItemQty(idx,val){editingItems[idx].qty=Math.max(1,parseInt(val)||1);renderItemsTotal();}
+function toggleOption(idx,optId,checked){
+  if(!editingItems[idx].options)editingItems[idx].options=[];
+  if(checked){if(!editingItems[idx].options.includes(optId))editingItems[idx].options.push(optId);}
+  else{editingItems[idx].options=editingItems[idx].options.filter(x=>x!==optId);}
+  renderItemsTotal();
+}
+
+function renderDealItemsHtml(dealId){
+  const items=dealItems[dealId]||[];
+  if(items.length===0)return '<div style="color:#bbb;font-size:12px">製品未登録</div>';
+  let total=0;
+  const rows=items.map(item=>{
+    const p=PRODUCTS.find(x=>x.id===item.product_model);
+    const opts=item.options?JSON.parse(item.options||'[]'):[];
+    let unitPrice=p?p.listPrice:0;
+    const optNames=[];
+    opts.forEach(optId=>{const o=OPTIONS.find(x=>x.id===optId);if(o){unitPrice+=o.listPrice;optNames.push(o.name);}});
+    const lineTotal=unitPrice*(item.qty||1);total+=lineTotal;
+    return `<tr><td>${item.product_model||'-'}</td><td>${item.product_name||'-'}</td><td style="text-align:center">${item.qty||1}</td><td>${optNames.length?optNames.join('・'):'-'}</td><td style="text-align:right">${unitPrice.toLocaleString()}円</td><td style="text-align:right;font-weight:500">${lineTotal.toLocaleString()}円</td></tr>`;
+  }).join('');
+  return `<table class="deal-items-table"><thead><tr><th>型式</th><th>製品名</th><th>数量</th><th>オプション</th><th>単価(定価)</th><th>小計(定価)</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td colspan="5" style="text-align:right;font-weight:600;padding:6px 8px;border-top:1px solid #e8e8e8">合計（定価）</td><td style="text-align:right;font-weight:700;color:#185FA5;padding:6px 8px;border-top:1px solid #e8e8e8">${total.toLocaleString()}円</td></tr></tfoot></table>`;
+}
+
+/* ── 案件一覧 ── */
 function renderList(c){
   const extraDeals=deals.filter(d=>!TARGETS.find(t=>t.name===d.target_name));
   const extraTargets=extraDeals.map(d=>({name:d.target_name,url:'',industry:'（自由登録）',category:'',priority:'-',rank:9999,address:'',prefecture:'',area:''}));
   const allTargets=[...TARGETS,...extraTargets.filter((t,i,a)=>a.findIndex(x=>x.name===t.name)===i)];
- 
   const filtered=allTargets.filter(t=>{
-    if(searchQ&&!t.name.includes(searchQ)&&!t.industry.includes(searchQ)) return false;
-    if(filtCat&&t.category!==filtCat) return false;
-    if(filtPriority&&t.priority!==filtPriority) return false;
-    if(filtStatus){
-      const d=deals.find(x=>x.target_name===t.name);
-      const st=d?d.status:'未着手';
-      if(st!==filtStatus) return false;
-    }
+    if(searchQ&&!t.name.includes(searchQ)&&!t.industry.includes(searchQ))return false;
+    if(filtCat&&t.category!==filtCat)return false;
+    if(filtPriority&&t.priority!==filtPriority)return false;
+    if(filtStatus){const d=deals.find(x=>x.target_name===t.name);const st=d?d.status:'未着手';if(st!==filtStatus)return false;}
     return true;
   });
- 
   const pageData=filtered.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);
   const totalPages=Math.ceil(filtered.length/PAGE_SIZE);
   const myDeals=deals.filter(d=>d.agency_name===currentProfile.agency_name);
   const wonAmt=myDeals.filter(d=>d.status==='受注').reduce((s,d)=>s+(d.amount||0),0);
- 
   let roleMsg='';
-  if(currentProfile.role==='agency') roleMsg=`<div class="info-banner">自社（${currentProfile.agency_name}）の商談情報のみ編集できます。他社の商談情報は閲覧できません。</div>`;
-  else if(currentProfile.role==='tokuyakuten') roleMsg=`<div class="info-banner">特約店として配下の全代理店の商談情報を閲覧できます。</div>`;
+  if(currentProfile.role==='agency')roleMsg=`<div class="info-banner">自社（${currentProfile.agency_name}）の商談情報のみ編集できます。</div>`;
+  else if(currentProfile.role==='tokuyakuten')roleMsg=`<div class="info-banner">特約店として配下の全代理店の商談情報を閲覧できます。</div>`;
   else roleMsg=`<div class="info-banner">メーカーとして全代理店の商談情報を閲覧できます。</div>`;
- 
   let html=`<div class="stats-grid">
     <div class="stat-card"><div class="stat-label">総ターゲット</div><div class="stat-value">${TARGETS.length}</div><div class="stat-sub">社・施設</div></div>
     <div class="stat-card"><div class="stat-label">表示件数</div><div class="stat-value">${filtered.length}</div></div>
@@ -432,14 +410,11 @@ function renderList(c){
   <table class="card-table"><thead><tr>
     <th>優先</th><th>企業名</th><th>業種</th><th>カテゴリ</th><th>担当代理店</th><th>ステータス</th><th>提案金額</th><th>初回接触</th><th>次アクション</th><th></th>
   </tr></thead><tbody>`;
- 
   pageData.forEach(t=>{
     const d=deals.find(x=>x.target_name===t.name);
     const status=d?d.status:'未着手';
     const isOwn=d&&d.agency_name===currentProfile.agency_name;
-    const see=d?canSee(d):false;
-    const edit=d?canEdit(d):false;
- 
+    const see=d?canSee(d):false;const edit=d?canEdit(d):false;
     html+=`<tr>
       <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
       <td><b>${t.name}</b>${isOwn?`<span class="own-tag">自社</span>`:''}<br><span style="font-size:10px;color:#aaa">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">${t.url.replace('https://','').substring(0,28)}</a>`:''}</span></td>
@@ -453,42 +428,27 @@ function renderList(c){
       <td><button class="btn btn-sm" onclick="openDeal('${t.name.replace(/'/g,"\\'")}',${isOwn})">${edit?'編集':'詳細'}</button></td>
     </tr>`;
   });
- 
-  html+=`</tbody></table>
-  <div class="pager">
-    <span>${filtered.length}件中 ${page*PAGE_SIZE+1}〜${Math.min((page+1)*PAGE_SIZE,filtered.length)}件</span>
-    <button ${page===0?'disabled':''} onclick="page--;renderView()">◀ 前へ</button>
-    <span>${page+1} / ${totalPages||1}</span>
-    <button ${page>=totalPages-1?'disabled':''} onclick="page++;renderView()">次へ ▶</button>
-  </div>`;
+  html+=`</tbody></table><div class="pager"><span>${filtered.length}件中 ${page*PAGE_SIZE+1}〜${Math.min((page+1)*PAGE_SIZE,filtered.length)}件</span><button ${page===0?'disabled':''} onclick="page--;renderView()">◀ 前へ</button><span>${page+1} / ${totalPages||1}</span><button ${page>=totalPages-1?'disabled':''} onclick="page++;renderView()">次へ ▶</button></div>`;
   c.innerHTML=html;
 }
- 
+
 function renderKanban(c){
   let html=`<div class="section-head"><span class="section-title">商談ボード</span></div><div class="kanban-wrap">`;
   STATUSES.forEach(st=>{
     const items=deals.filter(d=>d.status===st&&(currentProfile.role!=='agency'||d.agency_name===currentProfile.agency_name));
     html+=`<div class="kanban-col"><div class="kanban-col-title"><span class="badge badge-${st}">${st}</span><span style="color:#aaa;font-size:11px">${items.length}</span></div>`;
-    items.forEach(d=>{
-      html+=`<div class="kanban-card" onclick="openDeal('${d.target_name.replace(/'/g,"\\'")}',true)">
-        <div class="kanban-card-name">${d.target_name}</div>
-        <div class="kanban-card-cat"><span class="badge badge-agency">${d.agency_name}</span></div>
-        ${d.amount?`<div class="kanban-card-amt">${Math.round(d.amount/10000)}万円</div>`:''}
-      </div>`;
-    });
+    items.forEach(d=>{html+=`<div class="kanban-card" onclick="openDeal('${d.target_name.replace(/'/g,"\\'")}',true)"><div class="kanban-card-name">${d.target_name}</div><div class="kanban-card-cat"><span class="badge badge-agency">${d.agency_name}</span></div>${d.amount?`<div class="kanban-card-amt">${Math.round(d.amount/10000)}万円</div>`:''}</div>`;});
     html+=`</div>`;
   });
-  html+=`</div>`;
-  c.innerHTML=html;
+  html+=`</div>`;c.innerHTML=html;
 }
- 
+
 function renderDashboard(c){
   const myDeals=deals.filter(d=>currentProfile.role!=='agency'||d.agency_name===currentProfile.agency_name);
   const byStatus={};STATUSES.forEach(s=>byStatus[s]=0);
   myDeals.forEach(d=>byStatus[d.status]=(byStatus[d.status]||0)+1);
   const wonAmt=myDeals.filter(d=>d.status==='受注').reduce((s,d)=>s+(d.amount||0),0);
   const pipeAmt=myDeals.filter(d=>['提案中','交渉中'].includes(d.status)).reduce((s,d)=>s+(d.amount||0),0);
- 
   let html=`<div class="section-head"><span class="section-title">ダッシュボード</span></div>
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-label">総案件数</div><div class="stat-value">${myDeals.length}</div></div>
@@ -497,124 +457,79 @@ function renderDashboard(c){
     <div class="stat-card"><div class="stat-label">パイプライン</div><div class="stat-value">${Math.round(pipeAmt/10000)}万</div><div class="stat-sub">円</div></div>
   </div>
   <div class="dash-grid">
-    <div class="dash-card"><div class="dash-card-title">ステータス別件数</div>
-      ${STATUSES.map(s=>`<div class="bar-row"><span class="bar-label"><span class="badge badge-${s}">${s}</span></span><div class="bar-track"><div class="bar-fill" style="width:${myDeals.length?Math.round((byStatus[s]||0)/myDeals.length*100):0}%"></div></div><span class="bar-count">${byStatus[s]||0}</span></div>`).join('')}
-    </div>
-    <div class="dash-card"><div class="dash-card-title">代理店別案件数</div>
-      ${Object.entries(deals.reduce((acc,d)=>{acc[d.agency_name]=(acc[d.agency_name]||0)+1;return acc},{})).map(([k,v])=>`<div class="bar-row"><span class="bar-label" style="font-size:11px">${k}</span><div class="bar-track"><div class="bar-fill" style="width:${deals.length?Math.round(v/deals.length*100):0}%;background:#1D9E75"></div></div><span class="bar-count">${v}</span></div>`).join('')||'<div style="color:#aaa;font-size:12px">データなし</div>'}
-    </div>
+    <div class="dash-card"><div class="dash-card-title">ステータス別件数</div>${STATUSES.map(s=>`<div class="bar-row"><span class="bar-label"><span class="badge badge-${s}">${s}</span></span><div class="bar-track"><div class="bar-fill" style="width:${myDeals.length?Math.round((byStatus[s]||0)/myDeals.length*100):0}%"></div></div><span class="bar-count">${byStatus[s]||0}</span></div>`).join('')}</div>
+    <div class="dash-card"><div class="dash-card-title">代理店別案件数</div>${Object.entries(deals.reduce((acc,d)=>{acc[d.agency_name]=(acc[d.agency_name]||0)+1;return acc},{})).map(([k,v])=>`<div class="bar-row"><span class="bar-label" style="font-size:11px">${k}</span><div class="bar-track"><div class="bar-fill" style="width:${deals.length?Math.round(v/deals.length*100):0}%;background:#1D9E75"></div></div><span class="bar-count">${v}</span></div>`).join('')||'<div style="color:#aaa;font-size:12px">データなし</div>'}</div>
   </div>`;
   c.innerHTML=html;
 }
 
-// ── ターゲット管理（住所・都道府県・エリア付き） ─────────────────
 function renderTargets(c){
-  const tFiltered = TARGETS;
-  const tTotalPages = Math.ceil(tFiltered.length / TARGET_PAGE_SIZE);
-  const tPage = tFiltered.slice(targetPage * TARGET_PAGE_SIZE, (targetPage+1) * TARGET_PAGE_SIZE);
-
+  const tTotalPages=Math.ceil(TARGETS.length/TARGET_PAGE_SIZE);
+  const tPage=TARGETS.slice(targetPage*TARGET_PAGE_SIZE,(targetPage+1)*TARGET_PAGE_SIZE);
   let html=`<div class="section-head"><span class="section-title">ターゲット管理（基本情報）</span></div>
   <div class="info-banner">基本情報は全ユーザーが閲覧できます。「編集」ボタンをクリックして住所・都道府県・エリアを登録できます。</div>
-  <table class="card-table"><thead><tr>
-    <th>優先</th><th>企業名</th><th>業種</th><th>カテゴリ</th>
-    <th>住所</th><th>都道府県</th><th>エリア</th><th>URL</th><th></th>
-  </tr></thead><tbody>`;
-
+  <table class="card-table"><thead><tr><th>優先</th><th>企業名</th><th>業種</th><th>カテゴリ</th><th>住所</th><th>都道府県</th><th>エリア</th><th>URL</th><th></th></tr></thead><tbody>`;
   tPage.forEach(t=>{
-    const hasAddr = t.address || t.prefecture || t.area;
-    html+=`<tr>
-      <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
-      <td><b>${t.name}</b></td>
-      <td style="font-size:11px">${t.industry}</td>
-      <td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td>
-      <td style="font-size:11px;color:${t.address?'#333':'#bbb'}">${t.address||'未登録'}</td>
-      <td style="font-size:11px">${t.prefecture?`<span style="background:#f0f4ff;color:#2b4acb;padding:1px 6px;border-radius:4px;font-size:11px">${t.prefecture}</span>`:'<span style="color:#bbb">-</span>'}</td>
-      <td style="font-size:11px">${t.area?`<span style="background:#f0faf4;color:#1a7a4a;padding:1px 6px;border-radius:4px;font-size:11px">${t.area}</span>`:'<span style="color:#bbb">-</span>'}</td>
-      <td style="font-size:11px">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">サイトへ</a>`:''}</td>
-      <td><button class="btn btn-sm" onclick="openTargetEdit('${t.name.replace(/'/g,"\\'")}')">編集</button></td>
-    </tr>`;
+    html+=`<tr><td><span class="badge badge-${t.priority}">${t.priority}</span></td><td><b>${t.name}</b></td><td style="font-size:11px">${t.industry}</td><td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td><td style="font-size:11px;color:${t.address?'#333':'#bbb'}">${t.address||'未登録'}</td><td style="font-size:11px">${t.prefecture?`<span style="background:#f0f4ff;color:#2b4acb;padding:1px 6px;border-radius:4px;font-size:11px">${t.prefecture}</span>`:'<span style="color:#bbb">-</span>'}</td><td style="font-size:11px">${t.area?`<span style="background:#f0faf4;color:#1a7a4a;padding:1px 6px;border-radius:4px;font-size:11px">${t.area}</span>`:'<span style="color:#bbb">-</span>'}</td><td style="font-size:11px">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">サイトへ</a>`:''}</td><td><button class="btn btn-sm" onclick="openTargetEdit('${t.name.replace(/'/g,"\\'")}')">編集</button></td></tr>`;
   });
-
-  html+=`</tbody></table>
-  <div class="pager">
-    <span>${tFiltered.length}件中 ${targetPage*TARGET_PAGE_SIZE+1}〜${Math.min((targetPage+1)*TARGET_PAGE_SIZE,tFiltered.length)}件</span>
-    <button ${targetPage===0?'disabled':''} onclick="targetPage--;renderView()">◀ 前へ</button>
-    <span>${targetPage+1} / ${tTotalPages||1}</span>
-    <button ${targetPage>=tTotalPages-1?'disabled':''} onclick="targetPage++;renderView()">次へ ▶</button>
-  </div>`;
+  html+=`</tbody></table><div class="pager"><span>${TARGETS.length}件中 ${targetPage*TARGET_PAGE_SIZE+1}〜${Math.min((targetPage+1)*TARGET_PAGE_SIZE,TARGETS.length)}件</span><button ${targetPage===0?'disabled':''} onclick="targetPage--;renderView()">◀ 前へ</button><span>${targetPage+1} / ${tTotalPages||1}</span><button ${targetPage>=tTotalPages-1?'disabled':''} onclick="targetPage++;renderView()">次へ ▶</button></div>`;
   c.innerHTML=html;
 }
 
-// ── ターゲット住所編集モーダル ──────────────────────────────────
-function openTargetEdit(targetName) {
-  const t = TARGETS.find(x => x.name === targetName);
-  if (!t) return;
-
-  const prefOptions = PREFS.map(p =>
-    `<option value="${p}"${t.prefecture===p?' selected':''}>${p}</option>`
-  ).join('');
-
-  const areaOptions = [...new Set(Object.values(PREF_TO_AREA))].map(a =>
-    `<option value="${a}"${t.area===a?' selected':''}>${a}</option>`
-  ).join('');
-
-  let html = `<div class="modal-title">${t.name} <span style="font-size:12px;color:#888">— 基本情報編集</span></div>
-  <div style="background:#f8f8f8;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#666">
-    業種：${t.industry}　カテゴリ：${CAT_LABELS[t.category]||t.category}
-  </div>
-  <div class="form-section">住所・エリア情報</div>
-  <div class="form-row">
-    <label class="form-label">住所 <span class="auto-badge">入力で都道府県・エリアを自動判定</span></label>
-    <input class="form-input" id="f_address" value="${t.address||''}" placeholder="例：鹿児島県鹿児島市山下町11-1"
-      oninput="onAddressInput(this.value)">
-  </div>
-  <div class="form-row">
-    <label class="form-label">都道府県 <span class="auto-badge">自動入力</span></label>
-    <select class="form-input" id="f_prefecture" onchange="onPrefChange(this.value)">
-      <option value="">-- 選択 --</option>
-      ${prefOptions}
-    </select>
-  </div>
-  <div class="form-row">
-    <label class="form-label">エリア <span class="auto-badge">自動入力</span></label>
-    <select class="form-input" id="f_area">
-      <option value="">-- 選択 --</option>
-      ${areaOptions}
-    </select>
-  </div>
-  <div class="modal-actions">
-    <button class="btn" onclick="closeModal()">キャンセル</button>
-    <button class="btn btn-primary" onclick="saveTargetLocation('${targetName.replace(/'/g,"\\'")}')">保存</button>
-  </div>`;
-
-  document.getElementById('modalContent').innerHTML = html;
+function openTargetEdit(targetName){
+  const t=TARGETS.find(x=>x.name===targetName);if(!t)return;
+  const prefOptions=Object.keys(PREF_TO_AREA).map(p=>`<option value="${p}"${t.prefecture===p?' selected':''}>${p}</option>`).join('');
+  const areaOptions=[...new Set(Object.values(PREF_TO_AREA))].map(a=>`<option value="${a}"${t.area===a?' selected':''}>${a}</option>`).join('');
+  let html=`<div class="modal-title">${t.name} <span style="font-size:12px;color:#888">— 基本情報編集</span></div>
+  <div style="background:#f8f8f8;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#666">業種：${t.industry}　カテゴリ：${CAT_LABELS[t.category]||t.category}</div>
+  <div class="form-row"><label class="form-label">住所 <span class="auto-badge">入力で都道府県・エリアを自動判定</span></label><input class="form-input" id="f_address" value="${t.address||''}" placeholder="例：鹿児島県鹿児島市山下町11-1" oninput="onAddressInput(this.value)"></div>
+  <div class="form-row"><label class="form-label">都道府県 <span class="auto-badge">自動入力</span></label><select class="form-input" id="f_prefecture" onchange="onPrefChange(this.value)"><option value="">-- 選択 --</option>${prefOptions}</select></div>
+  <div class="form-row"><label class="form-label">エリア <span class="auto-badge">自動入力</span></label><select class="form-input" id="f_area"><option value="">-- 選択 --</option>${areaOptions}</select></div>
+  <div class="modal-actions"><button class="btn" onclick="closeModal()">キャンセル</button><button class="btn btn-primary" onclick="saveTargetLocation('${targetName.replace(/'/g,"\\'")}')">保存</button></div>`;
+  document.getElementById('modalContent').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('open');
 }
 
-function saveTargetLocation(targetName) {
-  const address = document.getElementById('f_address').value.trim();
-  const prefecture = document.getElementById('f_prefecture').value;
-  const area = document.getElementById('f_area').value;
-
-  // localStorageに保存
-  const locs = loadTargetLocations();
-  locs[targetName] = {address, prefecture, area};
-  saveTargetLocations(locs);
-
-  // メモリ上のTARGETSも更新
-  TARGETS = getTargets();
-
-  closeModal();
-  renderView();
+function saveTargetLocation(targetName){
+  const address=document.getElementById('f_address').value.trim();
+  const prefecture=document.getElementById('f_prefecture').value;
+  const area=document.getElementById('f_area').value;
+  const locs=loadTargetLocations();locs[targetName]={address,prefecture,area};saveTargetLocations(locs);
+  TARGETS=getTargets();closeModal();renderView();
 }
 
-function openDeal(targetName, isOwn){
-  // TARGETSリストにない自由登録企業にも対応
-  const t=TARGETS.find(x=>x.name===targetName) || {name:targetName,url:'',industry:'（自由登録）',category:'',priority:'-',address:'',prefecture:'',area:''};
+/* ── 製品マスタ画面 ── */
+function renderProducts(c){
+  let html=`<div class="section-head"><span class="section-title">製品マスタ</span></div>
+  <div class="info-banner">FGHPライト（570W・50℃環境・電源別置）の製品一覧です。仕切り価格は別途更新予定です。</div>
+  <div style="margin-bottom:20px">
+    <div style="font-size:13px;font-weight:600;color:#333;margin-bottom:8px;padding:6px 0;border-bottom:2px solid #185FA5">■ 本体</div>
+    <table class="card-table"><thead><tr><th>タイプ</th><th>型式</th><th>照射角度</th><th>保護等級</th><th>定価</th><th>御社仕切価格</th></tr></thead><tbody>
+    ${PRODUCTS.map(p=>`<tr><td><b>${p.name}</b></td><td><code style="background:#f5f5f5;padding:2px 6px;border-radius:4px;font-size:12px">${p.id}</code></td><td>${p.angle}</td><td><span style="background:#e8f4fd;color:#0c5460;padding:2px 8px;border-radius:10px;font-size:11px">${p.ip}</span></td><td style="font-weight:600;color:#185FA5">${p.listPrice.toLocaleString()}円</td><td style="color:#bbb">（未設定）</td></tr>`).join('')}
+    </tbody></table>
+  </div>
+  <div>
+    <div style="font-size:13px;font-weight:600;color:#333;margin-bottom:8px;padding:6px 0;border-bottom:2px solid #185FA5">■ オプション</div>
+    <table class="card-table"><thead><tr><th>オプション名</th><th>定価</th><th>御社仕切価格</th></tr></thead><tbody>
+    ${OPTIONS.map(o=>`<tr><td><b>${o.name}</b></td><td style="font-weight:600;color:#185FA5">${o.listPrice.toLocaleString()}円</td><td style="color:#bbb">（未設定）</td></tr>`).join('')}
+    </tbody></table>
+  </div>
+  <div style="margin-top:16px;padding:12px 16px;background:#FFF3CD;border:1px solid #FFECB5;border-radius:8px;font-size:12px;color:#856404">
+    💡 仕切り価格は後ほど追加できます。製品は各商談登録時に明細として付与できます。
+  </div>`;
+  c.innerHTML=html;
+}
+
+/* ── 商談モーダル ── */
+function openDeal(targetName,isOwn){
+  const t=TARGETS.find(x=>x.name===targetName)||{name:targetName,url:'',industry:'（自由登録）',category:'',priority:'-',address:'',prefecture:'',area:''};
   const d=deals.find(x=>x.target_name===targetName);
   const see=d?canSee(d):canCreate();
   const edit=d?canEdit(d):canCreate();
- 
+  if(edit&&d){
+    const savedItems=dealItems[d.id]||[];
+    editingItems=savedItems.map(item=>({productId:item.product_model||'',qty:item.qty||1,options:item.options?JSON.parse(item.options||'[]'):[]}));
+  } else {editingItems=[];}
   let html=`<div class="modal-title">${t.name} <span style="font-size:13px;color:#888">— ${CAT_LABELS[t.category]||'自由登録'}</span></div>
   <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:16px">
     <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:600">基本情報（全員閲覧可）</div>
@@ -627,19 +542,20 @@ function openDeal(targetName, isOwn){
       ${t.url?`<span style="color:#888">URL</span><span><a href="${t.url}" target="_blank" style="color:#185FA5;font-size:11px">${t.url}</a></span>`:''}
     </div>
   </div>`;
- 
   if(d&&!see){
     html+=`<div class="warn-banner">他社の商談情報は閲覧できません。</div>`;
   } else if(edit){
     html+=`<div class="form-section">商談情報</div>
-    <div class="form-row"><label class="form-label">ステータス</label>
-      <select class="form-input" id="f_status">${STATUSES.map(s=>`<option${(d&&d.status===s)||(!d&&s==='未着手')?' selected':''}>${s}</option>`).join('')}</select>
-    </div>
+    <div class="form-row"><label class="form-label">ステータス</label><select class="form-input" id="f_status">${STATUSES.map(s=>`<option${(d&&d.status===s)||(!d&&s==='未着手')?' selected':''}>${s}</option>`).join('')}</select></div>
     <div class="form-row"><label class="form-label">先方担当者名</label><input class="form-input" id="f_person" value="${d?d.person||'':''}" placeholder="例：田中課長"></div>
     <div class="form-row"><label class="form-label">提案金額（円）</label><input class="form-input" id="f_amount" type="number" value="${d?d.amount||0:0}"></div>
     <div class="form-row"><label class="form-label">初回接触日</label><input class="form-input" id="f_firstContact" type="date" value="${d?d.first_contact||'':''}"></div>
     <div class="form-row"><label class="form-label">次のアクション</label><input class="form-input" id="f_nextAction" value="${d?d.next_action||'':''}" placeholder="例：見積提出、再訪問"></div>
-    <div class="form-row"><label class="form-label">メモ</label><textarea class="form-input" id="f_memo" rows="3">${d?d.memo||'':''}</textarea></div>`;
+    <div class="form-row"><label class="form-label">メモ</label><textarea class="form-input" id="f_memo" rows="2">${d?d.memo||'':''}</textarea></div>
+    <div class="form-section">製品明細</div>
+    <div class="product-items-wrap"><div id="product-rows"></div></div>
+    <button class="add-product-btn" onclick="addProductItem()" style="margin-top:6px">＋ 製品を追加</button>
+    <div id="items-total" style="margin-top:6px;text-align:right;font-size:12px;color:#185FA5;font-weight:600"></div>`;
   } else if(d){
     html+=`<div class="form-section">商談情報（閲覧のみ）</div>
     <div style="font-size:12px;display:grid;grid-template-columns:100px 1fr;gap:6px 8px">
@@ -650,18 +566,32 @@ function openDeal(targetName, isOwn){
       <span style="color:#888">初回接触</span><span>${d.first_contact||'-'}</span>
       <span style="color:#888">次アクション</span><span>${d.next_action||'-'}</span>
       <span style="color:#888">メモ</span><span>${d.memo||'-'}</span>
-    </div>`;
+    </div>
+    <div class="form-section">製品明細</div>${renderDealItemsHtml(d.id)}`;
   }
- 
-  html+=`<div class="modal-actions">
-    <button class="btn" onclick="closeModal()">閉じる</button>
-    ${edit?`<button class="btn btn-primary" onclick="saveDeal('${targetName.replace(/'/g,"\\'")}')">保存</button>`:''}
-  </div>`;
+  html+=`<div class="modal-actions"><button class="btn" onclick="closeModal()">閉じる</button>${edit?`<button class="btn btn-primary" onclick="saveDeal('${targetName.replace(/'/g,"\\'")}')">保存</button>`:''}</div>`;
   document.getElementById('modalContent').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('open');
+  if(edit)renderProductRows();
 }
- 
+
+async function saveDeal(targetName){
+  const d=deals.find(x=>x.target_name===targetName);
+  const payload={target_name:targetName,agency_name:currentProfile.agency_name,status:document.getElementById('f_status').value,person:document.getElementById('f_person').value,amount:parseInt(document.getElementById('f_amount').value)||0,first_contact:document.getElementById('f_firstContact').value||null,next_action:document.getElementById('f_nextAction').value,memo:document.getElementById('f_memo').value,updated_at:new Date().toISOString()};
+  let dealId;
+  if(d){await sb.from('deals').update(payload).eq('id',d.id);dealId=d.id;}
+  else{payload.created_at=new Date().toISOString();const{data:newDeal}=await sb.from('deals').insert(payload).select().single();dealId=newDeal.id;}
+  await sb.from('deal_items').delete().eq('deal_id',dealId);
+  const validItems=editingItems.filter(item=>item.productId);
+  if(validItems.length>0){
+    const itemPayloads=validItems.map(item=>{const prod=PRODUCTS.find(x=>x.id===item.productId);return{deal_id:dealId,product_model:item.productId,product_name:prod?prod.name:'',qty:item.qty||1,options:JSON.stringify(item.options||[]),list_price:prod?prod.listPrice:0,created_at:new Date().toISOString()};});
+    await sb.from('deal_items').insert(itemPayloads);
+  }
+  await loadDeals();closeModal();renderView();
+}
+
 function openNewDeal(){
+  editingItems=[];
   let html=`<div class="modal-title">新規案件登録</div>
   <div class="form-row">
     <label class="form-label">企業名の入力方法</label>
@@ -669,134 +599,63 @@ function openNewDeal(){
       <button class="btn" id="btn-list" onclick="switchInputMode('list')" style="flex:1;background:#185FA5;color:#fff;border-color:#185FA5">リストから選ぶ</button>
       <button class="btn" id="btn-free" onclick="switchInputMode('free')" style="flex:1">自由入力</button>
     </div>
-    <div id="input-list">
-      <select class="form-input" id="f_target_list" onchange="checkDuplicate(this.value)">
-        <option value="">-- 企業を選択 --</option>
-        ${TARGETS.map(t=>`<option value="${t.name}">${t.name}（${CAT_LABELS[t.category]}）</option>`).join('')}
-      </select>
-    </div>
-    <div id="input-free" style="display:none">
-      <input class="form-input" id="f_target_free" placeholder="企業名を入力" oninput="checkDuplicate(this.value)">
-    </div>
+    <div id="input-list"><select class="form-input" id="f_target_list" onchange="checkDuplicate(this.value)"><option value="">-- 企業を選択 --</option>${TARGETS.map(t=>`<option value="${t.name}">${t.name}（${CAT_LABELS[t.category]}）</option>`).join('')}</select></div>
+    <div id="input-free" style="display:none"><input class="form-input" id="f_target_free" placeholder="企業名を入力" oninput="checkDuplicate(this.value)"></div>
     <div id="duplicate-msg" style="margin-top:6px"></div>
   </div>
-  <div class="form-row"><label class="form-label">ステータス</label>
-    <select class="form-input" id="f_status">${STATUSES.map(s=>`<option>${s}</option>`).join('')}</select>
-  </div>
+  <div class="form-row"><label class="form-label">ステータス</label><select class="form-input" id="f_status">${STATUSES.map(s=>`<option>${s}</option>`).join('')}</select></div>
   <div class="form-row"><label class="form-label">先方担当者名</label><input class="form-input" id="f_person" placeholder="例：田中課長"></div>
   <div class="form-row"><label class="form-label">提案金額（円）</label><input class="form-input" id="f_amount" type="number" value="0"></div>
   <div class="form-row"><label class="form-label">初回接触日</label><input class="form-input" id="f_firstContact" type="date"></div>
   <div class="form-row"><label class="form-label">次のアクション</label><input class="form-input" id="f_nextAction" placeholder="例：訪問アポ取得"></div>
-  <div class="form-row"><label class="form-label">メモ</label><textarea class="form-input" id="f_memo" rows="3"></textarea></div>
-  <div class="modal-actions">
-    <button class="btn" onclick="closeModal()">キャンセル</button>
-    <button class="btn btn-primary" id="btn-save-new" onclick="saveNewDeal()">登録</button>
-  </div>`;
+  <div class="form-row"><label class="form-label">メモ</label><textarea class="form-input" id="f_memo" rows="2"></textarea></div>
+  <div class="form-section">製品明細</div>
+  <div class="product-items-wrap"><div id="product-rows"></div></div>
+  <button class="add-product-btn" onclick="addProductItem()" style="margin-top:6px">＋ 製品を追加</button>
+  <div id="items-total" style="margin-top:6px;text-align:right;font-size:12px;color:#185FA5;font-weight:600"></div>
+  <div class="modal-actions"><button class="btn" onclick="closeModal()">キャンセル</button><button class="btn btn-primary" id="btn-save-new" onclick="saveNewDeal()">登録</button></div>`;
   document.getElementById('modalContent').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('open');
+  renderProductRows();
 }
- 
+
 function switchInputMode(mode){
-  if(mode==='list'){
-    document.getElementById('input-list').style.display='block';
-    document.getElementById('input-free').style.display='none';
-    document.getElementById('btn-list').style.background='#185FA5';
-    document.getElementById('btn-list').style.color='#fff';
-    document.getElementById('btn-list').style.borderColor='#185FA5';
-    document.getElementById('btn-free').style.background='#fff';
-    document.getElementById('btn-free').style.color='#333';
-    document.getElementById('btn-free').style.borderColor='#ddd';
-    document.getElementById('duplicate-msg').innerHTML='';
-  } else {
-    document.getElementById('input-list').style.display='none';
-    document.getElementById('input-free').style.display='block';
-    document.getElementById('btn-free').style.background='#185FA5';
-    document.getElementById('btn-free').style.color='#fff';
-    document.getElementById('btn-free').style.borderColor='#185FA5';
-    document.getElementById('btn-list').style.background='#fff';
-    document.getElementById('btn-list').style.color='#333';
-    document.getElementById('btn-list').style.borderColor='#ddd';
-    document.getElementById('duplicate-msg').innerHTML='';
-  }
+  const isList=mode==='list';
+  document.getElementById('input-list').style.display=isList?'block':'none';
+  document.getElementById('input-free').style.display=isList?'none':'block';
+  document.getElementById('btn-list').style.cssText=isList?'flex:1;background:#185FA5;color:#fff;border-color:#185FA5':'flex:1';
+  document.getElementById('btn-free').style.cssText=isList?'flex:1':'flex:1;background:#185FA5;color:#fff;border-color:#185FA5';
+  document.getElementById('duplicate-msg').innerHTML='';
 }
- 
+
 function checkDuplicate(name){
   const msg=document.getElementById('duplicate-msg');
   if(!name){msg.innerHTML='';return;}
   const ownDeal=deals.find(d=>d.target_name===name&&d.agency_name===currentProfile.agency_name);
   const otherDeal=deals.find(d=>d.target_name===name&&d.agency_name!==currentProfile.agency_name);
-  if(ownDeal){
-    msg.innerHTML=`<div style="background:#F8D7DA;border:1px solid #f5c6cb;border-radius:8px;padding:8px 12px;font-size:12px;color:#721C24">⛔ 自社ですでに登録済みの企業です。重複登録はできません。</div>`;
-    document.getElementById('btn-save-new').disabled=true;
-    document.getElementById('btn-save-new').style.opacity='0.5';
-  } else if(otherDeal){
-    msg.innerHTML=`<div style="background:#FFF3CD;border:1px solid #FFECB5;border-radius:8px;padding:8px 12px;font-size:12px;color:#856404">⚠️ 他の代理店がすでに案件登録しています。このまま登録しますか？</div>`;
-    document.getElementById('btn-save-new').disabled=false;
-    document.getElementById('btn-save-new').style.opacity='1';
-  } else {
-    msg.innerHTML=`<div style="background:#D4EDDA;border:1px solid #c3e6cb;border-radius:8px;padding:8px 12px;font-size:12px;color:#155724">✅ 登録可能です。</div>`;
-    document.getElementById('btn-save-new').disabled=false;
-    document.getElementById('btn-save-new').style.opacity='1';
-  }
+  const btn=document.getElementById('btn-save-new');
+  if(ownDeal){msg.innerHTML=`<div style="background:#F8D7DA;border:1px solid #f5c6cb;border-radius:8px;padding:8px 12px;font-size:12px;color:#721C24">⛔ 自社ですでに登録済みの企業です。</div>`;if(btn){btn.disabled=true;btn.style.opacity='0.5';}}
+  else if(otherDeal){msg.innerHTML=`<div style="background:#FFF3CD;border:1px solid #FFECB5;border-radius:8px;padding:8px 12px;font-size:12px;color:#856404">⚠️ 他の代理店がすでに案件登録しています。このまま登録しますか？</div>`;if(btn){btn.disabled=false;btn.style.opacity='1';}}
+  else{msg.innerHTML=`<div style="background:#D4EDDA;border:1px solid #c3e6cb;border-radius:8px;padding:8px 12px;font-size:12px;color:#155724">✅ 登録可能です。</div>`;if(btn){btn.disabled=false;btn.style.opacity='1';}}
 }
- 
-async function saveDeal(targetName){
-  const d=deals.find(x=>x.target_name===targetName);
-  const payload={
-    target_name:targetName,
-    agency_name:currentProfile.agency_name,
-    status:document.getElementById('f_status').value,
-    person:document.getElementById('f_person').value,
-    amount:parseInt(document.getElementById('f_amount').value)||0,
-    first_contact:document.getElementById('f_firstContact').value||null,
-    next_action:document.getElementById('f_nextAction').value,
-    memo:document.getElementById('f_memo').value,
-    updated_at:new Date().toISOString(),
-  };
-  if(d){
-    await sb.from('deals').update(payload).eq('id',d.id);
-  } else {
-    payload.created_at=new Date().toISOString();
-    await sb.from('deals').insert(payload);
-  }
-  await loadDeals();
-  closeModal();
-  renderView();
-}
- 
+
 async function saveNewDeal(){
-  const listEl=document.getElementById('f_target_list');
-  const freeEl=document.getElementById('f_target_free');
   const isListMode=document.getElementById('input-list').style.display!=='none';
-  const targetName=isListMode?(listEl?listEl.value:''):(freeEl?freeEl.value.trim():'');
- 
-  if(!targetName){
-    alert('企業名を入力または選択してください。');
-    return;
-  }
+  const targetName=isListMode?(document.getElementById('f_target_list')||{value:''}).value:((document.getElementById('f_target_free')||{value:''}).value.trim());
+  if(!targetName){alert('企業名を入力または選択してください。');return;}
   const ownDeal=deals.find(d=>d.target_name===targetName&&d.agency_name===currentProfile.agency_name);
-  if(ownDeal){
-    alert('自社ですでに登録済みの企業です。');
-    return;
+  if(ownDeal){alert('自社ですでに登録済みの企業です。');return;}
+  const payload={target_name:targetName,agency_name:currentProfile.agency_name,status:document.getElementById('f_status').value,person:document.getElementById('f_person').value,amount:parseInt(document.getElementById('f_amount').value)||0,first_contact:document.getElementById('f_firstContact').value||null,next_action:document.getElementById('f_nextAction').value,memo:document.getElementById('f_memo').value,created_at:new Date().toISOString(),updated_at:new Date().toISOString()};
+  const{data:newDeal}=await sb.from('deals').insert(payload).select().single();
+  const dealId=newDeal.id;
+  const validItems=editingItems.filter(item=>item.productId);
+  if(validItems.length>0){
+    const itemPayloads=validItems.map(item=>{const prod=PRODUCTS.find(x=>x.id===item.productId);return{deal_id:dealId,product_model:item.productId,product_name:prod?prod.name:'',qty:item.qty||1,options:JSON.stringify(item.options||[]),list_price:prod?prod.listPrice:0,created_at:new Date().toISOString()};});
+    await sb.from('deal_items').insert(itemPayloads);
   }
-  const payload={
-    target_name:targetName,
-    agency_name:currentProfile.agency_name,
-    status:document.getElementById('f_status').value,
-    person:document.getElementById('f_person').value,
-    amount:parseInt(document.getElementById('f_amount').value)||0,
-    first_contact:document.getElementById('f_firstContact').value||null,
-    next_action:document.getElementById('f_nextAction').value,
-    memo:document.getElementById('f_memo').value,
-    created_at:new Date().toISOString(),
-    updated_at:new Date().toISOString(),
-  };
-  await sb.from('deals').insert(payload);
-  await loadDeals();
-  closeModal();
-  renderView();
+  await loadDeals();closeModal();renderView();
 }
- 
+
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
 document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 </script>
