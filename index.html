@@ -96,7 +96,6 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
 .bar-fill{height:100%;background:#185FA5;border-radius:4px;transition:width 0.4s}
 .bar-count{font-size:12px;min-width:20px;text-align:right;color:#333}
 .auto-badge{display:inline-block;background:#E6F1FB;color:#0C447C;font-size:10px;padding:1px 6px;border-radius:4px;margin-left:6px;font-weight:500}
-/* 製品明細スタイル */
 .product-items-wrap{border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;margin-bottom:8px;background:#fff}
 .product-item-row{display:grid;grid-template-columns:1fr 70px auto;gap:8px;align-items:start;padding:10px 12px;border-bottom:1px solid #f0f0f0}
 .product-item-row:last-child{border-bottom:none}
@@ -114,8 +113,6 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
 .deal-items-table th{background:#f8f8f8;padding:6px 8px;text-align:left;font-weight:600;color:#666;border-bottom:1px solid #e8e8e8}
 .deal-items-table td{padding:6px 8px;border-bottom:1px solid #f5f5f5}
 .deal-items-table tr:last-child td{border-bottom:none}
-
-/* ── 仕切価格・ログ・添付ファイル スタイル ── */
 .shikiri-table{width:100%;border-collapse:collapse;font-size:12px}
 .shikiri-table th{background:#f8f8f8;padding:7px 10px;text-align:left;font-weight:600;color:#666;border-bottom:1px solid #e8e8e8}
 .shikiri-table td{padding:7px 10px;border-bottom:1px solid #f5f5f5;vertical-align:middle}
@@ -204,7 +201,7 @@ const OPTIONS = [
   {id:'vol_dimmer', name:'ボリューム調光', listPrice:45000},
   {id:'anti_salt',  name:'耐塩害塗装',    listPrice:45000},
 ];
-let editingItems = []; // モーダル内の一時明細
+let editingItems = [];
 
 /* ── 都道府県マッピング ── */
 const PREF_TO_AREA = {
@@ -309,7 +306,6 @@ async function loadDeals(){
     dealAttachments={};
     (atts||[]).forEach(a=>{if(!dealAttachments[a.deal_id])dealAttachments[a.deal_id]=[];dealAttachments[a.deal_id].push(a);});
   } else {dealItems={};dealLogs={};dealAttachments={};}
-  // agency_pricesをロード（maker/tokuyakutenは全件、agencyは自社のみ）
   const{data:prices}=await sb.from('agency_prices').select('*');
   agencyPrices=prices||[];
 }
@@ -329,7 +325,11 @@ sb.auth.onAuthStateChange(async(event,session)=>{
   }
 });
 
-function canSee(deal){if(!currentProfile)return false;if(currentProfile.role==='maker'||currentProfile.role==='tokuyakuten')return true;return deal.agency_name===currentProfile.agency_name;}
+/* ── 【修正】権限チェック関数 ── */
+// canSee: 全ロールが全案件を参照可能
+function canSee(deal){if(!currentProfile)return false;return true;}
+// isOwnDeal: 自社案件かどうか
+function isOwnDeal(deal){if(!currentProfile)return false;return deal.agency_name===currentProfile.agency_name;}
 function canEdit(deal){if(!currentProfile)return false;if(currentProfile.role!=='agency')return false;return deal.agency_name===currentProfile.agency_name;}
 function canCreate(){return currentProfile&&currentProfile.role==='agency';}
 
@@ -411,7 +411,7 @@ function renderDealItemsHtml(dealId){
   return `<table class="deal-items-table"><thead><tr><th>型式</th><th>製品名</th><th>数量</th><th>オプション</th><th>単価(定価)</th><th>小計(定価)</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td colspan="5" style="text-align:right;font-weight:600;padding:6px 8px;border-top:1px solid #e8e8e8">合計（定価）</td><td style="text-align:right;font-weight:700;color:#185FA5;padding:6px 8px;border-top:1px solid #e8e8e8">${total.toLocaleString()}円</td></tr></tfoot></table>`;
 }
 
-/* ── 案件一覧 ── */
+/* ── 【修正】案件一覧 ── */
 function renderList(c){
   const extraDeals=deals.filter(d=>!TARGETS.find(t=>t.name===d.target_name));
   const extraTargets=extraDeals.map(d=>({name:d.target_name,url:'',industry:'（自由登録）',category:'',priority:'-',rank:9999,address:'',prefecture:'',area:''}));
@@ -428,7 +428,7 @@ function renderList(c){
   const myDeals=deals.filter(d=>d.agency_name===currentProfile.agency_name);
   const wonAmt=myDeals.filter(d=>d.status==='受注').reduce((s,d)=>s+(d.amount||0),0);
   let roleMsg='';
-  if(currentProfile.role==='agency')roleMsg=`<div class="info-banner">自社（${currentProfile.agency_name}）の商談情報のみ編集できます。</div>`;
+  if(currentProfile.role==='agency')roleMsg=`<div class="info-banner">自社（${currentProfile.agency_name}）の商談情報のみ編集できます。他社の担当代理店名・提案金額・次アクションは非公開です。</div>`;
   else if(currentProfile.role==='tokuyakuten')roleMsg=`<div class="info-banner">特約店として配下の全代理店の商談情報を閲覧できます。</div>`;
   else roleMsg=`<div class="info-banner">メーカーとして全代理店の商談情報を閲覧できます。</div>`;
   let html=`<div class="stats-grid">
@@ -462,17 +462,19 @@ function renderList(c){
     const d=deals.find(x=>x.target_name===t.name);
     const status=d?d.status:'未着手';
     const isOwn=d&&d.agency_name===currentProfile.agency_name;
-    const see=d?canSee(d):false;const edit=d?canEdit(d):false;
+    // 【修正】isOwner: 自社案件かどうか / edit: 編集可否
+    const isOwner=d?isOwnDeal(d):false;
+    const edit=d?canEdit(d):false;
     html+=`<tr>
       <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
       <td><b>${t.name}</b>${isOwn?`<span class="own-tag">自社</span>`:''}<br><span style="font-size:10px;color:#aaa">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">${t.url.replace('https://','').substring(0,28)}</a>`:''}</span></td>
       <td>${t.industry}</td>
       <td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td>
-      <td>${see&&d?`<span class="badge badge-agency">${d.agency_name}</span>`:(d&&!see?`<span class="locked">非公開</span>`:'-')}</td>
+      <td>${d?(isOwner?`<span class="badge badge-agency">${d.agency_name}</span>`:`<span class="locked">非公開</span>`):''}</td>
       <td><span class="badge badge-${status}">${status}</span></td>
-      <td>${see&&d&&d.amount?Math.round(d.amount/10000)+'万円':(d&&!see?`<span class="locked">-</span>`:'-')}</td>
+      <td>${d?(isOwner&&d.amount?Math.round(d.amount/10000)+'万円':`<span class="locked">-</span>`):'-'}</td>
       <td style="font-size:11px">${d?d.first_contact||'-':'-'}</td>
-      <td style="font-size:11px">${see&&d?d.next_action||'-':(d&&!see?`<span class="locked">-</span>`:'-')}</td>
+      <td style="font-size:11px">${d?(isOwner?d.next_action||'-':`<span class="locked">-</span>`):'-'}</td>
       <td><button class="btn btn-sm" onclick="openDeal('${t.name.replace(/'/g,"\\'")}',${isOwn})">${edit?'編集':'詳細'}</button></td>
     </tr>`;
   });
@@ -546,7 +548,6 @@ function saveTargetLocation(targetName){
   TARGETS=getTargets();closeModal();renderView();
 }
 
-/* ── 製品マスタ画面 ── */
 function renderProducts(c){
   let html=`<div class="section-head"><span class="section-title">製品マスタ</span></div>
   <div class="info-banner">FGHPライト（570W・50℃環境・電源別置）の製品一覧です。仕切り価格は別途更新予定です。</div>
@@ -568,11 +569,9 @@ function renderProducts(c){
   c.innerHTML=html;
 }
 
-/* ── 商談モーダル ── */
 function openDeal(targetName,isOwn){
   const t=TARGETS.find(x=>x.name===targetName)||{name:targetName,url:'',industry:'（自由登録）',category:'',priority:'-',address:'',prefecture:'',area:''};
   const d=deals.find(x=>x.target_name===targetName);
-  const see=d?canSee(d):canCreate();
   const edit=d?canEdit(d):canCreate();
   if(edit&&d){
     const savedItems=dealItems[d.id]||[];
@@ -590,9 +589,7 @@ function openDeal(targetName,isOwn){
       ${t.url?`<span style="color:#888">URL</span><span><a href="${t.url}" target="_blank" style="color:#185FA5;font-size:11px">${t.url}</a></span>`:''}
     </div>
   </div>`;
-  if(d&&!see){
-    html+=`<div class="warn-banner">他社の商談情報は閲覧できません。</div>`;
-  } else if(edit){
+  if(edit){
     html+=`<div class="form-section">商談情報</div>
     <div class="form-row"><label class="form-label">ステータス</label><select class="form-input" id="f_status">${STATUSES.map(s=>`<option${(d&&d.status===s)||(!d&&s==='未着手')?' selected':''}>${s}</option>`).join('')}</select></div>
     <div class="form-row"><label class="form-label">先方担当者名</label><input class="form-input" id="f_person" value="${d?d.person||'':''}" placeholder="例：田中課長"></div>
@@ -604,7 +601,6 @@ function openDeal(targetName,isOwn){
     <div class="product-items-wrap"><div id="product-rows"></div></div>
     <button class="add-product-btn" onclick="addProductItem()" style="margin-top:6px">＋ 製品を追加</button>
     <div id="items-total" style="margin-top:6px;text-align:right;font-size:12px;color:#185FA5;font-weight:600"></div>
-
     <div class="form-section">商談ログ</div>
     <div class="log-list" id="log-list-edit">${renderLogsHtml(d?d.id:null)}</div>
     <div class="log-add-wrap">
@@ -612,7 +608,6 @@ function openDeal(targetName,isOwn){
       <textarea class="form-input" id="f_log_memo" rows="2" placeholder="状況メモを入力..."></textarea>
       <button class="btn btn-sm" onclick="addLog(${d?d.id:'null'})" style="align-self:flex-end">追記</button>
     </div>
-
     <div class="form-section">添付ファイル</div>
     <div class="attach-list" id="attach-list-edit">${renderAttachmentsHtml(d?d.id:null,true)}</div>
     <div class="attach-upload-wrap" style="margin-top:8px">
@@ -627,21 +622,19 @@ function openDeal(targetName,isOwn){
     </div>
     <div class="upload-progress" id="upload-progress"><div class="upload-progress-bar" id="upload-progress-bar"></div></div>`;
   } else if(d){
-    html+=`<div class="form-section">商談情報（閲覧のみ）</div>
+    // 他社案件の詳細: 担当代理店・提案金額・次アクションは非公開
+    const isOwner=isOwnDeal(d);
+    html+=`<div class="form-section">商談情報${isOwner?'（閲覧のみ）':'（他社案件 - 一部非公開）'}</div>
     <div style="font-size:12px;display:grid;grid-template-columns:100px 1fr;gap:6px 8px">
-      <span style="color:#888">担当代理店</span><span><span class="badge badge-agency">${d.agency_name}</span></span>
+      <span style="color:#888">担当代理店</span><span>${isOwner?`<span class="badge badge-agency">${d.agency_name}</span>`:`<span class="locked">非公開</span>`}</span>
       <span style="color:#888">ステータス</span><span><span class="badge badge-${d.status}">${d.status}</span></span>
-      <span style="color:#888">担当者</span><span>${d.person||'-'}</span>
-      <span style="color:#888">提案金額</span><span>${d.amount?Math.round(d.amount/10000)+'万円':'-'}</span>
+      <span style="color:#888">担当者</span><span>${isOwner?d.person||'-':'<span class="locked">非公開</span>'}</span>
+      <span style="color:#888">提案金額</span><span>${isOwner?(d.amount?Math.round(d.amount/10000)+'万円':'-'):`<span class="locked">非公開</span>`}</span>
       <span style="color:#888">初回接触</span><span>${d.first_contact||'-'}</span>
-      <span style="color:#888">次アクション</span><span>${d.next_action||'-'}</span>
-      <span style="color:#888">メモ</span><span>${d.memo||'-'}</span>
+      <span style="color:#888">次アクション</span><span>${isOwner?d.next_action||'-':`<span class="locked">非公開</span>`}</span>
+      <span style="color:#888">メモ</span><span>${isOwner?d.memo||'-':`<span class="locked">非公開</span>`}</span>
     </div>
-    <div class="form-section">製品明細</div>${renderDealItemsHtml(d.id)}
-    <div class="form-section">商談ログ</div>
-    <div class="log-list">${renderLogsHtml(d.id)}</div>
-    <div class="form-section">添付ファイル</div>
-    <div class="attach-list">${renderAttachmentsHtml(d.id,false)}</div>`;
+    ${isOwner?`<div class="form-section">製品明細</div>${renderDealItemsHtml(d.id)}<div class="form-section">商談ログ</div><div class="log-list">${renderLogsHtml(d.id)}</div><div class="form-section">添付ファイル</div><div class="attach-list">${renderAttachmentsHtml(d.id,false)}</div>`:''}`;
   }
   html+=`<div class="modal-actions"><button class="btn" onclick="closeModal()">閉じる</button>${edit?`<button class="btn btn-primary" onclick="saveDeal('${targetName.replace(/'/g,"\\'")}')">保存</button>`:''}</div>`;
   document.getElementById('modalContent').innerHTML=html;
@@ -661,7 +654,6 @@ async function saveDeal(targetName){
     const itemPayloads=validItems.map(item=>{const prod=PRODUCTS.find(x=>x.id===item.productId);return{deal_id:dealId,product_model:item.productId,product_name:prod?prod.name:'',qty:item.qty||1,options:JSON.stringify(item.options||[]),list_price:prod?prod.listPrice:0,created_at:new Date().toISOString()};});
     await sb.from('deal_items').insert(itemPayloads);
   }
-  // ログ追記（未保存分）
   const logDate=document.getElementById('f_log_date')?document.getElementById('f_log_date').value:'';
   const logMemo=document.getElementById('f_log_memo')?document.getElementById('f_log_memo').value.trim():'';
   if(logDate&&logMemo){
@@ -694,13 +686,11 @@ function openNewDeal(){
   <div class="product-items-wrap"><div id="product-rows"></div></div>
   <button class="add-product-btn" onclick="addProductItem()" style="margin-top:6px">＋ 製品を追加</button>
   <div id="items-total" style="margin-top:6px;text-align:right;font-size:12px;color:#185FA5;font-weight:600"></div>
-
   <div class="form-section">商談ログ（初回）</div>
   <div class="log-add-wrap">
     <input type="date" class="form-input" id="f_log_date" value="${new Date().toISOString().split('T')[0]}">
     <textarea class="form-input" id="f_log_memo" rows="2" placeholder="初回の状況メモ（省略可）"></textarea>
   </div>
-
   <div class="modal-actions"><button class="btn" onclick="closeModal()">キャンセル</button><button class="btn btn-primary" id="btn-save-new" onclick="saveNewDeal()">登録</button></div>`;
   document.getElementById('modalContent').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('open');
@@ -744,8 +734,6 @@ async function saveNewDeal(){
   await loadDeals();closeModal();renderView();
 }
 
-
-/* ── 商談ログ表示 ── */
 function renderLogsHtml(dealId){
   const logs=dealId?dealLogs[dealId]||[]:[];
   if(logs.length===0)return'<div style="padding:12px;color:#bbb;font-size:12px;text-align:center">ログがありません</div>';
@@ -756,28 +744,16 @@ async function addLog(dealId){
   const logDate=document.getElementById('f_log_date').value;
   const memo=document.getElementById('f_log_memo').value.trim();
   if(!logDate||!memo){alert('日付とメモを入力してください。');return;}
-  if(!dealId){
-    // 新規案件の場合は先に商談を保存してもらう
-    alert('先に商談情報を保存してから、ログを追記してください。');
-    return;
-  }
-  const{error}=await sb.from('deal_logs').insert({
-    deal_id:dealId,
-    log_date:logDate,
-    memo:memo,
-    created_by:currentUser.id,
-    created_at:new Date().toISOString()
-  });
+  if(!dealId){alert('先に商談情報を保存してから、ログを追記してください。');return;}
+  const{error}=await sb.from('deal_logs').insert({deal_id:dealId,log_date:logDate,memo:memo,created_by:currentUser.id,created_at:new Date().toISOString()});
   if(error){alert('追記に失敗しました: '+error.message);return;}
   document.getElementById('f_log_memo').value='';
-  // ローカルにも反映
   if(!dealLogs[dealId])dealLogs[dealId]=[];
   dealLogs[dealId].unshift({log_date:logDate,memo:memo});
   const el=document.getElementById('log-list-edit');
   if(el)el.innerHTML=renderLogsHtml(dealId);
 }
 
-/* ── 添付ファイル表示 ── */
 function renderAttachmentsHtml(dealId,canDelete){
   const atts=dealId?dealAttachments[dealId]||[]:[];
   if(atts.length===0)return'<div style="padding:12px;color:#bbb;font-size:12px;text-align:center">添付ファイルがありません</div>';
@@ -803,42 +779,20 @@ async function uploadAttachment(dealId){
   const file=fileInput.files[0];
   if(!file){alert('ファイルを選択してください。');return;}
   if(file.size>50*1024*1024){alert('ファイルサイズは50MB以下にしてください。');return;}
-
   const progressWrap=document.getElementById('upload-progress');
   const progressBar=document.getElementById('upload-progress-bar');
   if(progressWrap)progressWrap.style.display='block';
   if(progressBar)progressBar.style.width='0%';
-
-  const ext=file.name.split('.').pop();
   const safeName=file.name.replace(/[^a-zA-Z0-9_\u3000-\u9FFF\uFF00-\uFFEF.\-]/g,'_');
   const storagePath=`${currentProfile.agency_name}/${dealId}/${Date.now()}_${safeName}`;
-
   if(progressBar)progressBar.style.width='30%';
-
   const{error:upError}=await sb.storage.from('deal-files').upload(storagePath,file,{upsert:false});
-  if(upError){
-    if(progressWrap)progressWrap.style.display='none';
-    alert('アップロードに失敗しました: '+upError.message);return;
-  }
-
+  if(upError){if(progressWrap)progressWrap.style.display='none';alert('アップロードに失敗しました: '+upError.message);return;}
   if(progressBar)progressBar.style.width='70%';
-
-  const{error:dbError}=await sb.from('deal_attachments').insert({
-    deal_id:dealId,
-    file_type:fileType,
-    file_name:file.name,
-    storage_path:storagePath,
-    uploaded_by:currentUser.id,
-    created_at:new Date().toISOString()
-  });
-  if(dbError){
-    if(progressWrap)progressWrap.style.display='none';
-    alert('ファイル情報の保存に失敗しました: '+dbError.message);return;
-  }
-
+  const{error:dbError}=await sb.from('deal_attachments').insert({deal_id:dealId,file_type:fileType,file_name:file.name,storage_path:storagePath,uploaded_by:currentUser.id,created_at:new Date().toISOString()});
+  if(dbError){if(progressWrap)progressWrap.style.display='none';alert('ファイル情報の保存に失敗しました: '+dbError.message);return;}
   if(progressBar)progressBar.style.width='100%';
   setTimeout(()=>{if(progressWrap)progressWrap.style.display='none';},500);
-
   fileInput.value='';
   if(!dealAttachments[dealId])dealAttachments[dealId]=[];
   dealAttachments[dealId].push({file_type:fileType,file_name:file.name,storage_path:storagePath,id:Date.now()});
@@ -855,46 +809,20 @@ async function deleteAttachment(attachId,storagePath,dealId){
   if(el)el.innerHTML=renderAttachmentsHtml(dealId,true);
 }
 
-/* ── 仕切価格管理画面 ── */
 function renderPrices(c){
   const role=currentProfile.role;
   const myAgency=currentProfile.agency_name;
-
-  // 代理店一覧（deals から）
   const agencies=[...new Set(deals.map(d=>d.agency_name))].sort();
   if(agencies.length===0&&role==='agency')agencies.push(myAgency);
-
-  // 閲覧できる代理店を絞る
   const visibleAgencies = role==='agency' ? [myAgency] : agencies;
-
-  let html=`<div class="section-head"><span class="section-title">仕切価格管理</span></div>
-  <div class="info-banner">`;
-  if(role==='maker'||role==='tokuyakuten'){
-    html+=`代理店ごとの仕切価格を設定できます。代理店は自社の仕切価格のみ参照できます。`;
-  } else {
-    html+=`自社（${myAgency}）の仕切価格を参照できます。`;
-  }
+  let html=`<div class="section-head"><span class="section-title">仕切価格管理</span></div><div class="info-banner">`;
+  if(role==='maker'||role==='tokuyakuten'){html+=`代理店ごとの仕切価格を設定できます。代理店は自社の仕切価格のみ参照できます。`;}
+  else{html+=`自社（${myAgency}）の仕切価格を参照できます。`;}
   html+=`</div>`;
-
-  if(visibleAgencies.length===0){
-    html+=`<div style="color:#aaa;font-size:13px;padding:20px">代理店情報がありません。案件登録後に表示されます。</div>`;
-    c.innerHTML=html;return;
-  }
-
-  // 代理店タブ
-  const activeAgency = visibleAgencies[0];
-  if(visibleAgencies.length>1){
-    html+=`<div class="tab-bar">${visibleAgencies.map((ag,i)=>`<button class="tab-btn${i===0?' active':''}" onclick="switchPriceTab('${ag.replace(/'/g,"\\'")}',this)">${ag}</button>`).join('')}</div>`;
-  }
-
-  html+=visibleAgencies.map((ag,i)=>`
-    <div class="tab-panel${i===0?' active':''}" id="price-tab-${ag.replace(/[^a-zA-Z0-9]/g,'_')}">
-      ${renderPriceTable(ag, role)}
-    </div>`).join('');
-
-  if(role==='tokuyakuten'||role==='maker'){
-    html+=`<div style="margin-top:16px;text-align:right"><button class="btn btn-primary btn-sm" onclick="saveAllPrices()">全代理店の仕切価格を保存</button></div>`;
-  }
+  if(visibleAgencies.length===0){html+=`<div style="color:#aaa;font-size:13px;padding:20px">代理店情報がありません。案件登録後に表示されます。</div>`;c.innerHTML=html;return;}
+  if(visibleAgencies.length>1){html+=`<div class="tab-bar">${visibleAgencies.map((ag,i)=>`<button class="tab-btn${i===0?' active':''}" onclick="switchPriceTab('${ag.replace(/'/g,"\\'")}',this)">${ag}</button>`).join('')}</div>`;}
+  html+=visibleAgencies.map((ag,i)=>`<div class="tab-panel${i===0?' active':''}" id="price-tab-${ag.replace(/[^a-zA-Z0-9]/g,'_')}">${renderPriceTable(ag, role)}</div>`).join('');
+  if(role==='tokuyakuten'||role==='maker'){html+=`<div style="margin-top:16px;text-align:right"><button class="btn btn-primary btn-sm" onclick="saveAllPrices()">全代理店の仕切価格を保存</button></div>`;}
   c.innerHTML=html;
 }
 
@@ -909,57 +837,26 @@ function switchPriceTab(agencyName, btn){
 
 function renderPriceTable(agencyName, role){
   const canEdit=(role==='tokuyakuten'||role==='maker');
-  const getPrice=(productId)=>{
-    const p=agencyPrices.find(x=>x.agency_name===agencyName&&x.product_id===productId);
-    return p?p.shikiri_price:'';
-  };
-  const getRate=(productId,listPrice)=>{
-    const p=agencyPrices.find(x=>x.agency_name===agencyName&&x.product_id===productId);
-    if(!p||!p.shikiri_price||!listPrice)return'';
-    return'（掛率 '+(p.shikiri_price/listPrice*100).toFixed(1)+'%）';
-  };
-
+  const getPrice=(productId)=>{const p=agencyPrices.find(x=>x.agency_name===agencyName&&x.product_id===productId);return p?p.shikiri_price:'';};
+  const getRate=(productId,listPrice)=>{const p=agencyPrices.find(x=>x.agency_name===agencyName&&x.product_id===productId);if(!p||!p.shikiri_price||!listPrice)return'';return'（掛率 '+(p.shikiri_price/listPrice*100).toFixed(1)+'%）';};
   const agKey=agencyName.replace(/[^a-zA-Z0-9]/g,'_');
-
-  let html=`<table class="shikiri-table" style="margin-bottom:16px">
-    <thead><tr><th>種別</th><th>型式 / オプション名</th><th>定価</th><th>仕切価格${canEdit?'（編集可）':''}</th><th>掛率</th></tr></thead><tbody>`;
-
+  let html=`<table class="shikiri-table" style="margin-bottom:16px"><thead><tr><th>種別</th><th>型式 / オプション名</th><th>定価</th><th>仕切価格${canEdit?'（編集可）':''}</th><th>掛率</th></tr></thead><tbody>`;
   PRODUCTS.forEach(p=>{
-    const priceVal=getPrice(p.id);
-    const rateStr=getRate(p.id,p.listPrice);
-    html+=`<tr>
-      <td style="font-size:11px;color:#888">本体</td>
-      <td><b style="font-size:12px">${p.id}</b><br><span style="font-size:11px;color:#888">${p.name}（照射${p.angle}・${p.ip}）</span></td>
-      <td style="font-weight:500">${p.listPrice.toLocaleString()}円</td>
-      <td>${canEdit?`<input type="number" class="shikiri-input" id="sp_${agKey}_${p.id}" value="${priceVal}" placeholder="未設定" oninput="updateRateDisplay('${agKey}','${p.id}',${p.listPrice},this.value)">`:`<span style="font-weight:600;color:#185FA5">${priceVal?priceVal.toLocaleString()+'円':'（未設定）'}</span>`}</td>
-      <td id="rate_${agKey}_${p.id}" class="shikiri-rate">${rateStr}</td>
-    </tr>`;
+    const priceVal=getPrice(p.id);const rateStr=getRate(p.id,p.listPrice);
+    html+=`<tr><td style="font-size:11px;color:#888">本体</td><td><b style="font-size:12px">${p.id}</b><br><span style="font-size:11px;color:#888">${p.name}（照射${p.angle}・${p.ip}）</span></td><td style="font-weight:500">${p.listPrice.toLocaleString()}円</td><td>${canEdit?`<input type="number" class="shikiri-input" id="sp_${agKey}_${p.id}" value="${priceVal}" placeholder="未設定" oninput="updateRateDisplay('${agKey}','${p.id}',${p.listPrice},this.value)">`:`<span style="font-weight:600;color:#185FA5">${priceVal?priceVal.toLocaleString()+'円':'（未設定）'}</span>`}</td><td id="rate_${agKey}_${p.id}" class="shikiri-rate">${rateStr}</td></tr>`;
   });
-
   OPTIONS.forEach(o=>{
-    const priceVal=getPrice(o.id);
-    const rateStr=getRate(o.id,o.listPrice);
-    html+=`<tr>
-      <td style="font-size:11px;color:#888">オプション</td>
-      <td><b style="font-size:12px">${o.name}</b></td>
-      <td style="font-weight:500">${o.listPrice.toLocaleString()}円</td>
-      <td>${canEdit?`<input type="number" class="shikiri-input" id="sp_${agKey}_${o.id}" value="${priceVal}" placeholder="未設定" oninput="updateRateDisplay('${agKey}','${o.id}',${o.listPrice},this.value)">`:`<span style="font-weight:600;color:#185FA5">${priceVal?priceVal.toLocaleString()+'円':'（未設定）'}</span>`}</td>
-      <td id="rate_${agKey}_${o.id}" class="shikiri-rate">${rateStr}</td>
-    </tr>`;
+    const priceVal=getPrice(o.id);const rateStr=getRate(o.id,o.listPrice);
+    html+=`<tr><td style="font-size:11px;color:#888">オプション</td><td><b style="font-size:12px">${o.name}</b></td><td style="font-weight:500">${o.listPrice.toLocaleString()}円</td><td>${canEdit?`<input type="number" class="shikiri-input" id="sp_${agKey}_${o.id}" value="${priceVal}" placeholder="未設定" oninput="updateRateDisplay('${agKey}','${o.id}',${o.listPrice},this.value)">`:`<span style="font-weight:600;color:#185FA5">${priceVal?priceVal.toLocaleString()+'円':'（未設定）'}</span>`}</td><td id="rate_${agKey}_${o.id}" class="shikiri-rate">${rateStr}</td></tr>`;
   });
-
   html+=`</tbody></table>`;
-  if(canEdit){
-    html+=`<div style="text-align:right"><button class="btn btn-primary btn-sm" onclick="savePricesForAgency('${agencyName.replace(/'/g,"\\'")}')">この代理店の仕切価格を保存</button></div>`;
-  }
+  if(canEdit){html+=`<div style="text-align:right"><button class="btn btn-primary btn-sm" onclick="savePricesForAgency('${agencyName.replace(/'/g,"\\'")}')">この代理店の仕切価格を保存</button></div>`;}
   return html;
 }
 
 function updateRateDisplay(agKey,productId,listPrice,val){
-  const el=document.getElementById('rate_'+agKey+'_'+productId);
-  if(!el)return;
-  const v=parseInt(val);
-  if(!v||!listPrice){el.textContent='';return;}
+  const el=document.getElementById('rate_'+agKey+'_'+productId);if(!el)return;
+  const v=parseInt(val);if(!v||!listPrice){el.textContent='';return;}
   el.textContent='（掛率 '+(v/listPrice*100).toFixed(1)+'%）';
 }
 
@@ -968,19 +865,13 @@ async function savePricesForAgency(agencyName){
   const allProducts=[...PRODUCTS.map(p=>({id:p.id,type:'body'})),...OPTIONS.map(o=>({id:o.id,type:'option'}))];
   const upserts=[];
   allProducts.forEach(({id,type})=>{
-    const el=document.getElementById('sp_'+agKey+'_'+id);
-    if(!el)return;
+    const el=document.getElementById('sp_'+agKey+'_'+id);if(!el)return;
     const val=parseInt(el.value)||null;
     upserts.push({agency_name:agencyName,product_id:id,product_type:type,shikiri_price:val,updated_at:new Date().toISOString(),updated_by:currentUser.id});
   });
   const{error}=await sb.from('agency_prices').upsert(upserts,{onConflict:'agency_name,product_id'});
   if(error){alert('保存に失敗しました: '+error.message);return;}
-  // ローカルに反映
-  upserts.forEach(u=>{
-    const idx=agencyPrices.findIndex(x=>x.agency_name===u.agency_name&&x.product_id===u.product_id);
-    if(idx>=0)agencyPrices[idx]={...agencyPrices[idx],...u};
-    else agencyPrices.push(u);
-  });
+  upserts.forEach(u=>{const idx=agencyPrices.findIndex(x=>x.agency_name===u.agency_name&&x.product_id===u.product_id);if(idx>=0)agencyPrices[idx]={...agencyPrices[idx],...u};else agencyPrices.push(u);});
   alert(`${agencyName} の仕切価格を保存しました。`);
 }
 
@@ -989,7 +880,6 @@ async function saveAllPrices(){
   for(const ag of agencies)await savePricesForAgency(ag);
 }
 
-/* ── saveDeal後にモーダル内のログ・添付を最新化 ── */
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
 document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 </script>
