@@ -439,7 +439,7 @@ function renderList(c){
   </div>${roleMsg}
   <div class="section-head"><span class="section-title">案件一覧</span>${canCreate()?`<button class="btn btn-primary btn-sm" onclick="openNewDeal()">＋ 案件登録</button>`:''}</div>
   <div class="toolbar">
-    <input class="search" id="searchInput" placeholder="企業名・業種で検索..." value="${searchQ}" oninput="searchQ=this.value;page=0;debounceRender()">
+    <input class="search" id="searchInput" placeholder="企業名・業種で検索..." value="${searchQ}">
     <select class="filt" onchange="filtCat=this.value;page=0;renderView()">
       <option value="">全カテゴリ</option>
       ${Object.entries(CAT_LABELS).map(([k,v])=>`<option value="${k}"${filtCat===k?' selected':''}>${v}</option>`).join('')}
@@ -480,6 +480,7 @@ function renderList(c){
   });
   html+=`</tbody></table><div class="pager"><span>${filtered.length}件中 ${page*PAGE_SIZE+1}〜${Math.min((page+1)*PAGE_SIZE,filtered.length)}件</span><button ${page===0?'disabled':''} onclick="page--;renderView()">◀ 前へ</button><span>${page+1} / ${totalPages||1}</span><button ${page>=totalPages-1?'disabled':''} onclick="page++;renderView()">次へ ▶</button></div>`;
   c.innerHTML=html;
+  initSearchInput();
 }
 
 function renderKanban(c){
@@ -881,13 +882,18 @@ async function saveAllPrices(){
 }
 
 let _searchTimer=null;
-function debounceRender(){
-  clearTimeout(_searchTimer);
-  _searchTimer=setTimeout(()=>{renderView();restoreSearch();},0);
+let _imeComposing=false;
+function initSearchInput(){
+  const el=document.getElementById('searchInput');
+  if(!el||el._sfaInited)return;
+  el._sfaInited=true;
+  el.addEventListener('compositionstart',()=>{_imeComposing=true;});
+  el.addEventListener('compositionend',()=>{_imeComposing=false;searchQ=el.value;page=0;renderView();restoreSearch();});
+  el.addEventListener('input',()=>{if(_imeComposing)return;searchQ=el.value;page=0;renderView();restoreSearch();});
 }
 function restoreSearch(){
   const el=document.getElementById('searchInput');
-  if(el){el.focus();const len=el.value.length;el.setSelectionRange(len,len);}
+  if(el){initSearchInput();el.focus();const len=el.value.length;el.setSelectionRange(len,len);}
 }
 
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
