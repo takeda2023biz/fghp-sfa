@@ -439,7 +439,7 @@ function renderList(c){
   </div>${roleMsg}
   <div class="section-head"><span class="section-title">案件一覧</span>${canCreate()?`<button class="btn btn-primary btn-sm" onclick="openNewDeal()">＋ 案件登録</button>`:''}</div>
   <div class="toolbar">
-    <input class="search" placeholder="企業名・業種で検索..." value="${searchQ}" oninput="searchQ=this.value;page=0;renderView()">
+    <input class="search" id="searchInput" placeholder="企業名・業種で検索..." value="${searchQ}" oninput="searchQ=this.value;page=0;debounceRender()">
     <select class="filt" onchange="filtCat=this.value;page=0;renderView()">
       <option value="">全カテゴリ</option>
       ${Object.entries(CAT_LABELS).map(([k,v])=>`<option value="${k}"${filtCat===k?' selected':''}>${v}</option>`).join('')}
@@ -878,6 +878,16 @@ async function savePricesForAgency(agencyName){
 async function saveAllPrices(){
   const agencies=[...new Set(deals.map(d=>d.agency_name))].sort();
   for(const ag of agencies)await savePricesForAgency(ag);
+}
+
+let _searchTimer=null;
+function debounceRender(){
+  clearTimeout(_searchTimer);
+  _searchTimer=setTimeout(()=>{renderView();restoreSearch();},0);
+}
+function restoreSearch(){
+  const el=document.getElementById('searchInput');
+  if(el){el.focus();const len=el.value.length;el.setSelectionRange(len,len);}
 }
 
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
