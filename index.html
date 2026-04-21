@@ -266,6 +266,7 @@ async function loadTargets(){
 let TARGETS=[];
 let currentUser=null,currentProfile=null,currentView='list';
 let deals=[],dealItems={},dealLogs={},dealAttachments={},agencyPrices=[],searchQ='',filtCat='',filtIndustry='',filtPriority='',filtStatus='',page=0,targetPage=0;
+let kanbanFiscalYear=getFiscalYear(new Date().toISOString());
 const PAGE_SIZE=20,TARGET_PAGE_SIZE=50;
 
 /* 🟡【修正】ブルートフォース対策：連続失敗時に待機時間を増やす */
@@ -532,10 +533,45 @@ function renderList(c){
   initSearchInput();
 }
 
+/* ── 年度算出（4月始まり） ── */
+function getFiscalYear(dateStr){
+  if(!dateStr) return null;
+  const d = new Date(dateStr);
+  const y = d.getFullYear();
+  const m = d.getMonth()+1; // 1-12
+  return m >= 4 ? y : y - 1;
+}
+
 function renderKanban(c){
-  let html=`<div class="section-head"><span class="section-title">商談ボード</span></div><div class="kanban-wrap">`;
+  /* 年度一覧を deals から生成（created_at ベース） */
+  const fySet = new Set();
+  deals.forEach(d=>{ const fy=getFiscalYear(d.created_at); if(fy) fySet.add(fy); });
+  const currentFY = getFiscalYear(new Date().toISOString());
+  fySet.add(currentFY);
+  const fyList = [...fySet].sort((a,b)=>b-a);
+
+  const fyOptions = fyList.map(y=>`<option value="${y}"${kanbanFiscalYear===y?' selected':''}>${y}年度</option>`).join('');
+
+  const filteredDeals = deals.filter(d=>{
+    if(currentProfile.role==='agency' && d.agency_name!==currentProfile.agency_name) return false;
+    if(kanbanFiscalYear!==null && getFiscalYear(d.created_at)!==kanbanFiscalYear) return false;
+    return true;
+  });
+
+  let html=`<div class="section-head">
+    <span class="section-title">商談ボード</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <label style="font-size:12px;color:#666">年度：</label>
+      <select class="filt" onchange="kanbanFiscalYear=this.value==='all'?null:parseInt(this.value);renderView()">
+        <option value="all"${kanbanFiscalYear===null?' selected':''}>全年度</option>
+        ${fyOptions}
+      </select>
+      <span style="font-size:12px;color:#aaa">${filteredDeals.length}件</span>
+    </div>
+  </div>
+  <div class="kanban-wrap">`;
   STATUSES.forEach(st=>{
-    const items=deals.filter(d=>d.status===st&&(currentProfile.role!=='agency'||d.agency_name===currentProfile.agency_name));
+    const items=filteredDeals.filter(d=>d.status===st);
     html+=`<div class="kanban-col"><div class="kanban-col-title"><span class="badge badge-${st}">${st}</span><span style="color:#aaa;font-size:11px">${items.length}</span></div>`;
     items.forEach(d=>{html+=`<div class="kanban-card" onclick="openDeal('${d.target_name.replace(/'/g,"\\'")}',true)"><div class="kanban-card-name">${d.target_name}</div><div class="kanban-card-cat"><span class="badge badge-agency">${d.agency_name}</span></div>${d.amount?`<div class="kanban-card-amt">${Math.round(d.amount/10000)}万円</div>`:''}</div>`;});
     html+=`</div>`;
