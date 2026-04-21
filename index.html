@@ -202,6 +202,7 @@ const OPTIONS = [
   {id:'anti_salt',  name:'耐塩害塗装',    listPrice:45000},
 ];
 let editingItems = [];
+let editingOptions = []; // オプション：全明細共通
 
 /* ── 都道府県マッピング ── */
 const PREF_TO_AREA = {
@@ -375,8 +376,8 @@ sb.auth.onAuthStateChange(async(event,session)=>{
 /* ── 【修正】権限チェック関数 ── */
 function canSee(deal){if(!currentProfile)return false;return true;}
 function isOwnDeal(deal){if(!currentProfile)return false;return deal.agency_name===currentProfile.agency_name;}
-function canEdit(deal){if(!currentProfile)return false;if(currentProfile.role!=='agency')return false;return deal.agency_name===currentProfile.agency_name;}
-function canCreate(){return currentProfile&&currentProfile.role==='agency';}
+function canEdit(deal){if(!currentProfile)return false;if(!['agency','tokuyakuten'].includes(currentProfile.role))return false;return deal.agency_name===currentProfile.agency_name;}
+function canCreate(){return currentProfile&&['agency','tokuyakuten'].includes(currentProfile.role);}
 
 function showView(v){
   currentView=v;
@@ -399,7 +400,7 @@ function renderView(){
 function calcItemTotal(item){
   const p=PRODUCTS.find(x=>x.id===item.productId);if(!p)return 0;
   let base=p.listPrice*(item.qty||1);
-  (item.options||[]).forEach(optId=>{const o=OPTIONS.find(x=>x.id===optId);if(o)base+=o.listPrice*(item.qty||1);});
+  editingOptions.forEach(optId=>{const o=OPTIONS.find(x=>x.id===optId);if(o)base+=o.listPrice*(item.qty||1);});
   return base;
 }
 function renderItemsTotal(){
@@ -414,14 +415,12 @@ function renderProductRows(){
     renderItemsTotal();return;
   }
   wrap.innerHTML=editingItems.map((item,idx)=>{
-    const optChecks=OPTIONS.map(o=>`<label class="product-option-check"><input type="checkbox" ${(item.options||[]).includes(o.id)?'checked':''} onchange="toggleOption(${idx},'${o.id}',this.checked)"> ${o.name}（${o.listPrice.toLocaleString()}円）</label>`).join('');
     return `<div class="product-item-row">
       <div>
         <select class="product-select" onchange="updateItemProduct(${idx},this.value)">
           <option value="">-- 型式を選択 --</option>
           ${PRODUCTS.map(p=>`<option value="${p.id}"${item.productId===p.id?' selected':''}>${p.id} ${p.name}（照射${p.angle}・定価${p.listPrice.toLocaleString()}円）</option>`).join('')}
         </select>
-        <div class="product-options-wrap">${optChecks}</div>
       </div>
       <div><div style="font-size:10px;color:#888;margin-bottom:2px">数量</div><input type="number" class="product-qty" value="${item.qty||1}" min="1" onchange="updateItemQty(${idx},this.value)"></div>
       <button class="product-remove-btn" onclick="removeItem(${idx})">✕</button>
@@ -429,16 +428,20 @@ function renderProductRows(){
   }).join('');
   renderItemsTotal();
 }
-function addProductItem(){editingItems.push({productId:'',qty:1,options:[]});renderProductRows();}
+function renderOptionsArea(){
+  const wrap=document.getElementById('global-options');if(!wrap)return;
+  wrap.innerHTML=OPTIONS.map(o=>`<label class="product-option-check"><input type="checkbox" ${editingOptions.includes(o.id)?'checked':''} onchange="toggleGlobalOption('${o.id}',this.checked)"> ${o.name}（${o.listPrice.toLocaleString()}円／台）</label>`).join('');
+}
+function toggleGlobalOption(optId,checked){
+  if(checked){if(!editingOptions.includes(optId))editingOptions.push(optId);}
+  else{editingOptions=editingOptions.filter(x=>x!==optId);}
+  renderItemsTotal();
+}
+function addProductItem(){editingItems.push({productId:'',qty:1});renderProductRows();}
 function removeItem(idx){editingItems.splice(idx,1);renderProductRows();}
 function updateItemProduct(idx,val){editingItems[idx].productId=val;renderItemsTotal();}
 function updateItemQty(idx,val){editingItems[idx].qty=Math.max(1,parseInt(val)||1);renderItemsTotal();}
-function toggleOption(idx,optId,checked){
-  if(!editingItems[idx].options)editingItems[idx].options=[];
-  if(checked){if(!editingItems[idx].options.includes(optId))editingItems[idx].options.push(optId);}
-  else{editingItems[idx].options=editingItems[idx].options.filter(x=>x!==optId);}
-  renderItemsTotal();
-}
+function toggleOption(idx,optId,checked){} // 旧関数（互換性保持）
 
 function renderDealItemsHtml(dealId){
   const items=dealItems[dealId]||[];
@@ -476,7 +479,7 @@ function renderList(c){
   const wonAmt=myDeals.filter(d=>d.status==='受注').reduce((s,d)=>s+(d.amount||0),0);
   let roleMsg='';
   if(currentProfile.role==='agency')roleMsg=`<div class="info-banner">自社（${currentProfile.agency_name}）の商談情報のみ編集できます。他社の担当代理店名・提案金額・次アクションは非公開です。</div>`;
-  else if(currentProfile.role==='tokuyakuten')roleMsg=`<div class="info-banner">特約店として配下の全代理店の商談情報を閲覧できます。</div>`;
+  else if(currentProfile.role==='tokuyakuten')roleMsg=`<div class="info-banner">特約店として自社商談の登録・編集と、配下の全代理店の商談情報を閲覧できます。</div>`;
   else roleMsg=`<div class="info-banner">メーカーとして全代理店の商談情報を閲覧できます。</div>`;
   let html=`<div class="stats-grid">
     <div class="stat-card"><div class="stat-label">総ターゲット</div><div class="stat-value">${TARGETS.length}</div><div class="stat-sub">社・施設</div></div>
@@ -665,8 +668,11 @@ function openDeal(targetName,isOwn){
   const edit=d?canEdit(d):canCreate();
   if(edit&&d){
     const savedItems=dealItems[d.id]||[];
-    editingItems=savedItems.map(item=>({productId:item.product_model||'',qty:item.qty||1,options:item.options?JSON.parse(item.options||'[]'):[]}));
-  } else {editingItems=[];}
+    editingItems=savedItems.map(item=>({productId:item.product_model||'',qty:item.qty||1}));
+    // オプションは先頭アイテムから代表して読み込む（全体共通）
+    const firstItem=savedItems[0];
+    editingOptions=firstItem&&firstItem.options?JSON.parse(firstItem.options||'[]'):[];
+  } else {editingItems=[];editingOptions=[];}
   let html=`<div class="modal-title">${t.name} <span style="font-size:13px;color:#888">— ${CAT_LABELS[t.category]||'自由登録'}</span></div>
   <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:16px">
     <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:600">基本情報（全員閲覧可）</div>
@@ -691,6 +697,10 @@ function openDeal(targetName,isOwn){
     <div class="form-section">製品明細</div>
     <div class="product-items-wrap"><div id="product-rows"></div></div>
     <button class="add-product-btn" onclick="addProductItem()" style="margin-top:6px">＋ 製品を追加</button>
+    <div style="margin-top:10px;padding:10px 12px;background:#f8f8f8;border:1px solid #e8e8e8;border-radius:8px">
+      <div style="font-size:11px;font-weight:600;color:#666;margin-bottom:8px">オプション（全製品共通）</div>
+      <div id="global-options" class="product-options-wrap"></div>
+    </div>
     <div id="items-total" style="margin-top:6px;text-align:right;font-size:12px;color:#185FA5;font-weight:600"></div>
     <div class="form-section">商談ログ</div>
     <div class="log-list" id="log-list-edit">${renderLogsHtml(d?d.id:null)}</div>
@@ -730,7 +740,7 @@ function openDeal(targetName,isOwn){
   html+=`<div class="modal-actions"><button class="btn" onclick="closeModal()">閉じる</button>${edit?`<button class="btn btn-primary" onclick="saveDeal('${targetName.replace(/'/g,"\\'")}')">保存</button>`:''}</div>`;
   document.getElementById('modalContent').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('open');
-  if(edit)renderProductRows();
+  if(edit){renderProductRows();renderOptionsArea();}
 }
 
 async function saveDeal(targetName){
@@ -742,7 +752,7 @@ async function saveDeal(targetName){
   await sb.from('deal_items').delete().eq('deal_id',dealId);
   const validItems=editingItems.filter(item=>item.productId);
   if(validItems.length>0){
-    const itemPayloads=validItems.map(item=>{const prod=PRODUCTS.find(x=>x.id===item.productId);return{deal_id:dealId,product_model:item.productId,product_name:prod?prod.name:'',qty:item.qty||1,options:JSON.stringify(item.options||[]),list_price:prod?prod.listPrice:0,created_at:new Date().toISOString()};});
+    const itemPayloads=validItems.map(item=>{const prod=PRODUCTS.find(x=>x.id===item.productId);return{deal_id:dealId,product_model:item.productId,product_name:prod?prod.name:'',qty:item.qty||1,options:JSON.stringify(editingOptions),list_price:prod?prod.listPrice:0,created_at:new Date().toISOString()};});
     await sb.from('deal_items').insert(itemPayloads);
   }
   const logDate=document.getElementById('f_log_date')?document.getElementById('f_log_date').value:'';
@@ -755,7 +765,7 @@ async function saveDeal(targetName){
 }
 
 function openNewDeal(){
-  editingItems=[];
+  editingItems=[];editingOptions=[];
   let html=`<div class="modal-title">新規案件登録</div>
   <div class="form-row">
     <label class="form-label">企業名の入力方法</label>
@@ -777,6 +787,10 @@ function openNewDeal(){
   <div class="form-section">製品明細</div>
   <div class="product-items-wrap"><div id="product-rows"></div></div>
   <button class="add-product-btn" onclick="addProductItem()" style="margin-top:6px">＋ 製品を追加</button>
+  <div style="margin-top:10px;padding:10px 12px;background:#f8f8f8;border:1px solid #e8e8e8;border-radius:8px">
+    <div style="font-size:11px;font-weight:600;color:#666;margin-bottom:8px">オプション（全製品共通）</div>
+    <div id="global-options" class="product-options-wrap"></div>
+  </div>
   <div id="items-total" style="margin-top:6px;text-align:right;font-size:12px;color:#185FA5;font-weight:600"></div>
   <div class="form-section">商談ログ（初回）</div>
   <div class="log-add-wrap">
@@ -786,7 +800,7 @@ function openNewDeal(){
   <div class="modal-actions"><button class="btn" onclick="closeModal()">キャンセル</button><button class="btn btn-primary" id="btn-save-new" onclick="saveNewDeal()">登録</button></div>`;
   document.getElementById('modalContent').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('open');
-  renderProductRows();
+  renderProductRows();renderOptionsArea();
 }
 
 function switchInputMode(mode){
@@ -820,7 +834,7 @@ async function saveNewDeal(){
   const dealId=newDeal.id;
   const validItems=editingItems.filter(item=>item.productId);
   if(validItems.length>0){
-    const itemPayloads=validItems.map(item=>{const prod=PRODUCTS.find(x=>x.id===item.productId);return{deal_id:dealId,product_model:item.productId,product_name:prod?prod.name:'',qty:item.qty||1,options:JSON.stringify(item.options||[]),list_price:prod?prod.listPrice:0,created_at:new Date().toISOString()};});
+    const itemPayloads=validItems.map(item=>{const prod=PRODUCTS.find(x=>x.id===item.productId);return{deal_id:dealId,product_model:item.productId,product_name:prod?prod.name:'',qty:item.qty||1,options:JSON.stringify(editingOptions),list_price:prod?prod.listPrice:0,created_at:new Date().toISOString()};});
     await sb.from('deal_items').insert(itemPayloads);
   }
   await loadDeals();closeModal();renderView();
