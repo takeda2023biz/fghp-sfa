@@ -187,7 +187,6 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
 <script>
 const SUPABASE_URL = 'https://raqcwqmvwxhvarzoomvz.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhcWN3cW12d3hodmFyem9vbXZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2OTc5NTcsImV4cCI6MjA5MTI3Mzk1N30.75Ky3O1F9Y-9N3PxKxEDl_1HQQ9RcWhXqWqcfZLV_VQ';
-Object.keys(localStorage).forEach(k=>{ if(k.startsWith('sb-')) localStorage.removeItem(k); });
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* ── 製品マスタ ── */
@@ -773,7 +772,9 @@ async function saveNewTarget(isPending){
   if(!category){alert('カテゴリを選択してください。');return;}
   if(!industry){alert('業種を入力してください。');return;}
   if(TARGETS.find(t=>t.name===name)){alert('同じ名前のターゲットがすでに存在します。');return;}
-
+  // セッション確認・リフレッシュ
+  const{data:sd}=await sb.auth.getSession();
+  if(!sd.session){const{error:re}=await sb.auth.refreshSession();if(re){alert('セッションが切れています。再ログインしてください。');return;}}
   const payload={
     name,category,industry,
     priority:document.getElementById('nt_priority').value||'B',
@@ -784,9 +785,8 @@ async function saveNewTarget(isPending){
     approval_status:isPending?'pending':'approved',
     submitted_by:isPending?currentProfile.agency_name:null,
     submitted_at:isPending?new Date().toISOString():null,
-    rank:9000, // 新規は末尾
+    rank:9000,
   };
-
   const{error}=await sb.from('targets').insert(payload);
   if(error){alert('登録に失敗しました: '+error.message);return;}
   TARGETS=await loadTargets();
