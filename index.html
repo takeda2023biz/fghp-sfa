@@ -265,7 +265,7 @@ async function loadTargets(){
 
 let TARGETS=[];
 let currentUser=null,currentProfile=null,currentView='list';
-let deals=[],dealItems={},dealLogs={},dealAttachments={},agencyPrices=[],searchQ='',filtCat='',filtPriority='',filtStatus='',page=0,targetPage=0;
+let deals=[],dealItems={},dealLogs={},dealAttachments={},agencyPrices=[],searchQ='',filtCat='',filtIndustry='',filtPriority='',filtStatus='',page=0,targetPage=0;
 const PAGE_SIZE=20,TARGET_PAGE_SIZE=50;
 
 /* 🟡【修正】ブルートフォース対策：連続失敗時に待機時間を増やす */
@@ -381,7 +381,7 @@ function showView(v){
   currentView=v;
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
   var navEl=document.getElementById('nav-'+v);if(navEl)navEl.classList.add('active');
-  page=0;targetPage=0;renderView();
+  page=0;targetPage=0;filtIndustry='';renderView();
 }
 
 function renderView(){
@@ -464,6 +464,7 @@ function renderList(c){
   const filtered=allTargets.filter(t=>{
     if(searchQ&&!t.name.includes(searchQ)&&!t.industry.includes(searchQ))return false;
     if(filtCat&&t.category!==filtCat)return false;
+    if(filtIndustry&&t.industry!==filtIndustry)return false;
     if(filtPriority&&t.priority!==filtPriority)return false;
     if(filtStatus){const d=deals.find(x=>x.target_name===t.name);const st=d?d.status:'未着手';if(st!==filtStatus)return false;}
     return true;
@@ -489,6 +490,10 @@ function renderList(c){
       <option value="">全カテゴリ</option>
       ${Object.entries(CAT_LABELS).map(([k,v])=>`<option value="${k}"${filtCat===k?' selected':''}>${v}</option>`).join('')}
     </select>
+    <select class="filt" onchange="filtIndustry=this.value;page=0;renderView()">
+      <option value="">全業種</option>
+      ${[...new Set(TARGETS.map(t=>t.industry).filter(Boolean))].sort().map(i=>`<option value="${i}"${filtIndustry===i?' selected':''}>${i}</option>`).join('')}
+    </select>
     <select class="filt" onchange="filtPriority=this.value;page=0;renderView()">
       <option value="">全優先度</option>
       <option value="S"${filtPriority==='S'?' selected':''}>S</option>
@@ -501,7 +506,7 @@ function renderList(c){
     </select>
   </div>
   <table class="card-table"><thead><tr>
-    <th>優先</th><th>企業名</th><th>業種</th><th>カテゴリ</th><th>担当代理店</th><th>ステータス</th><th>提案金額</th><th>初回接触</th><th>次アクション</th><th></th>
+    <th>優先</th><th>企業名</th><th>カテゴリ</th><th>業種</th><th>担当代理店</th><th>ステータス</th><th>提案金額</th><th>初回接触</th><th>次アクション</th><th></th>
   </tr></thead><tbody>`;
   pageData.forEach(t=>{
     const d=deals.find(x=>x.target_name===t.name);
@@ -512,8 +517,8 @@ function renderList(c){
     html+=`<tr>
       <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
       <td><b>${t.name}</b>${isOwn?`<span class="own-tag">自社</span>`:''}<br><span style="font-size:10px;color:#aaa">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">${t.url.replace('https://','').substring(0,28)}</a>`:''}</span></td>
-      <td>${t.industry}</td>
       <td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td>
+      <td style="font-size:11px">${t.industry}</td>
       <td>${d?(isOwner?`<span class="badge badge-agency">${d.agency_name}</span>`:`<span class="locked">非公開</span>`):''}</td>
       <td><span class="badge badge-${status}">${status}</span></td>
       <td>${d?(isOwner&&d.amount?Math.round(d.amount/10000)+'万円':`<span class="locked">-</span>`):'-'}</td>
@@ -563,9 +568,9 @@ function renderTargets(c){
   const tPage=TARGETS.slice(targetPage*TARGET_PAGE_SIZE,(targetPage+1)*TARGET_PAGE_SIZE);
   let html=`<div class="section-head"><span class="section-title">ターゲット管理（基本情報）</span></div>
   <div class="info-banner">基本情報は全ユーザーが閲覧できます。「編集」ボタンをクリックして住所・都道府県・エリアを登録できます。</div>
-  <table class="card-table"><thead><tr><th>優先</th><th>企業名</th><th>業種</th><th>カテゴリ</th><th>住所</th><th>都道府県</th><th>エリア</th><th>URL</th><th></th></tr></thead><tbody>`;
+  <table class="card-table"><thead><tr><th>優先</th><th>企業名</th><th>カテゴリ</th><th>業種</th><th>住所</th><th>都道府県</th><th>エリア</th><th>URL</th><th></th></tr></thead><tbody>`;
   tPage.forEach(t=>{
-    html+=`<tr><td><span class="badge badge-${t.priority}">${t.priority}</span></td><td><b>${t.name}</b></td><td style="font-size:11px">${t.industry}</td><td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td><td style="font-size:11px;color:${t.address?'#333':'#bbb'}">${t.address||'未登録'}</td><td style="font-size:11px">${t.prefecture?`<span style="background:#f0f4ff;color:#2b4acb;padding:1px 6px;border-radius:4px;font-size:11px">${t.prefecture}</span>`:'<span style="color:#bbb">-</span>'}</td><td style="font-size:11px">${t.area?`<span style="background:#f0faf4;color:#1a7a4a;padding:1px 6px;border-radius:4px;font-size:11px">${t.area}</span>`:'<span style="color:#bbb">-</span>'}</td><td style="font-size:11px">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">サイトへ</a>`:''}</td><td><button class="btn btn-sm" onclick="openTargetEdit('${t.name.replace(/'/g,"\\'")}')">編集</button></td></tr>`;
+    html+=`<tr><td><span class="badge badge-${t.priority}">${t.priority}</span></td><td><b>${t.name}</b></td><td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td><td style="font-size:11px">${t.industry}</td><td style="font-size:11px;color:${t.address?'#333':'#bbb'}">${t.address||'未登録'}</td><td style="font-size:11px">${t.prefecture?`<span style="background:#f0f4ff;color:#2b4acb;padding:1px 6px;border-radius:4px;font-size:11px">${t.prefecture}</span>`:'<span style="color:#bbb">-</span>'}</td><td style="font-size:11px">${t.area?`<span style="background:#f0faf4;color:#1a7a4a;padding:1px 6px;border-radius:4px;font-size:11px">${t.area}</span>`:'<span style="color:#bbb">-</span>'}</td><td style="font-size:11px">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">サイトへ</a>`:''}</td><td><button class="btn btn-sm" onclick="openTargetEdit('${t.name.replace(/'/g,"\\'")}')">編集</button></td></tr>`;
   });
   html+=`</tbody></table><div class="pager"><span>${TARGETS.length}件中 ${targetPage*TARGET_PAGE_SIZE+1}〜${Math.min((targetPage+1)*TARGET_PAGE_SIZE,TARGETS.length)}件</span><button ${targetPage===0?'disabled':''} onclick="targetPage--;renderView()">◀ 前へ</button><span>${targetPage+1} / ${tTotalPages||1}</span><button ${targetPage>=tTotalPages-1?'disabled':''} onclick="targetPage++;renderView()">次へ ▶</button></div>`;
   c.innerHTML=html;
