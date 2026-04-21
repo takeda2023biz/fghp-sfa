@@ -655,7 +655,10 @@ function renderTargets(c){
       <td style="font-size:11px">${t.prefecture?`<span style="background:#f0f4ff;color:#2b4acb;padding:1px 6px;border-radius:4px">${t.prefecture}</span>`:'<span style="color:#bbb">-</span>'}</td>
       <td style="font-size:11px">${t.area?`<span style="background:#f0faf4;color:#1a7a4a;padding:1px 6px;border-radius:4px">${t.area}</span>`:'<span style="color:#bbb">-</span>'}</td>
       <td style="font-size:11px">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">サイトへ</a>`:''}</td>
-      <td><button class="btn btn-sm" onclick="openTargetEdit('${t.name.replace(/'/g,"\\'")}')">編集</button></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-sm" onclick="openTargetEdit('${t.name.replace(/'/g,"\\'")}',${t.id})" style="margin-right:4px">編集</button>
+        ${canApprove?`<button class="btn btn-sm btn-danger" onclick="deleteTarget(${t.id},'${t.name.replace(/'/g,"\\'")}')">削除</button>`:''}
+      </td>
     </tr>`;
   });
   html+=`</tbody></table>
@@ -692,6 +695,14 @@ function switchTargetTab(tab,btn){
   btn.classList.add('active');
   const panel=document.getElementById('target-tab-'+tab);
   if(panel)panel.classList.add('active');
+}
+
+async function deleteTarget(id,name){
+  if(!confirm(`「${name}」を削除しますか？\n関連する案件データは残ります。`))return;
+  const{error}=await sb.from('targets').delete().eq('id',id);
+  if(error){alert('削除に失敗しました: '+error.message);return;}
+  TARGETS=await loadTargets();
+  renderView();
 }
 
 async function approveTarget(id){
@@ -784,8 +795,8 @@ async function saveNewTarget(isPending){
   renderView();
 }
 
-function openTargetEdit(targetName){
-  const t=TARGETS.find(x=>x.name===targetName);if(!t)return;
+function openTargetEdit(targetName,targetId){
+  const t=TARGETS.find(x=>x.name===targetName)||(targetId?TARGETS.find(x=>x.id===targetId):null);if(!t)return;
   const prefOptions=Object.keys(PREF_TO_AREA).map(p=>`<option value="${p}"${t.prefecture===p?' selected':''}>${p}</option>`).join('');
   const areaOptions=[...new Set(Object.values(PREF_TO_AREA))].map(a=>`<option value="${a}"${t.area===a?' selected':''}>${a}</option>`).join('');
   let html=`<div class="modal-title">${t.name} <span style="font-size:12px;color:#888">— 基本情報編集</span></div>
