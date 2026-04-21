@@ -254,14 +254,20 @@ function loadTargetLocations(){try{const s=localStorage.getItem(LS_KEY);return s
 function saveTargetLocations(locs){localStorage.setItem(LS_KEY,JSON.stringify(locs))}
 function applyLocalStorageOverrides(targets){const locs=loadTargetLocations();return targets.map(t=>{const s=locs[t.name];return s?{...t,...s}:t})}
 
-/* 🔴【修正】ログイン後に Supabase の targets テーブルから取得する関数 */
+/* ── ターゲット取得：approved + 自分のpending ── */
 async function loadTargets(){
   const{data,error}=await sb.from('targets').select('*').order('rank');
-  if(error){
-    console.error('targets テーブル取得エラー:', error.message);
-    return [];
-  }
-  return applyLocalStorageOverrides(data||[]);
+  if(error){ console.error('targets テーブル取得エラー:', error.message); return []; }
+  const filtered=(data||[]).filter(t=>{
+    if(t.approval_status==='approved') return true;
+    if(t.approval_status==='pending'){
+      if(!currentProfile) return false;
+      if(['maker','tokuyakuten'].includes(currentProfile.role)) return true;
+      return t.submitted_by===currentProfile.agency_name;
+    }
+    return false;
+  });
+  return applyLocalStorageOverrides(filtered);
 }
 
 let TARGETS=[];
@@ -607,16 +613,175 @@ function renderDashboard(c){
 }
 
 function renderTargets(c){
-  const tTotalPages=Math.ceil(TARGETS.length/TARGET_PAGE_SIZE);
-  const tPage=TARGETS.slice(targetPage*TARGET_PAGE_SIZE,(targetPage+1)*TARGET_PAGE_SIZE);
-  let html=`<div class="section-head"><span class="section-title">ターゲット管理（基本情報）</span></div>
-  <div class="info-banner">基本情報は全ユーザーが閲覧できます。「編集」ボタンをクリックして住所・都道府県・エリアを登録できます。</div>
+  const role=currentProfile.role;
+  const canApprove=['maker','tokuyakuten'].includes(role);
+  const approvedTargets=TARGETS.filter(t=>t.approval_status==='approved');
+  const pendingTargets=TARGETS.filter(t=>t.approval_status==='pending');
+  const showPending=canApprove?pendingTargets:(pendingTargets.filter(t=>t.submitted_by===currentProfile.agency_name));
+
+  const tTotalPages=Math.ceil(approvedTargets.length/TARGET_PAGE_SIZE);
+  const tPage=approvedTargets.slice(targetPage*TARGET_PAGE_SIZE,(targetPage+1)*TARGET_PAGE_SIZE);
+
+  let html=`<div class="section-head">
+    <span class="section-title">ターゲット管理</span>
+    <button class="btn btn-primary btn-sm" onclick="openNewTarget()">＋ ターゲット登録</button>
+  </div>`;
+
+  // 承認待ちバナー（代理店：自分の仮登録件数、承認者：全pending件数）
+  if(showPending.length>0){
+    if(canApprove){
+      html+=`<div class="warn-banner">⏳ 承認待ちのターゲットが <b>${showPending.length}件</b> あります。下の「承認待ち」タブで確認・承認してください。</div>`;
+    } else {
+      html+=`<div class="info-banner">📋 あなたが申請したターゲットが <b>${showPending.length}件</b> 承認待ちです。承認されると案件一覧に表示されます。</div>`;
+    }
+  }
+
+  // タブ
+  html+=`<div class="tab-bar">
+    <button class="tab-btn active" id="tab-approved" onclick="switchTargetTab('approved',this)">承認済み（${approvedTargets.length}件）</button>
+    ${showPending.length>0?`<button class="tab-btn" id="tab-pending" onclick="switchTargetTab('pending',this)">承認待ち <span style="background:#dc3545;color:#fff;padding:1px 7px;border-radius:10px;font-size:10px;margin-left:4px">${showPending.length}</span></button>`:''}
+  </div>`;
+
+  // 承認済みタブ
+  html+=`<div id="target-tab-approved" class="tab-panel active">
   <table class="card-table"><thead><tr><th>優先</th><th>企業名</th><th>カテゴリ</th><th>業種</th><th>住所</th><th>都道府県</th><th>エリア</th><th>URL</th><th></th></tr></thead><tbody>`;
   tPage.forEach(t=>{
-    html+=`<tr><td><span class="badge badge-${t.priority}">${t.priority}</span></td><td><b>${t.name}</b></td><td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td><td style="font-size:11px">${t.industry}</td><td style="font-size:11px;color:${t.address?'#333':'#bbb'}">${t.address||'未登録'}</td><td style="font-size:11px">${t.prefecture?`<span style="background:#f0f4ff;color:#2b4acb;padding:1px 6px;border-radius:4px;font-size:11px">${t.prefecture}</span>`:'<span style="color:#bbb">-</span>'}</td><td style="font-size:11px">${t.area?`<span style="background:#f0faf4;color:#1a7a4a;padding:1px 6px;border-radius:4px;font-size:11px">${t.area}</span>`:'<span style="color:#bbb">-</span>'}</td><td style="font-size:11px">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">サイトへ</a>`:''}</td><td><button class="btn btn-sm" onclick="openTargetEdit('${t.name.replace(/'/g,"\\'")}')">編集</button></td></tr>`;
+    html+=`<tr>
+      <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
+      <td><b>${t.name}</b></td>
+      <td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td>
+      <td style="font-size:11px">${t.industry}</td>
+      <td style="font-size:11px;color:${t.address?'#333':'#bbb'}">${t.address||'未登録'}</td>
+      <td style="font-size:11px">${t.prefecture?`<span style="background:#f0f4ff;color:#2b4acb;padding:1px 6px;border-radius:4px">${t.prefecture}</span>`:'<span style="color:#bbb">-</span>'}</td>
+      <td style="font-size:11px">${t.area?`<span style="background:#f0faf4;color:#1a7a4a;padding:1px 6px;border-radius:4px">${t.area}</span>`:'<span style="color:#bbb">-</span>'}</td>
+      <td style="font-size:11px">${t.url?`<a href="${t.url}" target="_blank" style="color:#185FA5">サイトへ</a>`:''}</td>
+      <td><button class="btn btn-sm" onclick="openTargetEdit('${t.name.replace(/'/g,"\\'")}')">編集</button></td>
+    </tr>`;
   });
-  html+=`</tbody></table><div class="pager"><span>${TARGETS.length}件中 ${targetPage*TARGET_PAGE_SIZE+1}〜${Math.min((targetPage+1)*TARGET_PAGE_SIZE,TARGETS.length)}件</span><button ${targetPage===0?'disabled':''} onclick="targetPage--;renderView()">◀ 前へ</button><span>${targetPage+1} / ${tTotalPages||1}</span><button ${targetPage>=tTotalPages-1?'disabled':''} onclick="targetPage++;renderView()">次へ ▶</button></div>`;
+  html+=`</tbody></table>
+  <div class="pager"><span>${approvedTargets.length}件中 ${targetPage*TARGET_PAGE_SIZE+1}〜${Math.min((targetPage+1)*TARGET_PAGE_SIZE,approvedTargets.length)}件</span><button ${targetPage===0?'disabled':''} onclick="targetPage--;renderView()">◀ 前へ</button><span>${targetPage+1} / ${tTotalPages||1}</span><button ${targetPage>=tTotalPages-1?'disabled':''} onclick="targetPage++;renderView()">次へ ▶</button></div>
+  </div>`;
+
+  // 承認待ちタブ
+  if(showPending.length>0){
+    html+=`<div id="target-tab-pending" class="tab-panel">
+    <table class="card-table"><thead><tr><th>企業名</th><th>カテゴリ</th><th>業種</th><th>申請者</th><th>申請日</th>${canApprove?'<th>操作</th>':''}</tr></thead><tbody>`;
+    showPending.forEach(t=>{
+      const submittedDate=t.submitted_at?t.submitted_at.split('T')[0]:'-';
+      html+=`<tr>
+        <td><b>${t.name}</b>${t.url?`<br><a href="${t.url}" target="_blank" style="font-size:10px;color:#185FA5">${t.url.substring(0,30)}</a>`:''}</td>
+        <td style="font-size:11px">${CAT_LABELS[t.category]||t.category||'-'}</td>
+        <td style="font-size:11px">${t.industry||'-'}</td>
+        <td style="font-size:11px">${t.submitted_by||'-'}</td>
+        <td style="font-size:11px">${submittedDate}</td>
+        ${canApprove?`<td style="white-space:nowrap">
+          <button class="btn btn-sm" style="background:#1D9E75;color:#fff;border-color:#1D9E75;margin-right:4px" onclick="approveTarget(${t.id})">承認</button>
+          <button class="btn btn-sm btn-danger" onclick="rejectTarget(${t.id},'${t.name.replace(/'/g,"\\'")}')">却下</button>
+        </td>`:''}
+      </tr>`;
+    });
+    html+=`</tbody></table></div>`;
+  }
+
   c.innerHTML=html;
+}
+
+function switchTargetTab(tab,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  const panel=document.getElementById('target-tab-'+tab);
+  if(panel)panel.classList.add('active');
+}
+
+async function approveTarget(id){
+  const{error}=await sb.from('targets').update({approval_status:'approved'}).eq('id',id);
+  if(error){alert('承認に失敗しました: '+error.message);return;}
+  TARGETS=await loadTargets();
+  renderView();
+}
+
+async function rejectTarget(id,name){
+  if(!confirm(`「${name}」の申請を却下しますか？\n（ターゲットデータは削除されます）`))return;
+  const{error}=await sb.from('targets').delete().eq('id',id);
+  if(error){alert('却下に失敗しました: '+error.message);return;}
+  TARGETS=await loadTargets();
+  renderView();
+}
+
+function openNewTarget(){
+  const role=currentProfile.role;
+  const isPending=['agency'].includes(role);
+  const prefOptions=Object.keys(PREF_TO_AREA).map(p=>`<option value="${p}">${p}</option>`).join('');
+  const areaOptions=[...new Set(Object.values(PREF_TO_AREA))].map(a=>`<option value="${a}">${a}</option>`).join('');
+  let html=`<div class="modal-title">ターゲット新規登録${isPending?' <span style="background:#FFF3CD;color:#856404;padding:2px 8px;border-radius:8px;font-size:11px">仮登録→承認待ち</span>':' <span style="background:#D4EDDA;color:#155724;padding:2px 8px;border-radius:8px;font-size:11px">即時登録</span>'}</div>`;
+  if(isPending){
+    html+=`<div class="info-banner">登録後、特約店またはメーカーの承認を経て正式にターゲット一覧に追加されます。承認前でも自社の案件登録には使用できます。</div>`;
+  }
+  html+=`
+  <div class="form-row"><label class="form-label">企業名・施設名 <span style="color:#c33">*</span></label><input class="form-input" id="nt_name" placeholder="例：鹿児島市役所"></div>
+  <div class="form-row"><label class="form-label">カテゴリ <span style="color:#c33">*</span></label>
+    <select class="form-input" id="nt_category">
+      <option value="">-- 選択 --</option>
+      ${Object.entries(CAT_LABELS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}
+    </select>
+  </div>
+  <div class="form-row"><label class="form-label">業種 <span style="color:#c33">*</span></label><input class="form-input" id="nt_industry" placeholder="例：製造業、病院、自治体"></div>
+  <div class="form-row"><label class="form-label">優先度</label>
+    <select class="form-input" id="nt_priority">
+      <option value="B">B</option><option value="A">A</option><option value="S">S</option>
+    </select>
+  </div>
+  <div class="form-row"><label class="form-label">URL</label><input class="form-input" id="nt_url" placeholder="https://"></div>
+  <div class="form-row"><label class="form-label">住所 <span class="auto-badge">入力で都道府県・エリアを自動判定</span></label><input class="form-input" id="nt_address" placeholder="例：鹿児島県鹿児島市山下町1-1" oninput="onNewTargetAddress(this.value)"></div>
+  <div class="form-row"><label class="form-label">都道府県</label><select class="form-input" id="nt_prefecture" onchange="onNewTargetPref(this.value)"><option value="">-- 選択 --</option>${prefOptions}</select></div>
+  <div class="form-row"><label class="form-label">エリア</label><select class="form-input" id="nt_area"><option value="">-- 選択 --</option>${areaOptions}</select></div>
+  <div class="modal-actions"><button class="btn" onclick="closeModal()">キャンセル</button><button class="btn btn-primary" onclick="saveNewTarget(${isPending})">登録${isPending?'（承認申請）':''}</button></div>`;
+  document.getElementById('modalContent').innerHTML=html;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function onNewTargetAddress(val){
+  const pref=extractPrefecture(val);
+  const area=pref?(PREF_TO_AREA[pref]||''):'';
+  const pe=document.getElementById('nt_prefecture');
+  const ae=document.getElementById('nt_area');
+  if(pe&&pref&&!pe.value)pe.value=pref;
+  if(ae&&area&&!ae.value)ae.value=area;
+}
+function onNewTargetPref(val){
+  const ae=document.getElementById('nt_area');
+  if(ae)ae.value=PREF_TO_AREA[val]||'';
+}
+
+async function saveNewTarget(isPending){
+  const name=document.getElementById('nt_name').value.trim();
+  const category=document.getElementById('nt_category').value;
+  const industry=document.getElementById('nt_industry').value.trim();
+  if(!name){alert('企業名・施設名を入力してください。');return;}
+  if(!category){alert('カテゴリを選択してください。');return;}
+  if(!industry){alert('業種を入力してください。');return;}
+  if(TARGETS.find(t=>t.name===name)){alert('同じ名前のターゲットがすでに存在します。');return;}
+
+  const payload={
+    name,category,industry,
+    priority:document.getElementById('nt_priority').value||'B',
+    url:document.getElementById('nt_url').value.trim()||null,
+    address:document.getElementById('nt_address').value.trim()||null,
+    prefecture:document.getElementById('nt_prefecture').value||null,
+    area:document.getElementById('nt_area').value||null,
+    approval_status:isPending?'pending':'approved',
+    submitted_by:isPending?currentProfile.agency_name:null,
+    submitted_at:isPending?new Date().toISOString():null,
+    rank:9000, // 新規は末尾
+  };
+
+  const{error}=await sb.from('targets').insert(payload);
+  if(error){alert('登録に失敗しました: '+error.message);return;}
+  TARGETS=await loadTargets();
+  closeModal();
+  alert(isPending?`「${name}」を仮登録しました。特約店またはメーカーの承認をお待ちください。`:`「${name}」を登録しました。`);
+  renderView();
 }
 
 function openTargetEdit(targetName){
@@ -628,17 +793,24 @@ function openTargetEdit(targetName){
   <div class="form-row"><label class="form-label">住所 <span class="auto-badge">入力で都道府県・エリアを自動判定</span></label><input class="form-input" id="f_address" value="${t.address||''}" placeholder="例：鹿児島県鹿児島市山下町11-1" oninput="onAddressInput(this.value)"></div>
   <div class="form-row"><label class="form-label">都道府県 <span class="auto-badge">自動入力</span></label><select class="form-input" id="f_prefecture" onchange="onPrefChange(this.value)"><option value="">-- 選択 --</option>${prefOptions}</select></div>
   <div class="form-row"><label class="form-label">エリア <span class="auto-badge">自動入力</span></label><select class="form-input" id="f_area"><option value="">-- 選択 --</option>${areaOptions}</select></div>
-  <div class="modal-actions"><button class="btn" onclick="closeModal()">キャンセル</button><button class="btn btn-primary" onclick="saveTargetLocation('${targetName.replace(/'/g,"\\'")}')">保存</button></div>`;
+  <div class="modal-actions"><button class="btn" onclick="closeModal()">キャンセル</button><button class="btn btn-primary" onclick="saveTargetLocation('${targetName.replace(/'/g,"\\'")}',${t.id})">保存</button></div>`;
   document.getElementById('modalContent').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('open');
 }
 
-function saveTargetLocation(targetName){
+async function saveTargetLocation(targetName, targetId){
   const address=document.getElementById('f_address').value.trim();
   const prefecture=document.getElementById('f_prefecture').value;
   const area=document.getElementById('f_area').value;
+  // Supabase に保存
+  if(targetId){
+    const{error}=await sb.from('targets').update({address,prefecture,area}).eq('id',targetId);
+    if(error){alert('保存に失敗しました: '+error.message);return;}
+  }
+  // localStorage にも反映（フォールバック）
   const locs=loadTargetLocations();locs[targetName]={address,prefecture,area};saveTargetLocations(locs);
-  TARGETS=applyLocalStorageOverrides(TARGETS);closeModal();renderView();
+  TARGETS=await loadTargets();
+  closeModal();renderView();
 }
 
 function renderProducts(c){
