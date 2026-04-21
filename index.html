@@ -541,11 +541,15 @@ function getFiscalYear(dateStr){
   const m = d.getMonth()+1; // 1-12
   return m >= 4 ? y : y - 1;
 }
+/* 案件の実質年度：first_contact 優先、なければ created_at */
+function getDealFiscalYear(deal){
+  return getFiscalYear(deal.first_contact || deal.created_at);
+}
 
 function renderKanban(c){
-  /* 年度一覧を deals から生成（created_at ベース） */
+  /* 年度一覧を deals から生成（first_contact or created_at ベース） */
   const fySet = new Set();
-  deals.forEach(d=>{ const fy=getFiscalYear(d.created_at); if(fy) fySet.add(fy); });
+  deals.forEach(d=>{ const fy=getDealFiscalYear(d); if(fy) fySet.add(fy); });
   const currentFY = getFiscalYear(new Date().toISOString());
   fySet.add(currentFY);
   const fyList = [...fySet].sort((a,b)=>b-a);
@@ -554,7 +558,7 @@ function renderKanban(c){
 
   const filteredDeals = deals.filter(d=>{
     if(currentProfile.role==='agency' && d.agency_name!==currentProfile.agency_name) return false;
-    if(kanbanFiscalYear!==null && getFiscalYear(d.created_at)!==kanbanFiscalYear) return false;
+    if(kanbanFiscalYear!==null && getDealFiscalYear(d)!==kanbanFiscalYear) return false;
     return true;
   });
 
