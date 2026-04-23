@@ -238,12 +238,6 @@ function onPrefChange(val) {
 </script>
 
 <script>
-/* ── 🔴【修正】TARGETS_DEFAULT をここには置かない ──
-   ターゲットデータはログイン後に loadTargets() で Supabase から取得します。
-   index.html に直接書くと未ログイン状態でも「ページのソースを表示」から
-   全データが丸見えになるため、削除しました。
-   ────────────────────────────────────────────── */
-
 const CAT_LABELS={'gov_public':'自治体・公共','factory_logistics':'工場・物流倉庫','commercial_mall':'商業施設・SC','port_harbor_rail':'港湾・空港・鉄道','golf':'ゴルフ場','tourism_culture':'観光・文化財','sports_stadium':'スポーツ施設','medical':'病院・医療機関','marine_vessel':'海洋・船舶','other':'その他'};
 const STATUSES=['未着手','アプローチ済','提案中','交渉中','受注','失注'];
 const DEAL_TYPES=['常設（省エネ更新）','常設（新設）','仮設・レンタル（短期）','仮設・レンタル（中長期）','ESCO／リース','防災備蓄','プロポーザル・入札'];
@@ -273,12 +267,12 @@ let TARGETS=[];
 let currentUser=null,currentProfile=null,currentView='list';
 let deals=[],dealItems={},dealLogs={},dealAttachments={},agencyPrices=[],searchQ='',filtCat='',filtIndustry='',filtPriority='',filtStatus='',page=0,targetPage=0;
 let kanbanFiscalYear=getFiscalYear(new Date().toISOString());
+let listFiscalYear=getFiscalYear(new Date().toISOString()); // 案件一覧の年度フィルター
 const PAGE_SIZE=20,TARGET_PAGE_SIZE=50;
 
-/* 🟡【修正】ブルートフォース対策：連続失敗時に待機時間を増やす */
 let _loginBusy=false;
 let _loginFailCount=0;
-const _LOGIN_DELAYS=[0,0,3000,5000,10000]; // 3回失敗で3秒待機、以降増加
+const _LOGIN_DELAYS=[0,0,3000,5000,10000];
 
 async function doLogin(){
   if(_loginBusy)return;
@@ -286,15 +280,12 @@ async function doLogin(){
   const btn=document.querySelector('#loginView .btn-primary');
   if(btn){btn.textContent='ログイン中...';btn.disabled=true;}
   document.getElementById('loginError').textContent='';
-
-  /* 失敗回数に応じた待機 */
   const delay=_LOGIN_DELAYS[Math.min(_loginFailCount,_LOGIN_DELAYS.length-1)];
   if(delay>0){
     document.getElementById('loginError').textContent=`${delay/1000}秒後に再試行できます...`;
     await new Promise(r=>setTimeout(r,delay));
     document.getElementById('loginError').textContent='';
   }
-
   try{
     const email=document.getElementById('loginEmail').value.trim();
     const pass=document.getElementById('loginPassword').value;
@@ -305,7 +296,7 @@ async function doLogin(){
       document.getElementById('loginError').textContent='ログインに失敗しました: '+error.message;
       return;
     }
-    _loginFailCount=0; // 成功したらリセット
+    _loginFailCount=0;
     await loadProfile(data.user);
   }catch(e){
     _loginFailCount++;
@@ -321,7 +312,6 @@ async function loadProfile(user){
   const{data,error}=await sb.from('profiles').select('*').eq('id',user.id).single();
   if(error||!data){
     console.error('プロファイル取得失敗:', error?.message);
-    // リトライ（Lockエラー後のリカバリ）
     await new Promise(r=>setTimeout(r,1000));
     const{data:data2,error:error2}=await sb.from('profiles').select('*').eq('id',user.id).single();
     if(error2||!data2){
@@ -335,17 +325,13 @@ async function loadProfile(user){
     currentProfile=data;
   }
   const profile=currentProfile;
-
-  /* ログイン後にターゲットデータを Supabase から取得 */
   TARGETS = await loadTargets();
-
   await loadDeals();
   document.getElementById('loginView').style.display='none';
   document.getElementById('appView').style.display='flex';
   const roleClass={'maker':'role-maker','tokuyakuten':'role-tokuyakuten','agency':'role-agency'}[profile.role]||'role-agency';
   const roleLabel={'maker':'メーカー','tokuyakuten':'特約店','agency':'代理店'}[profile.role]||'代理店';
   document.getElementById('userInfoLabel').innerHTML=`${profile.name}<span class="user-role ${roleClass}">${roleLabel}</span>`;
-  /* 代理店には仕切価格管理メニューを非表示 */
   const pricesNav=document.getElementById('nav-prices');
   if(pricesNav) pricesNav.style.display=(profile.role==='agency')?'none':'block';
   currentView='list';
@@ -392,7 +378,6 @@ sb.auth.onAuthStateChange(async(event,session)=>{
   }
 });
 
-/* ── 【修正】権限チェック関数 ── */
 function canSee(deal){if(!currentProfile)return false;return true;}
 function isOwnDeal(deal){if(!currentProfile)return false;return deal.agency_name===currentProfile.agency_name;}
 function canEdit(deal){if(!currentProfile)return false;if(!['agency','tokuyakuten'].includes(currentProfile.role))return false;return deal.agency_name===currentProfile.agency_name;}
@@ -478,35 +463,78 @@ function renderDealItemsHtml(dealId){
   return `<table class="deal-items-table"><thead><tr><th>型式</th><th>製品名</th><th>数量</th><th>オプション</th><th>単価(定価)</th><th>小計(定価)</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td colspan="5" style="text-align:right;font-weight:600;padding:6px 8px;border-top:1px solid #e8e8e8">合計（定価）</td><td style="text-align:right;font-weight:700;color:#185FA5;padding:6px 8px;border-top:1px solid #e8e8e8">${total.toLocaleString()}円</td></tr></tfoot></table>`;
 }
 
-/* ── 【修正】案件一覧 ── */
+/* ── 年度算出（4月始まり） ── */
+function getFiscalYear(dateStr){
+  if(!dateStr) return null;
+  const d = new Date(dateStr);
+  const y = d.getFullYear();
+  const m = d.getMonth()+1; // 1-12
+  return m >= 4 ? y : y - 1;
+}
+/* 案件の実質年度：first_contact 優先、なければ created_at */
+function getDealFiscalYear(deal){
+  return getFiscalYear(deal.first_contact || deal.created_at);
+}
+
+/* ── 案件一覧（年度フィルター付き） ── */
 function renderList(c){
+  // 年度一覧を deals から生成
+  const fySet = new Set();
+  deals.forEach(d=>{ const fy=getDealFiscalYear(d); if(fy) fySet.add(fy); });
+  const currentFY = getFiscalYear(new Date().toISOString());
+  fySet.add(currentFY);
+  const fyList = [...fySet].sort((a,b)=>b-a);
+  const fyOptions = fyList.map(y=>`<option value="${y}"${listFiscalYear===y?' selected':''}>${y}年度</option>`).join('');
+
   const extraDeals=deals.filter(d=>!TARGETS.find(t=>t.name===d.target_name));
   const extraTargetNames=[...new Set(extraDeals.map(d=>d.target_name))];
   const extraTargets=extraTargetNames.map(name=>({name,url:'',industry:'（自由登録）',category:'',priority:'-',rank:9999,address:'',prefecture:'',area:''}));
   const allTargets=[...TARGETS,...extraTargets];
+
   const filtered=allTargets.filter(t=>{
     if(searchQ&&!t.name.includes(searchQ)&&!t.industry.includes(searchQ))return false;
     if(filtCat&&t.category!==filtCat)return false;
     if(filtIndustry&&t.industry!==filtIndustry)return false;
     if(filtPriority&&t.priority!==filtPriority)return false;
-    if(filtStatus){const d=deals.find(x=>x.target_name===t.name);const st=d?d.status:'未着手';if(st!==filtStatus)return false;}
+    const d=deals.find(x=>x.target_name===t.name);
+    const status=d?d.status:'未着手';
+    if(filtStatus&&status!==filtStatus)return false;
+    // 年度フィルター：deal あり → deal の年度で判定、deal なし（未着手）→ 全年度のみ表示
+    if(listFiscalYear!==null){
+      if(!d) return false; // 未着手は年度指定時は非表示
+      if(getDealFiscalYear(d)!==listFiscalYear) return false;
+    }
     return true;
   });
+
   const pageData=filtered.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);
   const totalPages=Math.ceil(filtered.length/PAGE_SIZE);
   const myDeals=deals.filter(d=>d.agency_name===currentProfile.agency_name);
-  const wonAmt=myDeals.filter(d=>d.status==='受注').reduce((s,d)=>s+(d.amount||0),0);
+  // 年度フィルター適用後の自社受注額
+  const myDealsFiltered=listFiscalYear===null?myDeals:myDeals.filter(d=>getDealFiscalYear(d)===listFiscalYear);
+  const wonAmt=myDealsFiltered.filter(d=>d.status==='受注').reduce((s,d)=>s+(d.amount||0),0);
   let roleMsg='';
   if(currentProfile.role==='agency')roleMsg=`<div class="info-banner">自社（${currentProfile.agency_name}）の商談情報のみ編集できます。他社の担当代理店名・提案金額・次アクションは非公開です。</div>`;
   else if(currentProfile.role==='tokuyakuten')roleMsg=`<div class="info-banner">特約店として自社商談の登録・編集と、配下の全代理店の商談情報を閲覧できます。</div>`;
   else roleMsg=`<div class="info-banner">メーカーとして全代理店の商談情報を閲覧できます。</div>`;
+
   let html=`<div class="stats-grid">
     <div class="stat-card"><div class="stat-label">総ターゲット</div><div class="stat-value">${TARGETS.length}</div><div class="stat-sub">社・施設</div></div>
     <div class="stat-card"><div class="stat-label">表示件数</div><div class="stat-value">${filtered.length}</div></div>
-    <div class="stat-card"><div class="stat-label">自社案件数</div><div class="stat-value">${myDeals.length}</div></div>
+    <div class="stat-card"><div class="stat-label">自社案件数</div><div class="stat-value">${myDealsFiltered.length}</div></div>
     <div class="stat-card"><div class="stat-label">自社受注額</div><div class="stat-value">${Math.round(wonAmt/10000)}万</div><div class="stat-sub">円</div></div>
   </div>${roleMsg}
-  <div class="section-head"><span class="section-title">案件一覧</span>${canCreate()?`<button class="btn btn-primary btn-sm" onclick="openNewDeal()">＋ 案件登録</button>`:''}</div>
+  <div class="section-head">
+    <span class="section-title">案件一覧</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <label style="font-size:12px;color:#666">年度：</label>
+      <select class="filt" onchange="listFiscalYear=this.value==='all'?null:parseInt(this.value);page=0;renderView()">
+        <option value="all"${listFiscalYear===null?' selected':''}>全年度</option>
+        ${fyOptions}
+      </select>
+      ${canCreate()?`<button class="btn btn-primary btn-sm" onclick="openNewDeal()">＋ 案件登録</button>`:''}
+    </div>
+  </div>
   <div class="toolbar">
     <input class="search" id="searchInput" placeholder="企業名・業種で検索..." value="${searchQ}">
     <select class="filt" onchange="filtCat=this.value;page=0;renderView()">
@@ -555,35 +583,18 @@ function renderList(c){
   initSearchInput();
 }
 
-/* ── 年度算出（4月始まり） ── */
-function getFiscalYear(dateStr){
-  if(!dateStr) return null;
-  const d = new Date(dateStr);
-  const y = d.getFullYear();
-  const m = d.getMonth()+1; // 1-12
-  return m >= 4 ? y : y - 1;
-}
-/* 案件の実質年度：first_contact 優先、なければ created_at */
-function getDealFiscalYear(deal){
-  return getFiscalYear(deal.first_contact || deal.created_at);
-}
-
 function renderKanban(c){
-  /* 年度一覧を deals から生成（first_contact or created_at ベース） */
   const fySet = new Set();
   deals.forEach(d=>{ const fy=getDealFiscalYear(d); if(fy) fySet.add(fy); });
   const currentFY = getFiscalYear(new Date().toISOString());
   fySet.add(currentFY);
   const fyList = [...fySet].sort((a,b)=>b-a);
-
   const fyOptions = fyList.map(y=>`<option value="${y}"${kanbanFiscalYear===y?' selected':''}>${y}年度</option>`).join('');
-
   const filteredDeals = deals.filter(d=>{
     if(currentProfile.role==='agency' && d.agency_name!==currentProfile.agency_name) return false;
     if(kanbanFiscalYear!==null && getDealFiscalYear(d)!==kanbanFiscalYear) return false;
     return true;
   });
-
   let html=`<div class="section-head">
     <span class="section-title">商談ボード</span>
     <div style="display:flex;align-items:center;gap:8px">
@@ -631,16 +642,12 @@ function renderTargets(c){
   const approvedTargets=TARGETS.filter(t=>t.approval_status==='approved');
   const pendingTargets=TARGETS.filter(t=>t.approval_status==='pending');
   const showPending=canApprove?pendingTargets:(pendingTargets.filter(t=>t.submitted_by===currentProfile.agency_name));
-
   const tTotalPages=Math.ceil(approvedTargets.length/TARGET_PAGE_SIZE);
   const tPage=approvedTargets.slice(targetPage*TARGET_PAGE_SIZE,(targetPage+1)*TARGET_PAGE_SIZE);
-
   let html=`<div class="section-head">
     <span class="section-title">ターゲット管理</span>
     <button class="btn btn-primary btn-sm" onclick="openNewTarget()">＋ ターゲット登録</button>
   </div>`;
-
-  // 承認待ちバナー（代理店：自分の仮登録件数、承認者：全pending件数）
   if(showPending.length>0){
     if(canApprove){
       html+=`<div class="warn-banner">⏳ 承認待ちのターゲットが <b>${showPending.length}件</b> あります。下の「承認待ち」タブで確認・承認してください。</div>`;
@@ -648,14 +655,10 @@ function renderTargets(c){
       html+=`<div class="info-banner">📋 あなたが申請したターゲットが <b>${showPending.length}件</b> 承認待ちです。承認されると案件一覧に表示されます。</div>`;
     }
   }
-
-  // タブ
   html+=`<div class="tab-bar">
     <button class="tab-btn active" id="tab-approved" onclick="switchTargetTab('approved',this)">承認済み（${approvedTargets.length}件）</button>
     ${showPending.length>0?`<button class="tab-btn" id="tab-pending" onclick="switchTargetTab('pending',this)">承認待ち <span style="background:#dc3545;color:#fff;padding:1px 7px;border-radius:10px;font-size:10px;margin-left:4px">${showPending.length}</span></button>`:''}
   </div>`;
-
-  // 承認済みタブ
   html+=`<div id="target-tab-approved" class="tab-panel active">
   <table class="card-table"><thead><tr><th>優先</th><th>企業名</th><th>カテゴリ</th><th>業種</th><th>住所</th><th>都道府県</th><th>エリア</th><th>URL</th><th></th></tr></thead><tbody>`;
   tPage.forEach(t=>{
@@ -677,8 +680,6 @@ function renderTargets(c){
   html+=`</tbody></table>
   <div class="pager"><span>${approvedTargets.length}件中 ${targetPage*TARGET_PAGE_SIZE+1}〜${Math.min((targetPage+1)*TARGET_PAGE_SIZE,approvedTargets.length)}件</span><button ${targetPage===0?'disabled':''} onclick="targetPage--;renderView()">◀ 前へ</button><span>${targetPage+1} / ${tTotalPages||1}</span><button ${targetPage>=tTotalPages-1?'disabled':''} onclick="targetPage++;renderView()">次へ ▶</button></div>
   </div>`;
-
-  // 承認待ちタブ
   if(showPending.length>0){
     html+=`<div id="target-tab-pending" class="tab-panel">
     <table class="card-table"><thead><tr><th>企業名</th><th>カテゴリ</th><th>業種</th><th>申請者</th><th>申請日</th>${canApprove?'<th>操作</th>':''}</tr></thead><tbody>`;
@@ -698,7 +699,6 @@ function renderTargets(c){
     });
     html+=`</tbody></table></div>`;
   }
-
   c.innerHTML=html;
 }
 
@@ -786,7 +786,6 @@ async function saveNewTarget(isPending){
   if(!category){alert('カテゴリを選択してください。');return;}
   if(!industry){alert('業種を入力してください。');return;}
   if(TARGETS.find(t=>t.name===name)){alert('同じ名前のターゲットがすでに存在します。');return;}
-  // セッション確認・リフレッシュ
   const{data:sd}=await sb.auth.getSession();
   if(!sd.session){const{error:re}=await sb.auth.refreshSession();if(re){alert('セッションが切れています。再ログインしてください。');return;}}
   const payload={
@@ -827,12 +826,10 @@ async function saveTargetLocation(targetName, targetId){
   const address=document.getElementById('f_address').value.trim();
   const prefecture=document.getElementById('f_prefecture').value;
   const area=document.getElementById('f_area').value;
-  // Supabase に保存
   if(targetId){
     const{error}=await sb.from('targets').update({address,prefecture,area}).eq('id',targetId);
     if(error){alert('保存に失敗しました: '+error.message);return;}
   }
-  // localStorage にも反映（フォールバック）
   const locs=loadTargetLocations();locs[targetName]={address,prefecture,area};saveTargetLocations(locs);
   TARGETS=await loadTargets();
   closeModal();renderView();
@@ -866,7 +863,6 @@ function openDeal(targetName,isOwn){
   if(edit&&d){
     const savedItems=dealItems[d.id]||[];
     editingItems=savedItems.map(item=>({productId:item.product_model||'',qty:item.qty||1}));
-    // オプションは先頭アイテムから代表して読み込む（全体共通）
     const firstItem=savedItems[0];
     editingOptions=firstItem&&firstItem.options?JSON.parse(firstItem.options||'[]'):[];
   } else {editingItems=[];editingOptions=[];}
