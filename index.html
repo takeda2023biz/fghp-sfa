@@ -168,6 +168,7 @@ select.filt{padding:7px 10px;border:1px solid #ddd;border-radius:8px;font-size:1
 .tab-btn.active{color:#185FA5;border-bottom-color:#185FA5;font-weight:600}
 .tab-btn:hover{color:#333}
 .tab-panel{display:none}
+.badge-期限切れ{background:#F8D7DA;color:#721C24;border:1px solid #f5c6cb}
 .tab-panel.active{display:block}
 </style>
 </head>
@@ -499,6 +500,14 @@ function getDealFiscalYear(deal){
   return getFiscalYear(deal.first_contact || deal.created_at);
 }
 
+/* ── 提案期限チェック（提案日から90日） ── */
+function isProposalExpired(deal){
+  if(deal.status!=='提案中'||!deal.proposal_date) return false;
+  const pd=new Date(deal.proposal_date);
+  const diff=(new Date()-pd)/(1000*60*60*24);
+  return diff>=90;
+}
+
 /* ── 案件一覧（年度フィルター付き） ── */
 function renderList(c){
   // 年度一覧を deals から生成
@@ -594,7 +603,7 @@ function renderList(c){
       <td style="font-size:11px">${CAT_LABELS[t.category]||t.category}</td>
       <td style="font-size:11px">${t.industry}</td>
       <td>${d?(isOwner?`<span class="badge badge-agency">${d.agency_name}</span>`:`<span class="locked">非公開</span>`):''}</td>
-      <td><span class="badge badge-${status}">${status}</span></td>
+      <td><span class="badge badge-${status}">${status}</span>${d&&isProposalExpired(d)?`<span class="badge badge-期限切れ" style="margin-left:4px">⚠️ 期限切れ</span>`:''}${d&&isProposalExpired(d)&&currentProfile&&['maker','tokuyakuten'].includes(currentProfile.role)?`<button class="btn btn-sm" style="margin-left:6px;font-size:10px;padding:2px 7px;color:#856404;border-color:#FFECB5;background:#FFF3CD" onclick="resetExpiredDeal(${d.id})">リセット</button>`:''}</td>
       <td>${d?(isOwner&&d.amount?Math.round(d.amount/10000)+'万円':`<span class="locked">-</span>`):'-'}</td>
       <td style="font-size:11px">${d?d.first_contact||'-':'-'}</td>
       <td style="font-size:11px">${d?(isOwner?d.next_action||'-':`<span class="locked">-</span>`):'-'}</td>
@@ -633,7 +642,7 @@ function renderKanban(c){
   STATUSES.forEach(st=>{
     const items=filteredDeals.filter(d=>d.status===st);
     html+=`<div class="kanban-col"><div class="kanban-col-title"><span class="badge badge-${st}">${st}</span><span style="color:#aaa;font-size:11px">${items.length}</span></div>`;
-    items.forEach(d=>{html+=`<div class="kanban-card" onclick="openDeal('${d.target_name.replace(/'/g,"\\'")}',true)"><div class="kanban-card-name">${d.target_name}</div><div class="kanban-card-cat"><span class="badge badge-agency">${d.agency_name}</span></div>${d.amount?`<div class="kanban-card-amt">${Math.round(d.amount/10000)}万円</div>`:''}</div>`;});
+    items.forEach(d=>{const expired=isProposalExpired(d);html+=`<div class="kanban-card" onclick="openDeal('${d.target_name.replace(/'/g,"\\'")}',true)"><div class="kanban-card-name">${d.target_name}${expired?'<span class="badge badge-期限切れ" style="margin-left:4px;font-size:10px">⚠️ 期限切れ</span>':''}</div><div class="kanban-card-cat"><span class="badge badge-agency">${d.agency_name}</span></div>${d.amount?`<div class="kanban-card-amt">${Math.round(d.amount/10000)}万円</div>`:''}</div>`;});
     html+=`</div>`;
   });
   html+=`</div>`;c.innerHTML=html;
@@ -908,6 +917,7 @@ function openDeal(targetName,isOwn){
     <div class="form-row"><label class="form-label">先方担当者名</label><input class="form-input" id="f_person" value="${d?d.person||'':''}" placeholder="例：田中課長"></div>
     <div class="form-row"><label class="form-label">提案金額（円）</label><input class="form-input" id="f_amount" type="number" value="${d?d.amount||0:0}"></div>
     <div class="form-row"><label class="form-label">初回接触日</label><input class="form-input" id="f_firstContact" type="date" value="${d?d.first_contact||'':''}"></div>
+    <div class="form-row"><label class="form-label">提案日</label><input class="form-input" id="f_proposalDate" type="date" value="${d?d.proposal_date||'':''}"></div>
     <div class="form-row"><label class="form-label">次のアクション</label><input class="form-input" id="f_nextAction" value="${d?d.next_action||'':''}" placeholder="例：見積提出、再訪問"></div>
     <div class="form-row"><label class="form-label">メモ</label><textarea class="form-input" id="f_memo" rows="2">${d?d.memo||'':''}</textarea></div>
     <div class="form-section">製品明細</div>
@@ -948,6 +958,7 @@ function openDeal(targetName,isOwn){
       <span style="color:#888">担当者</span><span>${isOwner?d.person||'-':'<span class="locked">非公開</span>'}</span>
       <span style="color:#888">提案金額</span><span>${isOwner?(d.amount?Math.round(d.amount/10000)+'万円':'-'):`<span class="locked">非公開</span>`}</span>
       <span style="color:#888">初回接触</span><span>${d.first_contact||'-'}</span>
+      <span style="color:#888">提案日</span><span>${d.proposal_date||'-'}${isProposalExpired(d)?'<span class="badge badge-期限切れ" style="margin-left:6px">⚠️ 期限切れ</span>':''}</span>
       <span style="color:#888">次アクション</span><span>${isOwner?d.next_action||'-':`<span class="locked">非公開</span>`}</span>
       <span style="color:#888">メモ</span><span>${isOwner?d.memo||'-':`<span class="locked">非公開</span>`}</span>
     </div>
@@ -961,7 +972,7 @@ function openDeal(targetName,isOwn){
 
 async function saveDeal(targetName){
   const d=deals.find(x=>x.target_name===targetName);
-  const payload={target_name:targetName,agency_name:currentProfile.agency_name,status:document.getElementById('f_status').value,deal_type:document.getElementById('f_deal_type')?document.getElementById('f_deal_type').value||null:null,person:document.getElementById('f_person').value,amount:parseInt(document.getElementById('f_amount').value)||0,first_contact:document.getElementById('f_firstContact').value||null,next_action:document.getElementById('f_nextAction').value,memo:document.getElementById('f_memo').value,updated_at:new Date().toISOString()};
+  const payload={target_name:targetName,agency_name:currentProfile.agency_name,status:document.getElementById('f_status').value,deal_type:document.getElementById('f_deal_type')?document.getElementById('f_deal_type').value||null:null,person:document.getElementById('f_person').value,amount:parseInt(document.getElementById('f_amount').value)||0,first_contact:document.getElementById('f_firstContact').value||null,proposal_date:document.getElementById('f_proposalDate')?document.getElementById('f_proposalDate').value||null:null,next_action:document.getElementById('f_nextAction').value,memo:document.getElementById('f_memo').value,updated_at:new Date().toISOString()};
   let dealId;
   if(d){await sb.from('deals').update(payload).eq('id',d.id);dealId=d.id;}
   else{payload.created_at=new Date().toISOString();const{data:newDeal}=await sb.from('deals').insert(payload).select().single();dealId=newDeal.id;}
@@ -998,6 +1009,7 @@ function openNewDeal(){
   <div class="form-row"><label class="form-label">先方担当者名</label><input class="form-input" id="f_person" placeholder="例：田中課長"></div>
   <div class="form-row"><label class="form-label">提案金額（円）</label><input class="form-input" id="f_amount" type="number" value="0"></div>
   <div class="form-row"><label class="form-label">初回接触日</label><input class="form-input" id="f_firstContact" type="date"></div>
+  <div class="form-row"><label class="form-label">提案日</label><input class="form-input" id="f_proposalDate" type="date"></div>
   <div class="form-row"><label class="form-label">次のアクション</label><input class="form-input" id="f_nextAction" placeholder="例：訪問アポ取得"></div>
   <div class="form-row"><label class="form-label">メモ</label><textarea class="form-input" id="f_memo" rows="2"></textarea></div>
   <div class="form-section">製品明細</div>
@@ -1045,7 +1057,7 @@ async function saveNewDeal(){
   if(!targetName){alert('企業名を入力または選択してください。');return;}
   const ownDeal=deals.find(d=>d.target_name===targetName&&d.agency_name===currentProfile.agency_name);
   if(ownDeal){alert('自社ですでに登録済みの企業です。');return;}
-  const payload={target_name:targetName,agency_name:currentProfile.agency_name,status:document.getElementById('f_status').value,deal_type:document.getElementById('f_deal_type')?document.getElementById('f_deal_type').value||null:null,person:document.getElementById('f_person').value,amount:parseInt(document.getElementById('f_amount').value)||0,first_contact:document.getElementById('f_firstContact').value||null,next_action:document.getElementById('f_nextAction').value,memo:document.getElementById('f_memo').value,created_at:new Date().toISOString(),updated_at:new Date().toISOString()};
+  const payload={target_name:targetName,agency_name:currentProfile.agency_name,status:document.getElementById('f_status').value,deal_type:document.getElementById('f_deal_type')?document.getElementById('f_deal_type').value||null:null,person:document.getElementById('f_person').value,amount:parseInt(document.getElementById('f_amount').value)||0,first_contact:document.getElementById('f_firstContact').value||null,proposal_date:document.getElementById('f_proposalDate')?document.getElementById('f_proposalDate').value||null:null,next_action:document.getElementById('f_nextAction').value,memo:document.getElementById('f_memo').value,created_at:new Date().toISOString(),updated_at:new Date().toISOString()};
   const{data:newDeal}=await sb.from('deals').insert(payload).select().single();
   const dealId=newDeal.id;
   const validItems=editingItems.filter(item=>item.productId);
@@ -1054,6 +1066,14 @@ async function saveNewDeal(){
     await sb.from('deal_items').insert(itemPayloads);
   }
   await loadDeals();closeModal();renderView();
+}
+
+async function resetExpiredDeal(dealId){
+  if(!confirm('この案件のステータスを「未着手」にリセットしますか？\n（提案期限切れとして処理されます）'))return;
+  const{error}=await sb.from('deals').update({status:'未着手',proposal_date:null,updated_at:new Date().toISOString()}).eq('id',dealId);
+  if(error){alert('リセットに失敗しました: '+error.message);return;}
+  await loadDeals();
+  renderView();
 }
 
 function renderLogsHtml(dealId){
