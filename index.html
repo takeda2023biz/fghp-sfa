@@ -4,6 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FGHP® ライト SFA</title>
+<script>
+// ── キャッシュ強制クリア（ログインフリーズ防止）──
+(function(){
+  // Service Worker 登録解除
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistrations().then(regs=>{
+      regs.forEach(reg=>reg.unregister());
+    });
+  }
+  // Cache Storage 削除
+  if('caches' in window){
+    caches.keys().then(keys=>{
+      keys.forEach(key=>caches.delete(key));
+    });
+  }
+  // 古い sb- セッションキーをクリア
+  try{
+    Object.keys(localStorage).forEach(k=>{
+      if(k.startsWith('sb-'))localStorage.removeItem(k);
+    });
+  }catch(e){}
+})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
