@@ -1007,22 +1007,26 @@ function openDeal(targetName,isOwn){
   } else if(d){
     const isOwner=isOwnDeal(d);
     const canView=canViewDetail(d);
-    html+=`<div class="form-section">商談情報${isOwner?'（閲覧のみ）':canView?'（閲覧のみ）':'（他社案件 - 一部非公開）'}</div>
-    <div style="font-size:12px;display:grid;grid-template-columns:100px 1fr;gap:6px 8px">
-      <span style="color:#888">担当代理店</span><span>${canView?`<span class="badge badge-agency">${d.agency_name}</span>`:`<span class="locked">非公開</span>`}</span>
-      <span style="color:#888">ステータス</span><span><span class="badge badge-${d.status}">${d.status}</span></span>
-      <span style="color:#888">案件タイプ</span><span>${d.deal_type||'-'}</span>
-      <span style="color:#888">担当者</span><span>${canView?d.person||'-':'<span class="locked">非公開</span>'}</span>
-      <span style="color:#888">提案金額</span><span>${canView?(d.amount?Math.round(d.amount/10000)+'万円':'-'):`<span class="locked">非公開</span>`}</span>
-      <span style="color:#888">初回接触</span><span>${d.first_contact||'-'}</span>
-      <span style="color:#888">提案日</span><span>${d.proposal_date||'-'}${isProposalExpired(d)?'<span class="badge badge-期限切れ" style="margin-left:6px">⚠️ 期限切れ</span>':''}</span>
-      <span style="color:#888">次アクション</span><span>${canView?d.next_action||'-':`<span class="locked">非公開</span>`}</span>
-      <span style="color:#888">メモ</span><span>${canView?d.memo||'-':`<span class="locked">非公開</span>`}</span>
-    </div>
-    ${canView?`<div class="form-section">製品明細</div>${renderDealItemsHtml(d.id)}<div class="form-section">商談ログ</div><div class="log-list">${renderLogsHtml(d.id)}</div><div class="form-section">添付ファイル</div><div class="attach-list">${renderAttachmentsHtml(d.id,false)}</div>`:''}`;
+    const sectionTitle=isOwner?'（閲覧のみ）':canView?'（閲覧のみ）':'（他社案件 - 一部非公開）';
+    const agencyBadge=canView?'<span class="badge badge-agency">'+d.agency_name+'</span>':'<span class="locked">非公開</span>';
+    const amtTxt=canView?(d.amount?Math.round(d.amount/10000)+'万円':'-'):'<span class="locked">非公開</span>';
+    const expiredBadge=isProposalExpired(d)?'<span class="badge badge-期限切れ" style="margin-left:6px">⚠️ 期限切れ</span>':'';
+    const detailSections=canView?'<div class="form-section">製品明細</div>'+renderDealItemsHtml(d.id)+'<div class="form-section">商談ログ</div><div class="log-list">'+renderLogsHtml(d.id)+'</div><div class="form-section">添付ファイル</div><div class="attach-list">'+renderAttachmentsHtml(d.id,false)+'</div>':'';
+    html+='<div class="form-section">商談情報'+sectionTitle+'</div>'
+      +'<div style="font-size:12px;display:grid;grid-template-columns:100px 1fr;gap:6px 8px">'
+      +'<span style="color:#888">担当代理店</span><span>'+agencyBadge+'</span>'
+      +'<span style="color:#888">ステータス</span><span><span class="badge badge-'+d.status+'">'+d.status+'</span></span>'
+      +'<span style="color:#888">案件タイプ</span><span>'+(d.deal_type||'-')+'</span>'
+      +'<span style="color:#888">担当者</span><span>'+(canView?d.person||'-':'<span class="locked">非公開</span>')+'</span>'
+      +'<span style="color:#888">提案金額</span><span>'+amtTxt+'</span>'
+      +'<span style="color:#888">初回接触</span><span>'+(d.first_contact||'-')+'</span>'
+      +'<span style="color:#888">提案日</span><span>'+(d.proposal_date||'-')+expiredBadge+'</span>'
+      +'<span style="color:#888">次アクション</span><span>'+(canView?d.next_action||'-':'<span class="locked">非公開</span>')+'</span>'
+      +'<span style="color:#888">メモ</span><span>'+(canView?d.memo||'-':'<span class="locked">非公開</span>')+'</span>'
+      +'</div>'+detailSections;
   }
-  }
-  html+=`<div class="modal-actions"><button class="btn" onclick="closeModal()">閉じる</button>${edit?`<button class="btn btn-primary" onclick="saveDeal('${targetName.replace(/'/g,"\\'")}')">保存</button>`:''}</div>`;
+  const saveBtn=edit?'<button class="btn btn-primary" onclick="saveDeal(\''+targetName.replace(/'/g,"\\'")+'\')">保存</button>':'';
+  html+=`<div class="modal-actions"><button class="btn" onclick="closeModal()">閉じる</button>${saveBtn}</div>`;
   document.getElementById('modalContent').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('open');
   if(edit){renderProductRows();renderOptionsArea();}
