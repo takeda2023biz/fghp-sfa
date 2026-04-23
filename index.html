@@ -450,7 +450,7 @@ function renderProductRows(){
           ${PRODUCTS.map(p=>`<option value="${p.id}"${item.productId===p.id?' selected':''}>${p.id} ${p.name}（照射${p.angle}・定価${p.listPrice.toLocaleString()}円）</option>`).join('')}
         </select>
       </div>
-     <div style="min-width:70px;"><div style="font-size:10px;color:#888;margin-bottom:2px">数量</div><input type="number" class="product-qty" value="${item.qty||1}" min="1" onkeydown="if(event.key==='Enter')event.preventDefault()" onchange="updateItemQty(${idx},this.value)"></div>
+     <input type="number" class="product-qty" value="${item.qty||1}" min="1" onkeydown="if(event.key==='Enter')event.preventDefault()" onchange="updateItemQty(${idx},this.value)">
       <button class="product-remove-btn" onclick="removeItem(${idx})">✕</button>
     </div>`;
   }).join('');
