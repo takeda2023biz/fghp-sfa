@@ -872,19 +872,17 @@ function renderProducts(c){
   <div class="info-banner">FGHPライト（570W・50℃環境・電源別置）の製品一覧です。仕切り価格は別途更新予定です。</div>
   <div style="margin-bottom:20px">
     <div style="font-size:13px;font-weight:600;color:#333;margin-bottom:8px;padding:6px 0;border-bottom:2px solid #185FA5">■ 本体</div>
-    <table class="card-table"><thead><tr><th>タイプ</th><th>型式</th><th>照射角度</th><th>保護等級</th><th>定価</th><th>御社仕切価格</th></tr></thead><tbody>
+    <table class="card-table"><thead><tr><th>タイプ</th><th>型式</th><th>照射角度</th><th>保護等級</th><th>定価</th><th>仕切価格</th></tr></thead><tbody>
     ${PRODUCTS.map(p=>`<tr><td><b>${p.name}</b></td><td><code style="background:#f5f5f5;padding:2px 6px;border-radius:4px;font-size:12px">${p.id}</code></td><td>${p.angle}</td><td><span style="background:#e8f4fd;color:#0c5460;padding:2px 8px;border-radius:10px;font-size:11px">${p.ip}</span></td><td style="font-weight:600;color:#185FA5">${p.listPrice.toLocaleString()}円</td><td style="color:#bbb">（未設定）</td></tr>`).join('')}
     </tbody></table>
   </div>
   <div>
     <div style="font-size:13px;font-weight:600;color:#333;margin-bottom:8px;padding:6px 0;border-bottom:2px solid #185FA5">■ オプション</div>
-    <table class="card-table"><thead><tr><th>オプション名</th><th>定価</th><th>御社仕切価格</th></tr></thead><tbody>
+    <table class="card-table"><thead><tr><th>オプション名</th><th>定価</th><th>仕切価格</th></tr></thead><tbody>
     ${OPTIONS.map(o=>`<tr><td><b>${o.name}</b></td><td style="font-weight:600;color:#185FA5">${o.listPrice.toLocaleString()}円</td><td style="color:#bbb">（未設定）</td></tr>`).join('')}
     </tbody></table>
   </div>
-  <div style="margin-top:16px;padding:12px 16px;background:#FFF3CD;border:1px solid #FFECB5;border-radius:8px;font-size:12px;color:#856404">
-    💡 仕切り価格は後ほど追加できます。製品は各商談登録時に明細として付与できます。
-  </div>`;
+`;
   c.innerHTML=html;
 }
 
