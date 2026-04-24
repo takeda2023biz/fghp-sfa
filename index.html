@@ -1053,17 +1053,17 @@ async function saveDeal(targetName){
   await loadDeals();closeModal();renderView();
 }
 
+/* ── 新規案件登録（リスト選択のみ） ── */
 function openNewDeal(){
   editingItems=[];editingOptions={};
   let html=`<div class="modal-title">新規案件登録</div>
   <div class="form-row">
-    <label class="form-label">企業名の入力方法</label>
-    <div style="display:flex;gap:8px;margin-bottom:8px">
-      <button class="btn" id="btn-list" onclick="switchInputMode('list')" style="flex:1;background:#185FA5;color:#fff;border-color:#185FA5">リストから選ぶ</button>
-      <button class="btn" id="btn-free" onclick="switchInputMode('free')" style="flex:1">自由入力</button>
-    </div>
-    <div id="input-list"><select class="form-input" id="f_target_list" onchange="checkDuplicate(this.value)"><option value="">-- 企業を選択 --</option>${TARGETS.map(t=>`<option value="${t.name}">${t.name}（${CAT_LABELS[t.category]}）</option>`).join('')}</select></div>
-    <div id="input-free" style="display:none"><input class="form-input" id="f_target_free" placeholder="企業名を入力" oninput="checkDuplicate(this.value)"></div>
+    <label class="form-label">企業名 <span style="color:#c33">*</span></label>
+    <div class="info-banner" style="margin-bottom:8px;font-size:11px">企業が見つからない場合は、まず「ターゲット管理」で企業を登録してください。</div>
+    <select class="form-input" id="f_target_list" onchange="checkDuplicate(this.value)">
+      <option value="">-- 企業を選択 --</option>
+      ${TARGETS.map(t=>`<option value="${t.name}">${t.name}（${CAT_LABELS[t.category]||t.category||''}）${t.approval_status==='pending'?'【承認待ち】':''}</option>`).join('')}
+    </select>
     <div id="duplicate-msg" style="margin-top:6px"></div>
   </div>
   <div class="form-row"><label class="form-label">ステータス</label><select class="form-input" id="f_status">${STATUSES.map(s=>`<option>${s}</option>`).join('')}</select></div>
@@ -1093,15 +1093,6 @@ function openNewDeal(){
   renderProductRows();renderOptionsArea();
 }
 
-function switchInputMode(mode){
-  const isList=mode==='list';
-  document.getElementById('input-list').style.display=isList?'block':'none';
-  document.getElementById('input-free').style.display=isList?'none':'block';
-  document.getElementById('btn-list').style.cssText=isList?'flex:1;background:#185FA5;color:#fff;border-color:#185FA5':'flex:1';
-  document.getElementById('btn-free').style.cssText=isList?'flex:1':'flex:1;background:#185FA5;color:#fff;border-color:#185FA5';
-  document.getElementById('duplicate-msg').innerHTML='';
-}
-
 function checkDuplicate(name){
   const msg=document.getElementById('duplicate-msg');
   if(!name){msg.innerHTML='';return;}
@@ -1114,9 +1105,8 @@ function checkDuplicate(name){
 }
 
 async function saveNewDeal(){
-  const isListMode=document.getElementById('input-list').style.display!=='none';
-  const targetName=isListMode?(document.getElementById('f_target_list')||{value:''}).value:((document.getElementById('f_target_free')||{value:''}).value.trim());
-  if(!targetName){alert('企業名を入力または選択してください。');return;}
+  const targetName=(document.getElementById('f_target_list')||{value:''}).value;
+  if(!targetName){alert('企業名を選択してください。');return;}
   const ownDeal=deals.find(d=>d.target_name===targetName&&d.agency_name===currentProfile.agency_name);
   if(ownDeal){alert('自社ですでに登録済みの企業です。');return;}
   const payload={target_name:targetName,agency_name:currentProfile.agency_name,status:document.getElementById('f_status').value,deal_type:document.getElementById('f_deal_type')?document.getElementById('f_deal_type').value||null:null,person:document.getElementById('f_person').value,amount:parseInt(document.getElementById('f_amount').value)||0,first_contact:document.getElementById('f_firstContact').value||null,proposal_date:document.getElementById('f_proposalDate')?document.getElementById('f_proposalDate').value||null:null,next_action:document.getElementById('f_nextAction').value,memo:document.getElementById('f_memo').value,created_at:new Date().toISOString(),updated_at:new Date().toISOString()};
@@ -1126,6 +1116,11 @@ async function saveNewDeal(){
   if(validItems.length>0){
     const itemPayloads=validItems.map(item=>{const prod=PRODUCTS.find(x=>x.id===item.productId);return{deal_id:dealId,product_model:item.productId,product_name:prod?prod.name:'',qty:item.qty||1,options:JSON.stringify(editingOptions),list_price:prod?prod.listPrice:0,created_at:new Date().toISOString()};});
     await sb.from('deal_items').insert(itemPayloads);
+  }
+  const logDate=document.getElementById('f_log_date')?document.getElementById('f_log_date').value:'';
+  const logMemo=document.getElementById('f_log_memo')?document.getElementById('f_log_memo').value.trim():'';
+  if(logDate&&logMemo){
+    await sb.from('deal_logs').insert({deal_id:dealId,log_date:logDate,memo:logMemo,created_by:currentUser.id,created_at:new Date().toISOString()});
   }
   await loadDeals();closeModal();renderView();
 }
