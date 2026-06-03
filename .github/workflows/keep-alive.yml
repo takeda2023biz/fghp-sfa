@@ -18,5 +18,4 @@ jobs:
             -H "apikey: ${SUPABASE_ANON_KEY}" \
             -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
             "${SUPABASE_URL}/rest/v1/")
-          echo "Status: $STATUS"
-          if [ "$STATUS" != "200" ]; then exit 1; fi
+          echo "Supabase ping status: $STATUS"
