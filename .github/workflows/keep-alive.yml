@@ -2,7 +2,7 @@ name: Supabase Keep Alive
 
 on:
   schedule:
-    - cron: '0 0 */3 * *'
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,13 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            --retry 5 --retry-all-errors --retry-delay 15 \
+            --connect-timeout 15 --max-time 60 \
             -H "apikey: ${SUPABASE_ANON_KEY}" \
             -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
             "${SUPABASE_URL}/rest/v1/")
           echo "Supabase ping status: $STATUS"
+          if [ "$STATUS" -lt 200 ] || [ "$STATUS" -ge 400 ]; then
+            echo "::error::Unexpected status code: $STATUS"
+            exit 1
+          fi
